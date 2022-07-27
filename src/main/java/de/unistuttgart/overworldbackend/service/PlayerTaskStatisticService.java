@@ -160,11 +160,7 @@ public class PlayerTaskStatisticService {
         }
       }
     }
-    final List<AreaLocation> completedDungeonLocations = new ArrayList<>();
-    for (final Dungeon dungeon : completedDungeons) {
-      completedDungeonLocations.add(new AreaLocation(dungeon.getWorld(), dungeon));
-    }
-    playerstatistic.setCompletedDungeons(completedDungeonLocations);
+    playerstatistic.setCompletedDungeons(completedDungeons);
   }
 
   private void logData(

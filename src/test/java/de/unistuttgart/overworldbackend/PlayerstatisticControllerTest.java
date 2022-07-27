@@ -79,6 +79,9 @@ class PlayerstatisticControllerTest {
     dungeon.setMinigameTasks(Set.of());
     dungeon.setNpcs(Set.of());
 
+    List<Dungeon> dungeons = new ArrayList<>();
+    dungeons.add(dungeon);
+
     final World world = new World();
     world.setIndex(1);
     world.setStaticName("Winter Wonderland");
@@ -86,7 +89,7 @@ class PlayerstatisticControllerTest {
     world.setActive(true);
     world.setMinigameTasks(Set.of());
     world.setNpcs(Set.of());
-    world.setDungeons(Arrays.asList(dungeon));
+    world.setDungeons(dungeons);
     List<World> worlds = new ArrayList<>();
     worlds.add(world);
 
@@ -100,16 +103,15 @@ class PlayerstatisticControllerTest {
     initialDungeon = initialWorld.getDungeons().stream().findFirst().get();
     initialDungeonDTO = dungeonMapper.dungeonToDungeonDTO(initialDungeon);
 
-    final AreaLocation areaLocation = new AreaLocation(initialWorld);
     final Playerstatistic playerstatistic = new Playerstatistic();
 
     playerstatistic.setUserId("45h23o2j432");
     playerstatistic.setUsername("testUser");
     playerstatistic.setLecture(initialLecture);
-    playerstatistic.setCurrentAreaLocation(areaLocation);
+    playerstatistic.setCurrentArea(initialWorld);
     playerstatistic.setKnowledge(new Random(10).nextLong());
-    final ArrayList<AreaLocation> unlockedAreas = new ArrayList<>();
-    unlockedAreas.add(areaLocation);
+    final ArrayList<Area> unlockedAreas = new ArrayList<>();
+    unlockedAreas.add(initialWorld);
     playerstatistic.setUnlockedAreas(unlockedAreas);
     playerstatistic.setCompletedDungeons(new ArrayList<>());
     initialPlayerstatistic = playerstatisticRepository.save(playerstatistic);
@@ -168,7 +170,7 @@ class PlayerstatisticControllerTest {
     assertEquals(0, createdPlayerstatisticDTOResult.getKnowledge());
     assertEquals(newPlayer.getUserId(), createdPlayerstatisticDTOResult.getUserId());
     assertEquals(newPlayer.getUsername(), createdPlayerstatisticDTOResult.getUsername());
-    assertEquals(new AreaLocationDTO(1, null), createdPlayerstatisticDTOResult.getCurrentAreaLocation());
+    assertEquals(new AreaLocationDTO(1, null), createdPlayerstatisticDTOResult.getCurrentArea());
     assertEquals(Arrays.asList(new AreaLocationDTO(1, null)), createdPlayerstatisticDTOResult.getUnlockedAreas());
   }
 
@@ -178,7 +180,7 @@ class PlayerstatisticControllerTest {
       initialPlayerstatistic
     );
     final AreaLocationDTO newAreaLocation = new AreaLocationDTO(initialWorld.getIndex(), initialDungeon.getIndex());
-    updatedPlayerstatistic.setCurrentAreaLocation(newAreaLocation);
+    updatedPlayerstatistic.setCurrentArea(newAreaLocation);
 
     final String bodyValue = objectMapper.writeValueAsString(updatedPlayerstatistic);
 
@@ -196,7 +198,7 @@ class PlayerstatisticControllerTest {
       PlayerstatisticDTO.class
     );
 
-    assertEquals(newAreaLocation, updatedPlayerstatisticDTOResult.getCurrentAreaLocation());
+    assertEquals(newAreaLocation, updatedPlayerstatisticDTOResult.getCurrentArea());
     assertEquals(initialPlayerstatistic.getId(), updatedPlayerstatisticDTOResult.getId());
     assertEquals(initialPlayerstatistic.getUserId(), updatedPlayerstatisticDTOResult.getUserId());
     assertEquals(initialPlayerstatistic.getUsername(), updatedPlayerstatisticDTOResult.getUsername());
@@ -208,7 +210,7 @@ class PlayerstatisticControllerTest {
       initialPlayerstatistic
     );
     final AreaLocationDTO newAreaLocation = new AreaLocationDTO(Integer.MAX_VALUE, Integer.MAX_VALUE);
-    updatedPlayerstatistic.setCurrentAreaLocation(newAreaLocation);
+    updatedPlayerstatistic.setCurrentArea(newAreaLocation);
 
     final String bodyValue = objectMapper.writeValueAsString(updatedPlayerstatistic);
 

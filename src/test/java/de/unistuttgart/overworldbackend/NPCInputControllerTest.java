@@ -106,9 +106,7 @@ class NPCInputControllerTest {
     playerstatistic.setUserId("45h23o2j432");
     playerstatistic.setUsername("testUser");
     playerstatistic.setLecture(initialLecture);
-    final AreaLocation areaLocation = new AreaLocation();
-    areaLocation.setWorld(initialLecture.getWorlds().stream().findFirst().get());
-    playerstatistic.setCurrentAreaLocation(areaLocation);
+    playerstatistic.setCurrentArea(initialLecture.getWorlds().stream().findFirst().get());
     playerstatistic.setKnowledge(new Random(10).nextLong());
     playerstatistic.setUnlockedAreas(new ArrayList<>());
     playerstatistic.setCompletedDungeons(new ArrayList<>());

@@ -92,11 +92,15 @@ class MinigameInputControllerTest {
     dungeonMinigameTask2.setGame("Moorhuhn");
     dungeonMinigameTask2.setIndex(2);
 
+    final Set<MinigameTask> dungeonMinigameTasks = new HashSet<>();
+    dungeonMinigameTasks.add(dungeonMinigameTask1);
+    dungeonMinigameTasks.add(dungeonMinigameTask2);
+
     final Dungeon dungeon = new Dungeon();
     dungeon.setStaticName("Dark Dungeon");
     dungeon.setTopicName("Dark UML");
     dungeon.setActive(true);
-    dungeon.setMinigameTasks(Set.of(dungeonMinigameTask1, dungeonMinigameTask2));
+    dungeon.setMinigameTasks(dungeonMinigameTasks);
     dungeon.setNpcs(Set.of());
     final List<Dungeon> dungeons = new ArrayList<>();
     dungeons.add(dungeon);
@@ -106,11 +110,14 @@ class MinigameInputControllerTest {
     minigameTask.setGame("Bugfinder");
     minigameTask.setIndex(1);
 
+    final Set<MinigameTask> worldMinigameTasks = new HashSet<>();
+    worldMinigameTasks.add(minigameTask);
+
     final World world = new World();
     world.setStaticName("Winter Wonderland");
     world.setTopicName("UML Winter");
     world.setActive(true);
-    world.setMinigameTasks(Set.of(minigameTask));
+    world.setMinigameTasks(worldMinigameTasks);
     world.setNpcs(Set.of());
     world.setDungeons(dungeons);
     final List<World> worlds = new ArrayList<>();
@@ -134,9 +141,7 @@ class MinigameInputControllerTest {
     playerstatistic.setUserId("45h23o2j432");
     playerstatistic.setUsername("testUser");
     playerstatistic.setLecture(initialLecture);
-    final AreaLocation areaLocation = new AreaLocation();
-    areaLocation.setWorld(initialLecture.getWorlds().stream().findFirst().get());
-    playerstatistic.setCurrentAreaLocation(areaLocation);
+    playerstatistic.setCurrentArea(initialLecture.getWorlds().stream().findFirst().get());
     playerstatistic.setKnowledge(new Random(10).nextLong());
     playerstatistic.setUnlockedAreas(new ArrayList<>());
     playerstatistic.setCompletedDungeons(new ArrayList<>());

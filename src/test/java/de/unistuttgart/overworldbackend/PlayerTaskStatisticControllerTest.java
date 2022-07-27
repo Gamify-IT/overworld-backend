@@ -119,9 +119,7 @@ class PlayerTaskStatisticControllerTest {
     playerstatistic.setUserId("45h23o2j432");
     playerstatistic.setUsername("testUser");
     playerstatistic.setLecture(initialLecture);
-    AreaLocation areaLocation = new AreaLocation();
-    areaLocation.setWorld(initialLecture.getWorlds().stream().findFirst().get());
-    playerstatistic.setCurrentAreaLocation(areaLocation);
+    playerstatistic.setCurrentArea(initialLecture.getWorlds().stream().findFirst().get());
     playerstatistic.setKnowledge(new Random(10).nextLong());
     playerstatistic.setUnlockedAreas(new ArrayList<>());
     playerstatistic.setCompletedDungeons(new ArrayList<>());
@@ -186,8 +184,8 @@ class PlayerTaskStatisticControllerTest {
     );
     assertEquals(statistic, playerTaskStatisticDTO);
     assertEquals(initialMinigameTaskDTO, playerTaskStatisticDTO.getMinigameTask());
-    assertNotNull(playerTaskStatisticDTO.getMinigameTask().getAreaLocation());
-    assertEquals(initialMinigameTaskDTO.getAreaLocation(), playerTaskStatisticDTO.getMinigameTask().getAreaLocation());
+    assertNotNull(playerTaskStatisticDTO.getMinigameTask().getArea());
+    assertEquals(initialMinigameTaskDTO.getArea(), playerTaskStatisticDTO.getMinigameTask().getArea());
   }
 
   @Test

@@ -22,6 +22,9 @@ public class PlayerStatisticService {
   private PlayerstatisticMapper playerstatisticMapper;
 
   @Autowired
+  private AreaService areaService;
+
+  @Autowired
   private WorldService worldService;
 
   @Autowired
@@ -69,7 +72,7 @@ public class PlayerStatisticService {
       );
     }
     final Lecture lecture = lectureService.getLecture(lectureId);
-    final AreaLocation firstWorld = new AreaLocation(getFirstWorld(lectureId));
+    final World firstWorld = getFirstWorld(lectureId);
 
     final Playerstatistic playerstatistic = new Playerstatistic();
     playerstatistic.setLecture(lecture);
@@ -77,7 +80,7 @@ public class PlayerStatisticService {
     playerstatistic.setUnlockedAreas(Arrays.asList(firstWorld));
     playerstatistic.setUserId(player.getUserId());
     playerstatistic.setUsername(player.getUsername());
-    playerstatistic.setCurrentAreaLocation(firstWorld);
+    playerstatistic.setCurrentArea(firstWorld);
     playerstatistic.setKnowledge(0);
     return playerstatisticMapper.playerstatisticToPlayerstatisticDTO(playerstatisticRepository.save(playerstatistic));
   }
@@ -101,42 +104,24 @@ public class PlayerStatisticService {
   ) {
     final Playerstatistic playerstatistic = getPlayerStatisticFromLecture(lectureId, playerId);
 
-    if (playerstatisticDTO.getCurrentAreaLocation() == null) {
+    if (playerstatisticDTO.getCurrentArea() == null) {
       throw new ResponseStatusException(
         HttpStatus.BAD_REQUEST,
         String.format("Current area location is not specified")
       );
     }
 
-    final AreaLocation areaLocation = areaLocationDTOToAreaLocation(
-      lectureId,
-      playerstatisticDTO.getCurrentAreaLocation()
-    );
-    playerstatistic.setCurrentAreaLocation(areaLocation);
+    try {
+      playerstatistic.setCurrentArea(
+        areaService.getAreaFromAreaLocationDTO(lectureId, playerstatisticDTO.getCurrentArea())
+      );
+    } catch (ResponseStatusException ex) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Specified Area does not exist"));
+    }
     return playerstatisticMapper.playerstatisticToPlayerstatisticDTO((playerstatisticRepository.save(playerstatistic)));
   }
 
   private World getFirstWorld(final int lectureId) {
     return worldService.getWorldByIndexFromLecture(lectureId, 1);
-  }
-
-  /**
-   * @throws ResponseStatusException (404) if world or dungeon with its indexes does not exist
-   * @param lectureId the id of the lecture
-   * @param areaLocationDTO the updated parameters
-   * @return the area location object
-   */
-  private AreaLocation areaLocationDTOToAreaLocation(final int lectureId, final AreaLocationDTO areaLocationDTO) {
-    try {
-      final World world = worldService.getWorldByIndexFromLecture(lectureId, areaLocationDTO.getWorldIndex());
-      Dungeon dungeon = null;
-      if (areaLocationDTO.getDungeonIndex() != null) {
-        dungeon =
-          dungeonService.getDungeonByIndexFromLecture(lectureId, world.getIndex(), areaLocationDTO.getDungeonIndex());
-      }
-      return new AreaLocation(world, dungeon);
-    } catch (final ResponseStatusException exception) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Combination of world and dungeon does not exist");
-    }
   }
 }
