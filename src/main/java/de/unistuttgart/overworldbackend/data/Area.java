@@ -9,6 +9,11 @@ import javax.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * Represents an area of the overworld map.
+ * <p>
+ * An area is either a world or a dungeon, and contains multiple minigame tasks and NPCs to interact with.
+ */
 @Entity
 @Inheritance
 @Getter
@@ -24,9 +29,15 @@ public class Area {
 
   int index;
 
+  /**
+   * A name given by the Gamify-IT development team to be displayed in the overworld.
+   */
   @NotNull
   String staticName;
 
+  /**
+   * A name given by the lecturer to describe the main content in the area such as {@code UML diagrams}.
+   */
   String topicName;
 
   boolean active;

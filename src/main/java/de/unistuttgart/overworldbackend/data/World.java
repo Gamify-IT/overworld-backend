@@ -9,6 +9,12 @@ import javax.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * A world is an instance of an Area.
+ * <p>
+ * A world contains multiple dungeons, minigame tasks and NPCs to interact with.
+ * @see Area
+ */
 @Entity
 @Getter
 @Setter
