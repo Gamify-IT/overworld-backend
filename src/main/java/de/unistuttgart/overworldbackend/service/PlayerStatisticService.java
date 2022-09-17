@@ -154,65 +154,62 @@ public class PlayerStatisticService {
             playerStatistic.getId()
         );
 
-        final int courseId = playerStatistic.getCourse().getId();
-
         if (isAreaCompleted(currentArea, playerTaskStatistics)) {
             if (currentArea instanceof World currentWorld) {
-                //if world -> unlock next dungeon or if not possible next world
-                currentWorld
-                    .getDungeons()
-                    .parallelStream()
-                    .min(Comparator.comparingInt(Area::getIndex))
-                    .filter(Dungeon::isConfigured)
-                    .ifPresentOrElse(
-                        playerStatistic::addUnlockedArea,
-                        () ->
-                            worldRepository
-                                .findByIndexAndCourseId(currentWorld.getIndex() + 1, courseId)
-                                .filter(Area::isConfigured)
-                                .ifPresent(playerStatistic::addUnlockedArea)
-                    );
+                checkWorldUnlocked(playerStatistic, currentWorld);
             } else if (currentArea instanceof Dungeon currentDungeon) {
-                //if dungeon -> unlock next dungeon or if not possible next world
-                currentDungeon
-                    .getWorld()
-                    .getDungeons()
-                    .parallelStream()
-                    .filter(dungeon -> dungeon.getIndex() > currentDungeon.getIndex())
-                    .min(Comparator.comparingInt(Dungeon::getIndex))
-                    .filter(Dungeon::isConfigured)
-                    .ifPresentOrElse(
-                        playerStatistic::addUnlockedArea,
-                        () ->
-                            worldRepository
-                                .findByIndexAndCourseId(currentDungeon.getWorld().getIndex() + 1, courseId)
-                                .filter(Area::isConfigured)
-                                .ifPresent(playerStatistic::addUnlockedArea)
-                    );
+                checkDungeonUnlocked(playerStatistic, currentDungeon);
             }
         }
     }
 
-    public void checkForUnlockedWorlds(final World currentWorld, final PlayerStatistic playerStatistic) {
-        final List<PlayerTaskStatistic> playerTaskStatistics = playerTaskStatisticRepository.findByPlayerStatisticId(
-            playerStatistic.getId()
-        );
-        final int courseId = playerStatistic.getCourse().getId();
-        if (isAreaCompleted(currentWorld, playerTaskStatistics)) {
-            currentWorld
-                .getDungeons()
-                .parallelStream()
-                .min(Comparator.comparingInt(Area::getIndex))
-                .filter(Dungeon::isConfigured)
-                .ifPresentOrElse(
-                    playerStatistic::addUnlockedArea,
-                    () ->
-                        worldRepository
-                            .findByIndexAndCourseId(currentWorld.getIndex() + 1, courseId)
-                            .filter(Area::isConfigured)
-                            .ifPresent(playerStatistic::addUnlockedArea)
-                );
-        }
+    /**
+     * If world is completed, the next dungeon gets unlocked.
+     * If all dungeons in the world are unlocked, the next world gets unlocked.
+     *
+     * @param playerStatistic of the player, the world is checked.
+     * @param currentDungeon dungeon to be checked.
+     */
+    private void checkDungeonUnlocked(final PlayerStatistic playerStatistic, final Dungeon currentDungeon) {
+        currentDungeon
+            .getWorld()
+            .getDungeons()
+            .parallelStream()
+            .filter(dungeon -> dungeon.getIndex() > currentDungeon.getIndex())
+            .min(Comparator.comparingInt(Dungeon::getIndex))
+            .filter(Dungeon::isConfigured)
+            .ifPresentOrElse(
+                playerStatistic::addUnlockedArea,
+                () ->
+                    worldRepository
+                        .findByIndexAndCourseId(currentDungeon.getWorld().getIndex() + 1, playerStatistic.getCourse().getId())
+                        .filter(Area::isConfigured)
+                        .ifPresent(playerStatistic::addUnlockedArea)
+            );
+    }
+
+    /**
+     * If world is completed, the next dungeon gets unlocked.
+     * If all dungeons in the world are unlocked, the next world gets unlocked.
+     *
+     * @param playerStatistic of the player, the world is checked.
+     * @param currentWorld world to be checked.
+     */
+    private void checkWorldUnlocked(final PlayerStatistic playerStatistic, final World currentWorld) {
+        //if world -> unlock next dungeon or if not possible next world
+        currentWorld
+            .getDungeons()
+            .parallelStream()
+            .min(Comparator.comparingInt(Area::getIndex))
+            .filter(Dungeon::isConfigured)
+            .ifPresentOrElse(
+                playerStatistic::addUnlockedArea,
+                () ->
+                    worldRepository
+                        .findByIndexAndCourseId(currentWorld.getIndex() + 1, playerStatistic.getCourse().getId())
+                        .filter(Area::isConfigured)
+                        .ifPresent(playerStatistic::addUnlockedArea)
+            );
     }
 
     /**
