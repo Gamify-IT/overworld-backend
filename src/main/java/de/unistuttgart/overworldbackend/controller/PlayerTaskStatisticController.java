@@ -29,8 +29,8 @@ public class PlayerTaskStatisticController {
   @Operation(summary = "Get all minigame Statistics of Player")
   @GetMapping("")
   public List<PlayerTaskStatisticDTO> getPlayerTaskStatistics(
-    @PathVariable int courseId,
-    @PathVariable String playerId
+    @PathVariable final int courseId,
+    @PathVariable final String playerId
   ) {
     log.debug("get Statistics of Player {} in the course {}", playerId, courseId);
     return playerTaskStatisticService.getAllStatisticsOfPlayer(courseId, playerId);
@@ -39,9 +39,9 @@ public class PlayerTaskStatisticController {
   @Operation(summary = "Get Statistic of a Player by id")
   @GetMapping("/{statisticId}")
   public PlayerTaskStatisticDTO getPlayerTaskStatistic(
-    @PathVariable int courseId,
-    @PathVariable String playerId,
-    @PathVariable UUID statisticId
+    @PathVariable final int courseId,
+    @PathVariable final String playerId,
+    @PathVariable final UUID statisticId
   ) {
     log.debug("get statistic {}", statisticId);
     return playerTaskStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);

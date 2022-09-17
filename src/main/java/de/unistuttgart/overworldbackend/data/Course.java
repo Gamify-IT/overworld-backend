@@ -6,11 +6,9 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.Hibernate;
 
 /**
  * A course is the highest-level entity:
@@ -19,7 +17,9 @@ import lombok.experimental.FieldDefaults;
  */
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "courseName", "semester" }) })
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -41,9 +41,11 @@ public class Course {
   boolean active;
 
   @OneToMany(cascade = CascadeType.ALL)
+  @ToString.Exclude
   List<World> worlds;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @ToString.Exclude
   Set<PlayerStatistic> playerStatistics = new HashSet<>();
 
   public Course(
@@ -99,11 +101,18 @@ public class Course {
     this.playerStatistics.add(playerStatistic);
   }
 
-  public void removePlayerStatistic(final PlayerStatistic playerStatistic) {
-    this.playerStatistics.remove(playerStatistic);
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o != null) {
+      Hibernate.getClass(this);
+      Hibernate.getClass(o);
+    }
+    return false;
   }
 
-  public void clearPlayerStatistics() {
-    this.playerStatistics.clear();
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

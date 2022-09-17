@@ -44,7 +44,7 @@ class PlayerTaskStatisticControllerTest {
     .withPassword("postgres");
 
   @DynamicPropertySource
-  public static void properties(DynamicPropertyRegistry registry) {
+  public static void properties(final DynamicPropertyRegistry registry) {
     registry.add("spring.datasource.url", postgresDB::getJdbcUrl);
     registry.add("spring.datasource.username", postgresDB::getUsername);
     registry.add("spring.datasource.password", postgresDB::getPassword);
@@ -166,7 +166,7 @@ class PlayerTaskStatisticControllerTest {
 
   @Test
   void getTaskStatistics() throws Exception {
-    PlayerTaskStatisticDTO statistic = playerTaskStatisticService.submitData(
+    final PlayerTaskStatisticDTO statistic = playerTaskStatisticService.submitData(
       new PlayerTaskStatisticData(
         initialMinigameTask.getGame(),
         initialMinigameTask.getConfigurationId(),
@@ -188,7 +188,7 @@ class PlayerTaskStatisticControllerTest {
 
   @Test
   void getTaskStatistic() throws Exception {
-    PlayerTaskStatisticDTO statistic = playerTaskStatisticService.submitData(
+    final PlayerTaskStatisticDTO statistic = playerTaskStatisticService.submitData(
       new PlayerTaskStatisticData(
         initialMinigameTask.getGame(),
         initialMinigameTask.getConfigurationId(),

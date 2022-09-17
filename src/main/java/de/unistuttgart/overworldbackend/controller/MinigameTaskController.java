@@ -21,7 +21,10 @@ public class MinigameTaskController {
 
   @Operation(summary = "Get all task from a world")
   @GetMapping("/minigame-tasks")
-  public Set<MinigameTaskDTO> getMinigameTasksFromWorld(@PathVariable int courseId, @PathVariable int worldIndex) {
+  public Set<MinigameTaskDTO> getMinigameTasksFromWorld(
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex
+  ) {
     log.debug("get tasks of world {} of course {}", worldIndex, courseId);
     return minigameTaskService.getMinigameTasksFromArea(courseId, worldIndex);
   }
@@ -29,9 +32,9 @@ public class MinigameTaskController {
   @Operation(summary = "Get all tasks from a dungeon")
   @GetMapping("/dungeons/{dungeonIndex}/minigame-tasks")
   public Set<MinigameTaskDTO> getMinigameTasksFromDungeon(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int dungeonIndex
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int dungeonIndex
   ) {
     log.debug("get tasks of dungeon {} from world {} of course {}", dungeonIndex, worldIndex, courseId);
     return minigameTaskService.getMinigameTasksFromArea(courseId, worldIndex, dungeonIndex);
@@ -40,33 +43,33 @@ public class MinigameTaskController {
   @Operation(summary = "Get a task by its index from a world")
   @GetMapping("/minigame-tasks/{taskIndex}")
   public MinigameTaskDTO getMinigameTaskFromWorld(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int taskIndex
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int taskIndex
   ) {
     log.debug("get task {} of world {} of course {}", taskIndex, worldIndex, courseId);
     return minigameTaskService.getMinigameTaskFromArea(courseId, worldIndex, Optional.empty(), taskIndex);
   }
 
   @Operation(summary = "Get a task by its index from a dungeon")
-  @GetMapping("/dungeons/{dungoenIndex}/minigame-tasks/{taskIndex}")
+  @GetMapping("/dungeons/{dungeonIndex}/minigame-tasks/{taskIndex}")
   public MinigameTaskDTO getMinigameTaskFromDungeon(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int dungoenIndex,
-    @PathVariable int taskIndex
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int dungeonIndex,
+    @PathVariable final int taskIndex
   ) {
-    log.debug("get task {} of dungeon {} from world {} of course {}", taskIndex, dungoenIndex, worldIndex, courseId);
-    return minigameTaskService.getMinigameTaskFromArea(courseId, worldIndex, Optional.of(dungoenIndex), taskIndex);
+    log.debug("get task {} of dungeon {} from world {} of course {}", taskIndex, dungeonIndex, worldIndex, courseId);
+    return minigameTaskService.getMinigameTaskFromArea(courseId, worldIndex, Optional.of(dungeonIndex), taskIndex);
   }
 
   @Operation(summary = "Update a task by its index from a world")
   @PutMapping("/minigame-tasks/{taskIndex}")
   public MinigameTaskDTO updateMinigameTasksFromWorld(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int taskIndex,
-    @RequestBody MinigameTaskDTO minigameTaskDTO
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int taskIndex,
+    @RequestBody final MinigameTaskDTO minigameTaskDTO
   ) {
     log.debug("update task {} of world {} of course {} with {}", taskIndex, worldIndex, courseId, minigameTaskDTO);
     return minigameTaskService.updateMinigameTaskFromArea(
@@ -81,11 +84,11 @@ public class MinigameTaskController {
   @Operation(summary = "Update a task by index id from a dungeon")
   @PutMapping("/dungeons/{dungeonIndex}/minigame-tasks/{taskIndex}")
   public MinigameTaskDTO updateMinigameTasksFromDungeon(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int dungeonIndex,
-    @PathVariable int taskIndex,
-    @RequestBody MinigameTaskDTO minigameTaskDTO
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int dungeonIndex,
+    @PathVariable final int taskIndex,
+    @RequestBody final MinigameTaskDTO minigameTaskDTO
   ) {
     log.debug(
       "update task {} of dungeon {} from world {} of course {} with {}",

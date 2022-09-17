@@ -24,7 +24,10 @@ public class PlayerNPCStatisticController {
 
   @Operation(summary = "Get all NPC statistics of a player")
   @GetMapping("")
-  public List<PlayerNPCStatisticDTO> getPlayerNPCStatistics(@PathVariable int courseId, @PathVariable String playerId) {
+  public List<PlayerNPCStatisticDTO> getPlayerNPCStatistics(
+    @PathVariable final int courseId,
+    @PathVariable final String playerId
+  ) {
     log.debug("get statistics of player {} in the course {}", playerId, courseId);
     return playerNPCStatisticService.getAllStatisticsOfPlayer(courseId, playerId);
   }
@@ -32,9 +35,9 @@ public class PlayerNPCStatisticController {
   @Operation(summary = "Get specific NPC statistic of a player")
   @GetMapping("/{statisticId}")
   public PlayerNPCStatisticDTO getPlayerNPCStatistic(
-    @PathVariable int courseId,
-    @PathVariable String playerId,
-    @PathVariable UUID statisticId
+    @PathVariable final int courseId,
+    @PathVariable final String playerId,
+    @PathVariable final UUID statisticId
   ) {
     log.debug("get statistic {}", statisticId);
     return playerNPCStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);

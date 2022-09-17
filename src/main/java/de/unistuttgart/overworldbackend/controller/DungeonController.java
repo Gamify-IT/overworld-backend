@@ -24,7 +24,7 @@ public class DungeonController {
 
   @Operation(summary = "Get all dungeons of a world")
   @GetMapping("")
-  public Set<DungeonDTO> getDungeons(@PathVariable int courseId, @PathVariable int worldIndex) {
+  public Set<DungeonDTO> getDungeons(@PathVariable final int courseId, @PathVariable final int worldIndex) {
     log.debug("get dungeons of world {} of course {}", worldIndex, courseId);
     return dungeonService.getDungeonsFromWorld(courseId, worldIndex);
   }
@@ -32,9 +32,9 @@ public class DungeonController {
   @Operation(summary = "Get a dungeon by its index in a world")
   @GetMapping("/{dungeonIndex}")
   public DungeonDTO getDungeon(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int dungeonIndex
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int dungeonIndex
   ) {
     log.debug("get dungeon {} of world {} of course {}", dungeonIndex, worldIndex, courseId);
     return dungeonMapper.dungeonToDungeonDTO(
@@ -45,10 +45,10 @@ public class DungeonController {
   @Operation(summary = "Update a dungeon by its index in a world")
   @PutMapping("/{dungeonIndex}")
   public DungeonDTO updateDungeon(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int dungeonIndex,
-    @RequestBody DungeonDTO dungeonDTO
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int dungeonIndex,
+    @RequestBody final DungeonDTO dungeonDTO
   ) {
     log.debug("update dungeon {} of world {} of course {} with {}", dungeonIndex, worldIndex, courseId, dungeonDTO);
     return dungeonService.updateDungeonFromCourse(courseId, worldIndex, dungeonIndex, dungeonDTO);

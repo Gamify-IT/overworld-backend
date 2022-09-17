@@ -127,17 +127,22 @@ public class PlayerTaskStatisticService {
             course.getId(),
             playerStatistic.getId()
           )
-          .get();
+          .orElseThrow(() ->
+            new ResponseStatusException(
+              HttpStatus.NOT_FOUND,
+              String.format("PlayerStatistic %s not found", playerStatistic.getId())
+            )
+          );
       });
 
-    long gainedKnowledge = calculateKnowledge(data.getScore(), playerTaskStatistic.getHighscore());
+    final long gainedKnowledge = calculateKnowledge(data.getScore(), playerTaskStatistic.getHighscore());
 
     playerTaskStatistic.setHighscore(Math.max(playerTaskStatistic.getHighscore(), data.getScore()));
     playerTaskStatistic.setCompleted(playerTaskStatistic.isCompleted() || checkCompleted(data.getScore()));
 
     logData(data, course, playerTaskStatistic, gainedKnowledge);
 
-    Area area = minigameTask.getArea();
+    final Area area = minigameTask.getArea();
     if (area instanceof Dungeon dungeon) {
       calculateCompletedDungeon(dungeon, playerStatistic);
     }
@@ -156,7 +161,7 @@ public class PlayerTaskStatisticService {
     final List<PlayerTaskStatistic> playerTaskStatistics = playerTaskStatisticRepository.findByPlayerStatisticId(
       playerStatistic.getId()
     );
-    boolean dungeonCompleted = dungeon
+    final boolean dungeonCompleted = dungeon
       .getMinigameTasks()
       .parallelStream()
       .allMatch(minigameTask ->
@@ -166,7 +171,7 @@ public class PlayerTaskStatisticService {
           .anyMatch(PlayerTaskStatistic::isCompleted)
       );
     if (dungeonCompleted) {
-      List<Area> completedDungeons = playerStatistic.getCompletedDungeons();
+      final List<Area> completedDungeons = playerStatistic.getCompletedDungeons();
       completedDungeons.add(dungeon);
     }
   }

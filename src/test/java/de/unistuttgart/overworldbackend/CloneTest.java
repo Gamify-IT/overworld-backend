@@ -1,7 +1,7 @@
 package de.unistuttgart.overworldbackend;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,16 +48,29 @@ public class CloneTest {
   )
     .withExposedService("overworld-db", 5432, Wait.forListeningPort())
     .withExposedService("reverse-proxy", 80)
-    .waitingFor("reverse-proxy", Wait.forHttp("/minigames/chickenshock/api/v1/configurations").forPort(80).forStatusCode(400))
-    .waitingFor("reverse-proxy", Wait.forHttp("/minigames/crosswordpuzzle/api/v1/configurations").forPort(80).forStatusCode(400))
-    .waitingFor("reverse-proxy", Wait.forHttp("/minigames/finitequiz/api/v1/configurations").forPort(80).forStatusCode(400))
-    .waitingFor("reverse-proxy", Wait.forHttp("/minigames/bugfinder/api/v1/configurations").forPort(80).forStatusCode(400));
+    .waitingFor(
+      "reverse-proxy",
+      Wait.forHttp("/minigames/chickenshock/api/v1/configurations").forPort(80).forStatusCode(400)
+    )
+    .waitingFor(
+      "reverse-proxy",
+      Wait.forHttp("/minigames/crosswordpuzzle/api/v1/configurations").forPort(80).forStatusCode(200)
+    )
+    .waitingFor(
+      "reverse-proxy",
+      Wait.forHttp("/minigames/finitequiz/api/v1/configurations").forPort(80).forStatusCode(400)
+    )
+    .waitingFor(
+      "reverse-proxy",
+      Wait.forHttp("/minigames/bugfinder/api/v1/configurations").forPort(80).forStatusCode(200)
+    );
 
   @DynamicPropertySource
-  public static void properties(DynamicPropertyRegistry registry) {
+  public static void properties(final DynamicPropertyRegistry registry) {
     //wait till setup has finished
-    ContainerState state = (ContainerState) compose.getContainerByServiceName("setup_1").get();
-    while (state.isRunning()) {}
+    final ContainerState state = (ContainerState) compose.getContainerByServiceName("setup_1").get();
+    final long currentTime = System.currentTimeMillis();
+    while (state.isRunning() && currentTime + 60000 < System.currentTimeMillis()) {}
     registry.add(
       "spring.datasource.url",
       () ->
@@ -120,7 +133,7 @@ public class CloneTest {
       objectMapper.readValue(resultGet.getResponse().getContentAsString(), CourseDTO.class)
     );
 
-    CourseInitialData initialData = new CourseInitialData();
+    final CourseInitialData initialData = new CourseInitialData();
     initialData.setCourseName("CloneCourse");
     initialData.setDescription("CloneDescription");
     initialData.setSemester("WS-23");
@@ -136,12 +149,12 @@ public class CloneTest {
     );
 
     for (int i = 0; i < course.getWorlds().size(); i++) {
-      World world = course.getWorlds().get(i);
-      World cloneWorld = cloneCourse.getWorlds().get(i);
+      final World world = course.getWorlds().get(i);
+      final World cloneWorld = cloneCourse.getWorlds().get(i);
       world
         .getMinigameTasks()
         .forEach(minigameTask -> {
-          MinigameTask cloneMinigameTask = cloneWorld
+          final MinigameTask cloneMinigameTask = cloneWorld
             .getMinigameTasks()
             .stream()
             .filter(minigameTask1 -> minigameTask1.getIndex() == minigameTask.getIndex())
@@ -154,25 +167,26 @@ public class CloneTest {
       world
         .getNpcs()
         .forEach(npc -> {
-          NPC cloneNpc = cloneWorld
+          final NPC cloneNpc = cloneWorld
             .getNpcs()
             .stream()
             .filter(npc1 -> npc1.getIndex() == npc.getIndex())
             .findAny()
             .get();
           AtomicInteger k = new AtomicInteger(0);
-          for (String text : npc.getText()) {
-            cloneNpc.getText().get(k.getAndIncrement());
+          for (final String text : npc.getText()) {
+            final String cloneText = cloneNpc.getText().get(k.getAndIncrement());
+            assertEquals(text, cloneText);
           }
           assertEquals(npc.getDescription(), cloneNpc.getDescription());
         });
       for (int j = 0; j < world.getDungeons().size(); j++) {
-        Dungeon dungeon = world.getDungeons().get(i);
-        Dungeon cloneDungeon = cloneWorld.getDungeons().get(i);
+        final Dungeon dungeon = world.getDungeons().get(i);
+        final Dungeon cloneDungeon = cloneWorld.getDungeons().get(i);
         dungeon
           .getMinigameTasks()
           .forEach(minigameTask -> {
-            MinigameTask cloneMinigameTask = cloneDungeon
+            final MinigameTask cloneMinigameTask = cloneDungeon
               .getMinigameTasks()
               .stream()
               .filter(minigameTask1 -> minigameTask1.getIndex() == minigameTask.getIndex())
@@ -185,15 +199,16 @@ public class CloneTest {
         dungeon
           .getNpcs()
           .forEach(npc -> {
-            NPC cloneNpc = cloneDungeon
+            final NPC cloneNpc = cloneDungeon
               .getNpcs()
               .stream()
               .filter(npc1 -> npc1.getIndex() == npc.getIndex())
               .findAny()
               .get();
-            AtomicInteger k = new AtomicInteger(0);
-            for (String text : npc.getText()) {
-              cloneNpc.getText().get(k.getAndIncrement());
+            final AtomicInteger k = new AtomicInteger(0);
+            for (final String text : npc.getText()) {
+              final String cloneText = cloneNpc.getText().get(k.getAndIncrement());
+              assertEquals(text, cloneText);
             }
             assertEquals(npc.getDescription(), cloneNpc.getDescription());
           });
@@ -201,7 +216,7 @@ public class CloneTest {
     }
   }
 
-  private void compareMinigame(MinigameTask minigameTask1, MinigameTask minigameTask2) {
+  private void compareMinigame(final MinigameTask minigameTask1, final MinigameTask minigameTask2) {
     if (minigameTask1 == null) {
       return;
     }
@@ -210,12 +225,18 @@ public class CloneTest {
     }
     switch (minigameTask1.getGame()) {
       case CHICKENSHOCK -> {
-        ChickenshockConfiguration config1 = chickenshockClient.getConfiguration("", minigameTask1.getConfigurationId());
-        ChickenshockConfiguration config2 = chickenshockClient.getConfiguration("", minigameTask2.getConfigurationId());
+        final ChickenshockConfiguration config1 = chickenshockClient.getConfiguration(
+          "",
+          minigameTask1.getConfigurationId()
+        );
+        final ChickenshockConfiguration config2 = chickenshockClient.getConfiguration(
+          "",
+          minigameTask2.getConfigurationId()
+        );
         config1
           .getQuestions()
           .forEach(chickenshockQuestion -> {
-            Optional<ChickenshockQuestion> question = config2
+            final Optional<ChickenshockQuestion> question = config2
               .getQuestions()
               .stream()
               .filter(chickenshockQuestion1 -> chickenshockQuestion1.getText().equals(chickenshockQuestion.getText()))
@@ -224,18 +245,18 @@ public class CloneTest {
           });
       }
       case CROSSWORDPUZZLE -> {
-        CrosswordpuzzleConfiguration config1 = crosswordpuzzleClient.getConfiguration(
-"",
+        final CrosswordpuzzleConfiguration config1 = crosswordpuzzleClient.getConfiguration(
+          "",
           minigameTask1.getConfigurationId()
         );
-        CrosswordpuzzleConfiguration config2 = crosswordpuzzleClient.getConfiguration(
-"",
+        final CrosswordpuzzleConfiguration config2 = crosswordpuzzleClient.getConfiguration(
+          "",
           minigameTask2.getConfigurationId()
         );
         config1
           .getQuestions()
           .forEach(crosswordpuzzleQuestion -> {
-            Optional<CrosswordpuzzleQuestion> question = config2
+            final Optional<CrosswordpuzzleQuestion> question = config2
               .getQuestions()
               .stream()
               .filter(crosswordpuzzleQuestion1 ->
@@ -246,12 +267,18 @@ public class CloneTest {
           });
       }
       case FINITEQUIZ -> {
-        FinitequizConfiguration config1 = finitequizClient.getConfiguration("", minigameTask1.getConfigurationId());
-        FinitequizConfiguration config2 = finitequizClient.getConfiguration("", minigameTask2.getConfigurationId());
+        final FinitequizConfiguration config1 = finitequizClient.getConfiguration(
+          "",
+          minigameTask1.getConfigurationId()
+        );
+        final FinitequizConfiguration config2 = finitequizClient.getConfiguration(
+          "",
+          minigameTask2.getConfigurationId()
+        );
         config1
           .getQuestions()
           .forEach(finitequizQuestion -> {
-            Optional<FinitequizQuestion> question = config2
+            final Optional<FinitequizQuestion> question = config2
               .getQuestions()
               .stream()
               .filter(finitequizQuestion1 -> finitequizQuestion1.getText().equals(finitequizQuestion.getText()))

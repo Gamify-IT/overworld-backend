@@ -24,7 +24,7 @@ public class MinigameInputController {
 
   @Operation(summary = "Submit statistics from a minigame run")
   @PostMapping("/submit-game-pass")
-  public PlayerTaskStatisticDTO inputData(@Valid @RequestBody PlayerTaskStatisticData data) {
+  public PlayerTaskStatisticDTO inputData(@Valid @RequestBody final PlayerTaskStatisticData data) {
     log.debug("submitted data from game run {}", data);
     return playerTaskStatisticService.submitData(data);
   }

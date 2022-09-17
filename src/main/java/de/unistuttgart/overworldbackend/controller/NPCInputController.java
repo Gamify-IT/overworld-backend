@@ -25,7 +25,7 @@ public class NPCInputController {
   @Valid
   @Operation(summary = "Submit statistics for a NPC for a player")
   @PostMapping("/submit-npc-pass")
-  public PlayerNPCStatisticDTO inputData(@RequestBody PlayerNPCStatisticData data) {
+  public PlayerNPCStatisticDTO inputData(@RequestBody final PlayerNPCStatisticData data) {
     log.debug("submitted data from npc pass {}", data);
     return playerNPCStatisticService.submitData(data);
   }

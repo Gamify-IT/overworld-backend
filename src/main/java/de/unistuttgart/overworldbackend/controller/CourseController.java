@@ -38,7 +38,7 @@ public class CourseController {
 
   @Operation(summary = "Get a course by its id")
   @GetMapping("/{id}")
-  public CourseDTO getCourse(@PathVariable int id) {
+  public CourseDTO getCourse(@PathVariable final int id) {
     log.debug("get course {}", id);
     return courseMapper.courseToCourseDTO(courseService.getCourse(id));
   }
@@ -46,21 +46,21 @@ public class CourseController {
   @Operation(summary = "Create a course")
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("")
-  public CourseDTO createCourse(@Valid @RequestBody CourseInitialData course) {
-    log.debug("create course {}");
+  public CourseDTO createCourse(@Valid @RequestBody final CourseInitialData course) {
+    log.debug("create course {}", course.getCourseName());
     return courseService.createCourse(course);
   }
 
   @Operation(summary = "Update a course by its id")
   @PutMapping("/{id}")
-  public CourseDTO updateCourse(@PathVariable int id, @Valid @RequestBody CourseDTO courseDTO) {
+  public CourseDTO updateCourse(@PathVariable final int id, @Valid @RequestBody final CourseDTO courseDTO) {
     log.debug("update course {} with {}", id, courseDTO);
     return courseService.updateCourse(id, courseDTO);
   }
 
   @Operation(summary = "Delete a course by its id")
   @DeleteMapping("/{id}")
-  public CourseDTO deleteCourse(@PathVariable int id) {
+  public CourseDTO deleteCourse(@PathVariable final int id) {
     log.debug("delete course {}", id);
     return courseService.deleteCourse(id);
   }
@@ -73,8 +73,8 @@ public class CourseController {
   @PostMapping("/{id}/clone")
   public CourseDTO cloneCourse(
     @CookieValue("access_token") final String accessToken,
-    @PathVariable int id,
-    @Valid @RequestBody CourseInitialData course
+    @PathVariable final int id,
+    @Valid @RequestBody final CourseInitialData course
   ) {
     log.debug("clone course {}", id);
     return courseService.cloneCourse(id, course, accessToken);

@@ -20,10 +20,10 @@ public class NPCController {
   @Operation(summary = "Update a NPC by its index in a world")
   @PutMapping("/npcs/{npcIndex}")
   public NPCDTO updateNPCFromWorld(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int npcIndex,
-    @RequestBody NPCDTO npcDTO
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int npcIndex,
+    @RequestBody final NPCDTO npcDTO
   ) {
     log.debug("update npc {} of world {} of course {}", npcIndex, worldIndex, courseId);
     return npcService.updateNPCFromWorld(courseId, worldIndex, npcIndex, npcDTO);
@@ -32,11 +32,11 @@ public class NPCController {
   @Operation(summary = "Update a NPC by its index in a dungeon")
   @PutMapping("/dungeons/{dungeonIndex}/npcs/{npcIndex}")
   public NPCDTO updateNPCFromDungeon(
-    @PathVariable int courseId,
-    @PathVariable int worldIndex,
-    @PathVariable int dungeonIndex,
-    @PathVariable int npcIndex,
-    @RequestBody NPCDTO npcDTO
+    @PathVariable final int courseId,
+    @PathVariable final int worldIndex,
+    @PathVariable final int dungeonIndex,
+    @PathVariable final int npcIndex,
+    @RequestBody final NPCDTO npcDTO
   ) {
     log.debug(
       "update npc {} of dungeon {} from world {} of course {} with {}",

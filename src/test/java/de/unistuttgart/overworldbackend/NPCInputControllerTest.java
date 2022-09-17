@@ -45,7 +45,7 @@ class NPCInputControllerTest {
     .withPassword("postgres");
 
   @DynamicPropertySource
-  public static void properties(DynamicPropertyRegistry registry) {
+  public static void properties(final DynamicPropertyRegistry registry) {
     registry.add("spring.datasource.url", postgresDB::getJdbcUrl);
     registry.add("spring.datasource.username", postgresDB::getUsername);
     registry.add("spring.datasource.password", postgresDB::getPassword);
@@ -129,7 +129,7 @@ class NPCInputControllerTest {
     initialCourse = courseRepository.save(course);
     initialCourseDTO = courseMapper.courseToCourseDTO(initialCourse);
 
-    World initialWorld = initialCourse.getWorlds().stream().findFirst().get();
+    final World initialWorld = initialCourse.getWorlds().stream().findFirst().get();
     initialNpc = initialWorld.getNpcs().stream().findFirst().get();
     initialNpcDTO = npcMapper.npcToNPCDTO(initialNpc);
 
@@ -155,7 +155,7 @@ class NPCInputControllerTest {
 
   @Test
   void submitNPCData() throws Exception {
-    PlayerNPCStatisticData playerNPCStatisticData = new PlayerNPCStatisticData();
+    final PlayerNPCStatisticData playerNPCStatisticData = new PlayerNPCStatisticData();
     playerNPCStatisticData.setUserId(initialPlayerStatistic.getUserId());
     playerNPCStatisticData.setNpcId(initialNpcDTO.getId());
     playerNPCStatisticData.setCompleted(true);
@@ -174,7 +174,7 @@ class NPCInputControllerTest {
     assertEquals(playerNPCStatisticData.isCompleted(), playerNPCStatisticDTO.isCompleted());
 
     // check that action log was created
-    PlayerNPCActionLog actionLog = playerNPCActionLogRepository
+    final PlayerNPCActionLog actionLog = playerNPCActionLogRepository
       .findAll()
       .stream()
       .filter(log -> log.getPlayerNPCStatistic().getPlayerStatistic().getId().equals(initialPlayerStatistic.getId()))
@@ -216,7 +216,7 @@ class NPCInputControllerTest {
 
   @Test
   void submitNPCData_ResetNPC() throws Exception {
-    PlayerNPCStatisticData playerNPCStatisticData = new PlayerNPCStatisticData();
+    final PlayerNPCStatisticData playerNPCStatisticData = new PlayerNPCStatisticData();
     playerNPCStatisticData.setUserId(initialPlayerStatistic.getUserId());
     playerNPCStatisticData.setNpcId(initialNpcDTO.getId());
     playerNPCStatisticData.setCompleted(true);
@@ -245,7 +245,7 @@ class NPCInputControllerTest {
       )
       .andExpect(status().isOk())
       .andReturn();
-    PlayerNPCStatistic currentPlayerNPCStatistic = playerNPCStatisticRepository
+    final PlayerNPCStatistic currentPlayerNPCStatistic = playerNPCStatisticRepository
       .findByNpcIdAndCourseIdAndPlayerStatisticId(
         initialNpc.getId(),
         initialCourse.getId(),

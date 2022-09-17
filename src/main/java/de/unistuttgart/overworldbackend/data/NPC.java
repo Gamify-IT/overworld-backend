@@ -2,13 +2,12 @@ package de.unistuttgart.overworldbackend.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.Hibernate;
 import org.springframework.lang.Nullable;
 
 /**
@@ -18,7 +17,9 @@ import org.springframework.lang.Nullable;
  */
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "index", "area_id", "course_id" }) })
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -49,9 +50,22 @@ public class NPC {
     this.index = index;
   }
 
-  public NPC(final List<String> text, String description, final int index) {
+  public NPC(final List<String> text, final @org.jetbrains.annotations.Nullable String description, final int index) {
     this.text = text;
     this.index = index;
     this.description = description;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    final NPC npc = (NPC) o;
+    return id != null && Objects.equals(id, npc.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }
