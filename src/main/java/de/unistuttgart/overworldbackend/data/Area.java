@@ -23,62 +23,62 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Area {
 
-  @Id
-  @GeneratedValue(generator = "uuid")
-  UUID id;
+    @Id
+    @GeneratedValue(generator = "uuid")
+    UUID id;
 
-  int index;
+    int index;
 
-  /**
-   * A name given by the Gamify-IT development team to be displayed in the overworld.
-   */
-  @NotNull
-  String staticName;
+    /**
+     * A name given by the Gamify-IT development team to be displayed in the overworld.
+     */
+    @NotNull
+    String staticName;
 
-  /**
-   * A name given by the lecturer to describe the main content in the area such as {@code UML diagrams}.
-   */
-  String topicName;
+    /**
+     * A name given by the lecturer to describe the main content in the area such as {@code UML diagrams}.
+     */
+    String topicName;
 
-  boolean active;
-  boolean configured;
+    boolean active;
+    boolean configured;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  Set<MinigameTask> minigameTasks;
+    @OneToMany(cascade = CascadeType.ALL)
+    Set<MinigameTask> minigameTasks;
 
-  @JsonManagedReference
-  @OneToMany(cascade = CascadeType.ALL)
-  Set<NPC> npcs;
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL)
+    Set<NPC> npcs;
 
-  @ManyToOne
-  Course course;
+    @ManyToOne
+    Course course;
 
-  protected Area(
-    final String staticName,
-    final String topicName,
-    final boolean active,
-    final Set<MinigameTask> minigameTasks,
-    final Set<NPC> npcs,
-    final int index
-  ) {
-    this.staticName = staticName;
-    this.topicName = topicName;
-    this.active = active;
-    this.minigameTasks = minigameTasks;
-    this.npcs = npcs;
-    this.index = index;
-  }
+    protected Area(
+        final String staticName,
+        final String topicName,
+        final boolean active,
+        final Set<MinigameTask> minigameTasks,
+        final Set<NPC> npcs,
+        final int index
+    ) {
+        this.staticName = staticName;
+        this.topicName = topicName;
+        this.active = active;
+        this.minigameTasks = minigameTasks;
+        this.npcs = npcs;
+        this.index = index;
+    }
 
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    final Area area = (Area) o;
-    return id.equals(area.id);
-  }
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Area area = (Area) o;
+        return id.equals(area.id);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

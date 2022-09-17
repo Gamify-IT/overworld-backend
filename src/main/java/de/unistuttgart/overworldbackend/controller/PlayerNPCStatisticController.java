@@ -19,27 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/courses/{courseId}/playerstatistics/{playerId}/player-npc-statistics")
 public class PlayerNPCStatisticController {
 
-  @Autowired
-  private PlayerNPCStatisticService playerNPCStatisticService;
+    @Autowired
+    private PlayerNPCStatisticService playerNPCStatisticService;
 
-  @Operation(summary = "Get all NPC statistics of a player")
-  @GetMapping("")
-  public List<PlayerNPCStatisticDTO> getPlayerNPCStatistics(
-    @PathVariable final int courseId,
-    @PathVariable final String playerId
-  ) {
-    log.debug("get statistics of player {} in the course {}", playerId, courseId);
-    return playerNPCStatisticService.getAllStatisticsOfPlayer(courseId, playerId);
-  }
+    @Operation(summary = "Get all NPC statistics of a player")
+    @GetMapping("")
+    public List<PlayerNPCStatisticDTO> getPlayerNPCStatistics(
+        @PathVariable final int courseId,
+        @PathVariable final String playerId
+    ) {
+        log.debug("get statistics of player {} in the course {}", playerId, courseId);
+        return playerNPCStatisticService.getAllStatisticsOfPlayer(courseId, playerId);
+    }
 
-  @Operation(summary = "Get specific NPC statistic of a player")
-  @GetMapping("/{statisticId}")
-  public PlayerNPCStatisticDTO getPlayerNPCStatistic(
-    @PathVariable final int courseId,
-    @PathVariable final String playerId,
-    @PathVariable final UUID statisticId
-  ) {
-    log.debug("get statistic {}", statisticId);
-    return playerNPCStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);
-  }
+    @Operation(summary = "Get specific NPC statistic of a player")
+    @GetMapping("/{statisticId}")
+    public PlayerNPCStatisticDTO getPlayerNPCStatistic(
+        @PathVariable final int courseId,
+        @PathVariable final String playerId,
+        @PathVariable final UUID statisticId
+    ) {
+        log.debug("get statistic {}", statisticId);
+        return playerNPCStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);
+    }
 }

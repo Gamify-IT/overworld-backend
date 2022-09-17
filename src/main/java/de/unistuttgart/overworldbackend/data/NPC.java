@@ -25,47 +25,47 @@ import org.springframework.lang.Nullable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NPC {
 
-  @Id
-  @GeneratedValue(generator = "uuid")
-  UUID id;
+    @Id
+    @GeneratedValue(generator = "uuid")
+    UUID id;
 
-  int index;
+    int index;
 
-  @ElementCollection
-  List<String> text;
+    @ElementCollection
+    List<String> text;
 
-  @Nullable
-  String description;
+    @Nullable
+    String description;
 
-  @JsonBackReference
-  @ManyToOne
-  Course course;
+    @JsonBackReference
+    @ManyToOne
+    Course course;
 
-  @JsonBackReference
-  @ManyToOne
-  Area area;
+    @JsonBackReference
+    @ManyToOne
+    Area area;
 
-  public NPC(final List<String> text, final int index) {
-    this.text = text;
-    this.index = index;
-  }
+    public NPC(final List<String> text, final int index) {
+        this.text = text;
+        this.index = index;
+    }
 
-  public NPC(final List<String> text, final @org.jetbrains.annotations.Nullable String description, final int index) {
-    this.text = text;
-    this.index = index;
-    this.description = description;
-  }
+    public NPC(final List<String> text, final @org.jetbrains.annotations.Nullable String description, final int index) {
+        this.text = text;
+        this.index = index;
+        this.description = description;
+    }
 
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    final NPC npc = (NPC) o;
-    return id != null && Objects.equals(id, npc.id);
-  }
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        final NPC npc = (NPC) o;
+        return id != null && Objects.equals(id, npc.id);
+    }
 
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

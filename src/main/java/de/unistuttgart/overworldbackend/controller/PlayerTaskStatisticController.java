@@ -20,30 +20,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/courses/{courseId}/playerstatistics/{playerId}/player-task-statistics")
 public class PlayerTaskStatisticController {
 
-  @Autowired
-  private PlayerTaskStatisticRepository playerTaskStatisticRepository;
+    @Autowired
+    private PlayerTaskStatisticRepository playerTaskStatisticRepository;
 
-  @Autowired
-  private PlayerTaskStatisticService playerTaskStatisticService;
+    @Autowired
+    private PlayerTaskStatisticService playerTaskStatisticService;
 
-  @Operation(summary = "Get all minigame Statistics of Player")
-  @GetMapping("")
-  public List<PlayerTaskStatisticDTO> getPlayerTaskStatistics(
-    @PathVariable final int courseId,
-    @PathVariable final String playerId
-  ) {
-    log.debug("get Statistics of Player {} in the course {}", playerId, courseId);
-    return playerTaskStatisticService.getAllStatisticsOfPlayer(courseId, playerId);
-  }
+    @Operation(summary = "Get all minigame Statistics of Player")
+    @GetMapping("")
+    public List<PlayerTaskStatisticDTO> getPlayerTaskStatistics(
+        @PathVariable final int courseId,
+        @PathVariable final String playerId
+    ) {
+        log.debug("get Statistics of Player {} in the course {}", playerId, courseId);
+        return playerTaskStatisticService.getAllStatisticsOfPlayer(courseId, playerId);
+    }
 
-  @Operation(summary = "Get Statistic of a Player by id")
-  @GetMapping("/{statisticId}")
-  public PlayerTaskStatisticDTO getPlayerTaskStatistic(
-    @PathVariable final int courseId,
-    @PathVariable final String playerId,
-    @PathVariable final UUID statisticId
-  ) {
-    log.debug("get statistic {}", statisticId);
-    return playerTaskStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);
-  }
+    @Operation(summary = "Get Statistic of a Player by id")
+    @GetMapping("/{statisticId}")
+    public PlayerTaskStatisticDTO getPlayerTaskStatistic(
+        @PathVariable final int courseId,
+        @PathVariable final String playerId,
+        @PathVariable final UUID statisticId
+    ) {
+        log.debug("get statistic {}", statisticId);
+        return playerTaskStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);
+    }
 }

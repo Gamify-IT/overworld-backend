@@ -18,40 +18,43 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/playerstatistics")
 public class PlayerStatisticController {
 
-  @Autowired
-  private PlayerStatisticService playerStatisticService;
+    @Autowired
+    private PlayerStatisticService playerStatisticService;
 
-  @Autowired
-  private PlayerStatisticMapper playerStatisticMapper;
+    @Autowired
+    private PlayerStatisticMapper playerStatisticMapper;
 
-  @Operation(summary = "Get a playerStatistic from a player in a course by playerId and courseId")
-  @GetMapping("/{playerId}")
-  public PlayerStatisticDTO getPlayerstatistic(@PathVariable final int courseId, @PathVariable final String playerId) {
-    log.debug("get statistics from player {} in course {}", playerId, courseId);
-    return playerStatisticMapper.playerStatisticToPlayerstatisticDTO(
-      playerStatisticService.getPlayerStatisticFromCourse(courseId, playerId)
-    );
-  }
+    @Operation(summary = "Get a playerStatistic from a player in a course by playerId and courseId")
+    @GetMapping("/{playerId}")
+    public PlayerStatisticDTO getPlayerstatistic(
+        @PathVariable final int courseId,
+        @PathVariable final String playerId
+    ) {
+        log.debug("get statistics from player {} in course {}", playerId, courseId);
+        return playerStatisticMapper.playerStatisticToPlayerstatisticDTO(
+            playerStatisticService.getPlayerStatisticFromCourse(courseId, playerId)
+        );
+    }
 
-  @Operation(summary = "Create a playerStatistic in a course by playerId ")
-  @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping("")
-  public PlayerStatisticDTO createPlayerstatistic(
-    @PathVariable final int courseId,
-    @Valid @RequestBody final Player player
-  ) {
-    log.debug("create playerstatistic for userId {} in course {}", player, courseId);
-    return playerStatisticService.createPlayerStatisticInCourse(courseId, player);
-  }
+    @Operation(summary = "Create a playerStatistic in a course by playerId ")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("")
+    public PlayerStatisticDTO createPlayerstatistic(
+        @PathVariable final int courseId,
+        @Valid @RequestBody final Player player
+    ) {
+        log.debug("create playerstatistic for userId {} in course {}", player, courseId);
+        return playerStatisticService.createPlayerStatisticInCourse(courseId, player);
+    }
 
-  @Operation(summary = "Update a playerStatistic in a course by playerId ")
-  @PutMapping("/{playerId}")
-  public PlayerStatisticDTO updatePlayerStatistic(
-    @PathVariable final int courseId,
-    @PathVariable final String playerId,
-    @RequestBody final PlayerStatisticDTO playerstatisticDTO
-  ) {
-    log.debug("update playerStatistic for userId {} in course {} with {}", playerId, courseId, playerstatisticDTO);
-    return playerStatisticService.updatePlayerStatisticInCourse(courseId, playerId, playerstatisticDTO);
-  }
+    @Operation(summary = "Update a playerStatistic in a course by playerId ")
+    @PutMapping("/{playerId}")
+    public PlayerStatisticDTO updatePlayerStatistic(
+        @PathVariable final int courseId,
+        @PathVariable final String playerId,
+        @RequestBody final PlayerStatisticDTO playerstatisticDTO
+    ) {
+        log.debug("update playerStatistic for userId {} in course {} with {}", playerId, courseId, playerstatisticDTO);
+        return playerStatisticService.updatePlayerStatisticInCourse(courseId, playerId, playerstatisticDTO);
+    }
 }

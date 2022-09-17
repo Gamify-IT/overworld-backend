@@ -24,49 +24,49 @@ import org.springframework.lang.Nullable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MinigameTask {
 
-  @Id
-  @GeneratedValue(generator = "uuid")
-  UUID id;
+    @Id
+    @GeneratedValue(generator = "uuid")
+    UUID id;
 
-  int index;
+    int index;
 
-  @Enumerated(EnumType.STRING)
-  Minigame game;
+    @Enumerated(EnumType.STRING)
+    Minigame game;
 
-  UUID configurationId;
+    UUID configurationId;
 
-  @Nullable
-  String description;
+    @Nullable
+    String description;
 
-  @ManyToOne
-  Course course;
+    @ManyToOne
+    Course course;
 
-  @ManyToOne
-  Area area;
+    @ManyToOne
+    Area area;
 
-  public MinigameTask(final Minigame game, final UUID configurationId, final int index) {
-    this.game = game;
-    this.configurationId = configurationId;
-    this.index = index;
-  }
+    public MinigameTask(final Minigame game, final UUID configurationId, final int index) {
+        this.game = game;
+        this.configurationId = configurationId;
+        this.index = index;
+    }
 
-  public MinigameTask(final Minigame game, String description, final UUID configurationId, final int index) {
-    this.game = game;
-    this.configurationId = configurationId;
-    this.index = index;
-    this.description = description;
-  }
+    public MinigameTask(final Minigame game, String description, final UUID configurationId, final int index) {
+        this.game = game;
+        this.configurationId = configurationId;
+        this.index = index;
+        this.description = description;
+    }
 
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    final MinigameTask that = (MinigameTask) o;
-    return id != null && Objects.equals(id, that.id);
-  }
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        final MinigameTask that = (MinigameTask) o;
+        return id != null && Objects.equals(id, that.id);
+    }
 
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

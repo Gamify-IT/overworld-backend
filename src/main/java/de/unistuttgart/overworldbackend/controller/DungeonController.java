@@ -16,41 +16,41 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/worlds/{worldIndex}/dungeons")
 public class DungeonController {
 
-  @Autowired
-  private DungeonService dungeonService;
+    @Autowired
+    private DungeonService dungeonService;
 
-  @Autowired
-  private DungeonMapper dungeonMapper;
+    @Autowired
+    private DungeonMapper dungeonMapper;
 
-  @Operation(summary = "Get all dungeons of a world")
-  @GetMapping("")
-  public Set<DungeonDTO> getDungeons(@PathVariable final int courseId, @PathVariable final int worldIndex) {
-    log.debug("get dungeons of world {} of course {}", worldIndex, courseId);
-    return dungeonService.getDungeonsFromWorld(courseId, worldIndex);
-  }
+    @Operation(summary = "Get all dungeons of a world")
+    @GetMapping("")
+    public Set<DungeonDTO> getDungeons(@PathVariable final int courseId, @PathVariable final int worldIndex) {
+        log.debug("get dungeons of world {} of course {}", worldIndex, courseId);
+        return dungeonService.getDungeonsFromWorld(courseId, worldIndex);
+    }
 
-  @Operation(summary = "Get a dungeon by its index in a world")
-  @GetMapping("/{dungeonIndex}")
-  public DungeonDTO getDungeon(
-    @PathVariable final int courseId,
-    @PathVariable final int worldIndex,
-    @PathVariable final int dungeonIndex
-  ) {
-    log.debug("get dungeon {} of world {} of course {}", dungeonIndex, worldIndex, courseId);
-    return dungeonMapper.dungeonToDungeonDTO(
-      dungeonService.getDungeonByIndexFromCourse(courseId, worldIndex, dungeonIndex)
-    );
-  }
+    @Operation(summary = "Get a dungeon by its index in a world")
+    @GetMapping("/{dungeonIndex}")
+    public DungeonDTO getDungeon(
+        @PathVariable final int courseId,
+        @PathVariable final int worldIndex,
+        @PathVariable final int dungeonIndex
+    ) {
+        log.debug("get dungeon {} of world {} of course {}", dungeonIndex, worldIndex, courseId);
+        return dungeonMapper.dungeonToDungeonDTO(
+            dungeonService.getDungeonByIndexFromCourse(courseId, worldIndex, dungeonIndex)
+        );
+    }
 
-  @Operation(summary = "Update a dungeon by its index in a world")
-  @PutMapping("/{dungeonIndex}")
-  public DungeonDTO updateDungeon(
-    @PathVariable final int courseId,
-    @PathVariable final int worldIndex,
-    @PathVariable final int dungeonIndex,
-    @RequestBody final DungeonDTO dungeonDTO
-  ) {
-    log.debug("update dungeon {} of world {} of course {} with {}", dungeonIndex, worldIndex, courseId, dungeonDTO);
-    return dungeonService.updateDungeonFromCourse(courseId, worldIndex, dungeonIndex, dungeonDTO);
-  }
+    @Operation(summary = "Update a dungeon by its index in a world")
+    @PutMapping("/{dungeonIndex}")
+    public DungeonDTO updateDungeon(
+        @PathVariable final int courseId,
+        @PathVariable final int worldIndex,
+        @PathVariable final int dungeonIndex,
+        @RequestBody final DungeonDTO dungeonDTO
+    ) {
+        log.debug("update dungeon {} of world {} of course {} with {}", dungeonIndex, worldIndex, courseId, dungeonDTO);
+        return dungeonService.updateDungeonFromCourse(courseId, worldIndex, dungeonIndex, dungeonDTO);
+    }
 }

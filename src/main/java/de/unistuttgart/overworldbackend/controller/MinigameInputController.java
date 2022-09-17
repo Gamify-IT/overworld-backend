@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/internal")
 public class MinigameInputController {
 
-  @Autowired
-  PlayerTaskStatisticService playerTaskStatisticService;
+    @Autowired
+    PlayerTaskStatisticService playerTaskStatisticService;
 
-  @Operation(summary = "Submit statistics from a minigame run")
-  @PostMapping("/submit-game-pass")
-  public PlayerTaskStatisticDTO inputData(@Valid @RequestBody final PlayerTaskStatisticData data) {
-    log.debug("submitted data from game run {}", data);
-    return playerTaskStatisticService.submitData(data);
-  }
+    @Operation(summary = "Submit statistics from a minigame run")
+    @PostMapping("/submit-game-pass")
+    public PlayerTaskStatisticDTO inputData(@Valid @RequestBody final PlayerTaskStatisticData data) {
+        log.debug("submitted data from game run {}", data);
+        return playerTaskStatisticService.submitData(data);
+    }
 }
