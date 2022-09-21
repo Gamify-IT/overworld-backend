@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 /**
  * A world is an instance of an Area.
  * <p>
- * A world contains multiple dungeons, minigame tasks and NPCs to interact with.
- * @see Area
+ * In addition to the functionality offered by dungeons, a world can also hold several dungeons as "sub-levels".
+ * @see Dungeon
  */
 @Entity
 @Getter

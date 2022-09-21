@@ -40,7 +40,19 @@ public class Area {
    */
   String topicName;
 
+  /**
+   * Whether the area should be shown to students.
+   *
+   * @see #configured
+   */
   boolean active;
+
+  /**
+   * Whether the lecturer has configured the area already.
+   * <p>
+   * The relation between {@link #active} and {@code configured} is {@code active implies configured}.<br>
+   * The case {@code active && !configured} is illegal.
+   */
   boolean configured;
 
   @OneToMany(cascade = CascadeType.ALL)
