@@ -217,7 +217,7 @@ public class CourseService {
         final String accessToken
     ) {
         final Course course = getCourse(id);
-        final List<String> errorMessages = new ArrayList<>();
+        final Set<String> errorMessages = new HashSet<>();
         final Course cloneCourse = new Course(
             courseInitialData.getCourseName(),
             courseInitialData.getSemester(),
@@ -251,7 +251,7 @@ public class CourseService {
      * @param accessToken access Token in the cookie
      * @return cloned world
      */
-    private World cloneWorld(final World oldWorld, final String accessToken, final List<String> errorMessages) {
+    private World cloneWorld(final World oldWorld, final String accessToken, final Set<String> errorMessages) {
         final World world = new World(
             oldWorld.getStaticName(),
             oldWorld.getTopicName(),
@@ -286,7 +286,7 @@ public class CourseService {
      * @param accessToken access Token in the cookie
      * @return cloned dungeon
      */
-    private Dungeon cloneDungeon(final Dungeon oldDungeon, final String accessToken, final List<String> errorMessages) {
+    private Dungeon cloneDungeon(final Dungeon oldDungeon, final String accessToken, final Set<String> errorMessages) {
         final Dungeon dungeon = new Dungeon(
             oldDungeon.getStaticName(),
             oldDungeon.getTopicName(),
@@ -320,7 +320,7 @@ public class CourseService {
     private MinigameTask cloneMinigameTask(
         final MinigameTask minigameTask,
         final String accessToken,
-        final List<String> errorMessages
+        final Set<String> errorMessages
     ) {
         if (minigameTask.getGame() == null) {
             return new MinigameTask(null, minigameTask.getDescription(), null, minigameTask.getIndex());
@@ -345,7 +345,7 @@ public class CourseService {
     private MinigameTask cloneBugfinder(
         final MinigameTask minigameTask,
         final String accessToken,
-        final List<String> errorMessages
+        final Set<String> errorMessages
     ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.BUGFINDER, minigameTask.getDescription(), null, minigameTask.getIndex());
@@ -370,20 +370,17 @@ public class CourseService {
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                if (!errorMessages.contains("bugfinder-backend not present")) {
-                    log.debug(CLONE_ERROR_MESSAGE, e);
-                    errorMessages.add("bugfinder-backend not present");
-                    return new MinigameTask(Minigame.BUGFINDER, "", null, minigameTask.getIndex());
-                }
+                log.debug(CLONE_ERROR_MESSAGE, e);
+                errorMessages.add("bugfinder-backend not present");
+                return new MinigameTask(Minigame.BUGFINDER, "", null, minigameTask.getIndex());
             }
         }
-        return null;
     }
 
     private MinigameTask cloneCrosswordpuzzle(
         final MinigameTask minigameTask,
         final String accessToken,
-        final List<String> errorMessages
+        final Set<String> errorMessages
     ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(
@@ -408,20 +405,17 @@ public class CourseService {
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                if (!errorMessages.contains("crosswordpuzzle-backend not present")) {
-                    log.debug(CLONE_ERROR_MESSAGE, e);
-                    errorMessages.add("crosswordpuzzle-backend not present");
-                    return new MinigameTask(Minigame.CROSSWORDPUZZLE, "", null, minigameTask.getIndex());
-                }
+                log.debug(CLONE_ERROR_MESSAGE, e);
+                errorMessages.add("crosswordpuzzle-backend not present");
+                return new MinigameTask(Minigame.CROSSWORDPUZZLE, "", null, minigameTask.getIndex());
             }
         }
-        return null;
     }
 
     private MinigameTask cloneFinitequiz(
         final MinigameTask minigameTask,
         final String accessToken,
-        final List<String> errorMessages
+        final Set<String> errorMessages
     ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.FINITEQUIZ, minigameTask.getDescription(), null, minigameTask.getIndex());
@@ -441,20 +435,17 @@ public class CourseService {
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                if (!errorMessages.contains("finitequiz-backend not present")) {
-                    log.debug(CLONE_ERROR_MESSAGE, e);
-                    errorMessages.add("finitequiz-backend not present");
-                    return new MinigameTask(Minigame.FINITEQUIZ, "", null, minigameTask.getIndex());
-                }
+                log.debug(CLONE_ERROR_MESSAGE, e);
+                errorMessages.add("finitequiz-backend not present");
+                return new MinigameTask(Minigame.FINITEQUIZ, "", null, minigameTask.getIndex());
             }
         }
-        return null;
     }
 
     private MinigameTask cloneChickenshock(
         final MinigameTask minigameTask,
         final String accessToken,
-        final List<String> errorMessages
+        final Set<String> errorMessages
     ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(
@@ -479,13 +470,10 @@ public class CourseService {
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                if (!errorMessages.contains("chickenshock-backend not present")) {
-                    log.debug(CLONE_ERROR_MESSAGE, e);
-                    errorMessages.add("chickenshock-backend not present");
-                    return new MinigameTask(Minigame.CHICKENSHOCK, "", null, minigameTask.getIndex());
-                }
+                log.debug(CLONE_ERROR_MESSAGE, e);
+                errorMessages.add("chickenshock-backend not present");
+                return new MinigameTask(Minigame.CHICKENSHOCK, "", null, minigameTask.getIndex());
             }
         }
-        return null;
     }
 }

@@ -45,7 +45,7 @@ public class WorldService {
             );
     }
 
-    public Optional<World> getOptionalWorldByIndexFromCourse(final int courseId, final int worldIndex) {
+    public Optional<World> getOptionalWorldByIndexFromCourse(final int worldIndex, final int courseId) {
         return worldRepository.findByIndexAndCourseId(worldIndex, courseId);
     }
 
