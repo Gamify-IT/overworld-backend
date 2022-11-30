@@ -59,11 +59,7 @@ public class CourseService {
     @Autowired
     private CourseMapper courseMapper;
 
-    private final List<String> errorMessages;
-
     public CourseService() {
-        errorMessages = new ArrayList<>();
-        configCourse = new CourseConfig();
         final ObjectMapper mapper = new ObjectMapper();
 
         final InputStream inputStream = TypeReference.class.getResourceAsStream("/config.json");
@@ -72,6 +68,10 @@ public class CourseService {
         } catch (final IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
     }
 
     /**
@@ -153,18 +153,14 @@ public class CourseService {
         worldConfig
             .getDungeons()
             .forEach(dungeonConfig -> dungeons.add(configureDungeon(dungeonId.getAndIncrement(), dungeonConfig)));
-        for (int minigameIndex = 1; minigameIndex <= worldConfig.getNumberOfMinigames(); minigameIndex++) {
-            final MinigameTask minigame = new MinigameTask(null, null, minigameIndex);
-            minigames.add(minigame);
-        }
-        for (int npcIndex = 1; npcIndex <= worldConfig.getNumberOfNPCs(); npcIndex++) {
-            final NPC npc = new NPC(new ArrayList<>(), npcIndex);
-            npcs.add(npc);
-        }
-        for (int bookIndex = 1; bookIndex <= worldConfig.getNumberOfBooks(); bookIndex++) {
-            final Book book = new Book("", bookIndex);
-            books.add(book);
-        }
+        configureArea(
+            minigames,
+            npcs,
+            books,
+            worldConfig.getNumberOfMinigames(),
+            worldConfig.getNumberOfNPCs(),
+            worldConfig.getNumberOfBooks()
+        );
         final World world = new World(
             worldConfig.getStaticName(),
             "",
@@ -182,19 +178,37 @@ public class CourseService {
         final Set<MinigameTask> minigames = new HashSet<>();
         final Set<NPC> npcs = new HashSet<>();
         final Set<Book> books = new HashSet<>();
-        for (int minigameIndex = 1; minigameIndex <= dungeonConfig.getNumberOfMinigames(); minigameIndex++) {
+        configureArea(
+            minigames,
+            npcs,
+            books,
+            dungeonConfig.getNumberOfMinigames(),
+            dungeonConfig.getNumberOfNPCs(),
+            dungeonConfig.getNumberOfBooks()
+        );
+        return new Dungeon(dungeonConfig.getStaticName(), "", false, minigames, npcs, books, dungeonId);
+    }
+
+    private void configureArea(
+        final Set<MinigameTask> minigames,
+        final Set<NPC> npcs,
+        final Set<Book> books,
+        final int numberOfMinigames,
+        final int numberOfNPCs,
+        final int numberOfBooks
+    ) {
+        for (int minigameIndex = 1; minigameIndex <= numberOfMinigames; minigameIndex++) {
             final MinigameTask minigame = new MinigameTask(null, null, minigameIndex);
             minigames.add(minigame);
         }
-        for (int npcIndex = 1; npcIndex <= dungeonConfig.getNumberOfNPCs(); npcIndex++) {
+        for (int npcIndex = 1; npcIndex <= numberOfNPCs; npcIndex++) {
             final NPC npc = new NPC(new ArrayList<>(), npcIndex);
             npcs.add(npc);
         }
-        for (int bookIndex = 1; bookIndex <= dungeonConfig.getNumberOfBooks(); bookIndex++) {
+        for (int bookIndex = 1; bookIndex <= numberOfBooks; bookIndex++) {
             final Book book = new Book("", bookIndex);
             books.add(book);
         }
-        return new Dungeon(dungeonConfig.getStaticName(), "", false, minigames, npcs, books, dungeonId);
     }
 
     public CourseCloneDTO cloneCourse(
@@ -202,8 +216,8 @@ public class CourseService {
         final CourseInitialData courseInitialData,
         final String accessToken
     ) {
-        errorMessages.clear();
         final Course course = getCourse(id);
+        final List<String> errorMessages = new ArrayList<>();
         final Course cloneCourse = new Course(
             courseInitialData.getCourseName(),
             courseInitialData.getSemester(),
@@ -212,7 +226,7 @@ public class CourseService {
             course
                 .getWorlds()
                 .parallelStream()
-                .map(world -> cloneWorld(world, accessToken))
+                .map(world -> cloneWorld(world, accessToken, errorMessages))
                 .collect(Collectors.toCollection(ArrayList::new))
         );
 
@@ -237,7 +251,7 @@ public class CourseService {
      * @param accessToken access Token in the cookie
      * @return cloned world
      */
-    private World cloneWorld(final World oldWorld, final String accessToken) {
+    private World cloneWorld(final World oldWorld, final String accessToken, final List<String> errorMessages) {
         final World world = new World(
             oldWorld.getStaticName(),
             oldWorld.getTopicName(),
@@ -246,14 +260,14 @@ public class CourseService {
             oldWorld
                 .getMinigameTasks()
                 .parallelStream()
-                .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken))
+                .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken, errorMessages))
                 .collect(Collectors.toCollection(HashSet::new)),
             oldWorld.getNpcs().parallelStream().map(this::cloneNPC).collect(Collectors.toCollection(HashSet::new)),
             oldWorld.getBooks().parallelStream().map(this::cloneBook).collect(Collectors.toCollection(HashSet::new)),
             oldWorld
                 .getDungeons()
                 .parallelStream()
-                .map(dungeon -> cloneDungeon(dungeon, accessToken))
+                .map(dungeon -> cloneDungeon(dungeon, accessToken, errorMessages))
                 .sorted(Comparator.comparingInt(Area::getIndex))
                 .collect(Collectors.toCollection(ArrayList::new)),
             oldWorld.getIndex()
@@ -272,7 +286,7 @@ public class CourseService {
      * @param accessToken access Token in the cookie
      * @return cloned dungeon
      */
-    private Dungeon cloneDungeon(final Dungeon oldDungeon, final String accessToken) {
+    private Dungeon cloneDungeon(final Dungeon oldDungeon, final String accessToken, final List<String> errorMessages) {
         final Dungeon dungeon = new Dungeon(
             oldDungeon.getStaticName(),
             oldDungeon.getTopicName(),
@@ -280,7 +294,7 @@ public class CourseService {
             oldDungeon
                 .getMinigameTasks()
                 .parallelStream()
-                .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken))
+                .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken, errorMessages))
                 .collect(Collectors.toCollection(HashSet::new)),
             oldDungeon.getNpcs().parallelStream().map(this::cloneNPC).collect(Collectors.toCollection(HashSet::new)),
             oldDungeon.getBooks().parallelStream().map(this::cloneBook).collect(Collectors.toCollection(HashSet::new)),
@@ -303,7 +317,11 @@ public class CourseService {
         return new Book(book.getText(), book.getDescription(), book.getIndex());
     }
 
-    private MinigameTask cloneMinigameTask(final MinigameTask minigameTask, final String accessToken) {
+    private MinigameTask cloneMinigameTask(
+        final MinigameTask minigameTask,
+        final String accessToken,
+        final List<String> errorMessages
+    ) {
         if (minigameTask.getGame() == null) {
             return new MinigameTask(null, minigameTask.getDescription(), null, minigameTask.getIndex());
         }
@@ -311,20 +329,24 @@ public class CourseService {
             case NONE:
                 return new MinigameTask(Minigame.NONE, null, minigameTask.getIndex());
             case CHICKENSHOCK:
-                return cloneChickenshock(minigameTask, accessToken);
+                return cloneChickenshock(minigameTask, accessToken, errorMessages);
             case FINITEQUIZ:
-                return cloneFinitequiz(minigameTask, accessToken);
+                return cloneFinitequiz(minigameTask, accessToken, errorMessages);
             case CROSSWORDPUZZLE:
-                return cloneCrosswordpuzzle(minigameTask, accessToken);
+                return cloneCrosswordpuzzle(minigameTask, accessToken, errorMessages);
             case BUGFINDER:
-                return cloneBugfinder(minigameTask, accessToken);
+                return cloneBugfinder(minigameTask, accessToken, errorMessages);
             default:
                 errorMessages.add(String.format("minigame %s doesn't exist", minigameTask.getGame()));
                 return new MinigameTask(Minigame.NONE, "", null, minigameTask.getIndex());
         }
     }
 
-    private MinigameTask cloneBugfinder(final MinigameTask minigameTask, final String accessToken) {
+    private MinigameTask cloneBugfinder(
+        final MinigameTask minigameTask,
+        final String accessToken,
+        final List<String> errorMessages
+    ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.BUGFINDER, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
@@ -358,7 +380,11 @@ public class CourseService {
         return null;
     }
 
-    private MinigameTask cloneCrosswordpuzzle(final MinigameTask minigameTask, final String accessToken) {
+    private MinigameTask cloneCrosswordpuzzle(
+        final MinigameTask minigameTask,
+        final String accessToken,
+        final List<String> errorMessages
+    ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(
                 Minigame.CROSSWORDPUZZLE,
@@ -392,7 +418,11 @@ public class CourseService {
         return null;
     }
 
-    private MinigameTask cloneFinitequiz(final MinigameTask minigameTask, final String accessToken) {
+    private MinigameTask cloneFinitequiz(
+        final MinigameTask minigameTask,
+        final String accessToken,
+        final List<String> errorMessages
+    ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.FINITEQUIZ, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
@@ -421,7 +451,11 @@ public class CourseService {
         return null;
     }
 
-    private MinigameTask cloneChickenshock(final MinigameTask minigameTask, final String accessToken) {
+    private MinigameTask cloneChickenshock(
+        final MinigameTask minigameTask,
+        final String accessToken,
+        final List<String> errorMessages
+    ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(
                 Minigame.CHICKENSHOCK,

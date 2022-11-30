@@ -5,16 +5,16 @@ import de.unistuttgart.overworldbackend.data.enums.Minigame;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerStatisticMapper;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
-import de.unistuttgart.overworldbackend.repositories.WorldRepository;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,9 +25,6 @@ public class PlayerStatisticService {
 
     @Autowired
     private PlayerStatisticRepository playerstatisticRepository;
-
-    @Autowired
-    private WorldRepository worldRepository;
 
     @Autowired
     private PlayerTaskStatisticRepository playerTaskStatisticRepository;
@@ -167,8 +164,8 @@ public class PlayerStatisticService {
                     .ifPresentOrElse(
                         playerStatistic::addUnlockedArea,
                         () ->
-                            worldRepository
-                                .findByIndexAndCourseId(currentWorld.getIndex() + 1, courseId)
+                            worldService
+                                .getOptionalWorldByIndexFromCourse(currentWorld.getIndex() + 1, courseId)
                                 .filter(Area::isConfigured)
                                 .ifPresent(playerStatistic::addUnlockedArea)
                     );
@@ -184,8 +181,8 @@ public class PlayerStatisticService {
                     .ifPresentOrElse(
                         playerStatistic::addUnlockedArea,
                         () ->
-                            worldRepository
-                                .findByIndexAndCourseId(currentDungeon.getWorld().getIndex() + 1, courseId)
+                            worldService
+                                .getOptionalWorldByIndexFromCourse(currentDungeon.getWorld().getIndex() + 1, courseId)
                                 .filter(Area::isConfigured)
                                 .ifPresent(playerStatistic::addUnlockedArea)
                     );

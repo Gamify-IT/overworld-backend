@@ -4,6 +4,8 @@ import de.unistuttgart.overworldbackend.data.World;
 import de.unistuttgart.overworldbackend.data.WorldDTO;
 import de.unistuttgart.overworldbackend.data.mapper.WorldMapper;
 import de.unistuttgart.overworldbackend.repositories.WorldRepository;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,14 @@ public class WorldService {
                     )
                 )
             );
+    }
+
+    public Optional<World> getOptionalWorldByIndexFromCourse(final int courseId, final int worldIndex) {
+        return worldRepository.findByIndexAndCourseId(worldIndex, courseId);
+    }
+
+    public Set<World> getAllWorldsFromCourse(final int courseId) {
+        return worldRepository.findAllByCourseId(courseId);
     }
 
     /**

@@ -1,12 +1,5 @@
 package de.unistuttgart.overworldbackend;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import de.unistuttgart.overworldbackend.data.*;
@@ -16,9 +9,6 @@ import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.MinigameTaskRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskActionLogRepository;
-import java.util.*;
-import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +23,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @Transactional
@@ -328,6 +329,7 @@ class MinigameInputControllerTest {
                 .andExpect(status().isOk());
         }
 
+        assert initialPlayerStatisticDTO.getId() != null;
         final PlayerStatistic playerstatistic = playerstatisticRepository
             .findById(initialPlayerStatisticDTO.getId())
             .get();
@@ -343,7 +345,7 @@ class MinigameInputControllerTest {
             playerTaskStatisticData.setUserId(initialPlayerStatisticDTO.getUserId());
             playerTaskStatisticData.setGame(minigameTask.getGame());
             playerTaskStatisticData.setConfigurationId(minigameTask.getConfigurationId());
-            playerTaskStatisticData.setScore(80);
+            playerTaskStatisticData.setScore(100);
 
             final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
@@ -360,6 +362,7 @@ class MinigameInputControllerTest {
             .findById(initialPlayerStatisticDTO.getId())
             .get();
         final List<Area> unlockedAreas = playerstatistic.getUnlockedAreas();
+        unlockedAreas.forEach(area -> System.out.println(area.getStaticName()));
         assertTrue(unlockedAreas.contains(initialWorld2));
     }
 
@@ -386,6 +389,7 @@ class MinigameInputControllerTest {
                 )
                 .andExpect(status().isOk());
         }
+        assert initialPlayerStatisticDTO.getId() != null;
         final PlayerStatistic playerstatistic = playerstatisticRepository
             .findById(initialPlayerStatisticDTO.getId())
             .get();

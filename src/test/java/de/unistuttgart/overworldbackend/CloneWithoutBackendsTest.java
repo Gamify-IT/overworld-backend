@@ -169,6 +169,7 @@ public class CloneWithoutBackendsTest {
             CourseCloneDTO.class
         );
         final List<String> errorMessages = courseCloneDTO.getErrorMessages();
+        System.out.println(errorMessages);
         assertTrue(errorMessages.contains("chickenshock-backend not present"));
         assertTrue(errorMessages.contains("finitequiz-backend not present"));
         assertTrue(errorMessages.contains("crosswordpuzzle-backend not present"));
