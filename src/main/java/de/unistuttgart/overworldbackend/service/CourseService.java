@@ -9,11 +9,6 @@ import de.unistuttgart.overworldbackend.data.config.DungeonConfig;
 import de.unistuttgart.overworldbackend.data.config.WorldConfig;
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
 import de.unistuttgart.overworldbackend.data.mapper.CourseMapper;
-import de.unistuttgart.overworldbackend.data.minigames.bugfinder.BugfinderConfiguration;
-import de.unistuttgart.overworldbackend.data.minigames.chickenshock.ChickenshockConfiguration;
-import de.unistuttgart.overworldbackend.data.minigames.crosswordpuzzle.CrosswordpuzzleConfiguration;
-import de.unistuttgart.overworldbackend.data.minigames.finitequiz.FinitequizConfiguration;
-import de.unistuttgart.overworldbackend.data.minigames.towercrush.TowercrushConfiguration;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
@@ -359,26 +354,15 @@ public class CourseService {
             return new MinigameTask(Minigame.BUGFINDER, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
             try {
-                BugfinderConfiguration config = bugfinderClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
-                config.setId(null);
-                config
-                    .getCodes()
-                    .forEach(bugfinderCode -> {
-                        bugfinderCode.setId(null);
-                        bugfinderCode.getWords().forEach(bugfinderWord -> bugfinderWord.setId(null));
-                    });
-                config = bugfinderClient.postConfiguration(accessToken, config);
+                final UUID cloneId = bugfinderClient.postClone(accessToken, minigameTask.getConfigurationId());
                 return new MinigameTask(
                     Minigame.BUGFINDER,
                     minigameTask.getDescription(),
-                    config.getId(),
+                        cloneId,
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                log.debug(CLONE_ERROR_MESSAGE, e);
+                log.info(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("bugfinder-backend not present");
                 return new MinigameTask(Minigame.BUGFINDER, "", null, minigameTask.getIndex());
             }
@@ -399,21 +383,15 @@ public class CourseService {
             );
         } else {
             try {
-                CrosswordpuzzleConfiguration config = crosswordpuzzleClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
-                config.setId(null);
-                config.getQuestions().forEach(crosswordpuzzleQuestion -> crosswordpuzzleQuestion.setId(null));
-                config = crosswordpuzzleClient.postConfiguration(accessToken, config);
+                final UUID cloneId = crosswordpuzzleClient.postClone(accessToken, minigameTask.getConfigurationId());
                 return new MinigameTask(
                     Minigame.CROSSWORDPUZZLE,
                     minigameTask.getDescription(),
-                    config.getId(),
+                    cloneId,
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                log.debug(CLONE_ERROR_MESSAGE, e);
+                log.info(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("crosswordpuzzle-backend not present");
                 return new MinigameTask(Minigame.CROSSWORDPUZZLE, "", null, minigameTask.getIndex());
             }
@@ -429,46 +407,34 @@ public class CourseService {
             return new MinigameTask(Minigame.FINITEQUIZ, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
             try {
-                FinitequizConfiguration config = finitequizClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
-                config.setId(null);
-                config.getQuestions().forEach(finitequizQuestion -> finitequizQuestion.setId(null));
-                config = finitequizClient.postConfiguration(accessToken, config);
+                final UUID cloneId = finitequizClient.postClone(accessToken, minigameTask.getConfigurationId());
                 return new MinigameTask(
                     Minigame.FINITEQUIZ,
                     minigameTask.getDescription(),
-                    config.getId(),
+                    cloneId,
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                log.debug(CLONE_ERROR_MESSAGE, e);
+                log.info(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("finitequiz-backend not present");
                 return new MinigameTask(Minigame.FINITEQUIZ, "", null, minigameTask.getIndex());
             }
         }
     }
-    private MinigameTask cloneTowercrush(final MinigameTask minigameTask, final String accessToken, Set<String> errorMessages) {
+    private MinigameTask cloneTowercrush(final MinigameTask minigameTask, final String accessToken, final Set<String> errorMessages) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.TOWERCRUSH, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
             try {
-                TowercrushConfiguration config = towercrushClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
-                config.setId(null);
-                config.getQuestions().forEach(towercrushQuestion -> towercrushQuestion.setId(null));
-                config = towercrushClient.postConfiguration(accessToken, config);
+                final UUID cloneId = towercrushClient.postClone(accessToken, minigameTask.getConfigurationId());
                 return new MinigameTask(
                     Minigame.TOWERCRUSH,
                     minigameTask.getDescription(),
-                    config.getId(),
+                    cloneId,
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                log.debug(CLONE_ERROR_MESSAGE, e);
+                log.info(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("towercrush-backend not present");
                 return new MinigameTask(Minigame.TOWERCRUSH, "", null, minigameTask.getIndex());
             }
@@ -489,21 +455,15 @@ public class CourseService {
             );
         } else {
             try {
-                ChickenshockConfiguration config = chickenshockClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
-                config.setId(null);
-                config.getQuestions().forEach(chickenshockQuestion -> chickenshockQuestion.setId(null));
-                config = chickenshockClient.postConfiguration(accessToken, config);
+                final UUID cloneId = chickenshockClient.postClone(accessToken, minigameTask.getConfigurationId());
                 return new MinigameTask(
                     Minigame.CHICKENSHOCK,
                     minigameTask.getDescription(),
-                    config.getId(),
+                    cloneId,
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
-                log.debug(CLONE_ERROR_MESSAGE, e);
+                log.info(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("chickenshock-backend not present");
                 return new MinigameTask(Minigame.CHICKENSHOCK, "", null, minigameTask.getIndex());
             }
