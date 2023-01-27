@@ -37,6 +37,7 @@ services:
         chickenshock/default.sql
         finitequiz/default.sql
         crosswordpuzzle/default.sql
+        bugfinder/default.sql
 
   keycloak-db:
     container_name: keycloak-db
@@ -99,6 +100,16 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+  towercrush-db:
+    image: postgres:14-alpine
+    pull_policy: always
+    restart: always
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
   # --- backends ---
   # These backend services contain the logic of the Gamify-IT services.
   keycloak:
@@ -141,13 +152,14 @@ services:
       - CROSSWORDPUZZLE_URL=http://crosswordpuzzle-backend/api/v1
       - FINITEQUIZ_URL=http://finitequiz-backend/api/v1
       - BUGFINDER_URL=http://bugfinder-backend/api/v1
+      - TOWERCRUSH_URL=http://towercrush-backend/api/v1
       - KEYCLOAK_ISSUER=http://localhost/keycloak/realms/Gamify-IT
       - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
 
   crosswordpuzzle-backend:
     container_name:   crosswordpuzzle-backend
-    image: ghcr.io/gamify-it/crosswordpuzzle-backend:main
+    image: ghcr.io/gamify-it/crosswordpuzzle-backend:maintenance-clone-config
     restart: always
     expose:
       - "80"
@@ -163,7 +175,7 @@ services:
 
   chickenshock-backend:
     container_name:   chickenshock-backend
-    image: ghcr.io/gamify-it/chickenshock-backend:main
+    image: ghcr.io/gamify-it/chickenshock-backend:maintenance-clone-config
     restart: always
     expose:
       - "80"
@@ -179,7 +191,7 @@ services:
 
   finitequiz-backend:
     container_name: finitequiz-backend
-    image: ghcr.io/gamify-it/finitequiz-backend:main
+    image: ghcr.io/gamify-it/finitequiz-backend:maintenance-clone-config
     pull_policy: always
     restart: always
     expose:
@@ -195,7 +207,7 @@ services:
       - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
   bugfinder-backend:
-    image: ghcr.io/gamify-it/bugfinder-backend:main
+    image: ghcr.io/gamify-it/bugfinder-backend:maintenance-clone-config
     pull_policy: always
     restart: always
     expose:
@@ -210,6 +222,21 @@ services:
       - KEYCLOAK_ISSUER=http://localhost/keycloak/realms/Gamify-IT
       - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
+  towercrush-backend:
+    image: ghcr.io/gamify-it/towercrush-backend:maintenance-clone-config
+    pull_policy: always
+    restart: always
+    expose:
+      - "80"
+    depends_on:
+      - bugfinder-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_URL=postgresql://towercrush-db:5432/postgres
+      - OVERWORLD_URL=http://overworld-backend/api/v1
+      - KEYCLOAK_ISSUER=http://localhost/keycloak/realms/Gamify-IT
+      - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
   # --- frontends ---
   # These frontend services contain the user interface of the Gamify-IT services.

@@ -11,6 +11,13 @@ import de.unistuttgart.overworldbackend.data.enums.Minigame;
 import de.unistuttgart.overworldbackend.data.mapper.CourseMapper;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import feign.FeignException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CourseService {
 
     private static final boolean DEFAULT_IS_ACTIVE = true;
@@ -35,16 +37,33 @@ public class CourseService {
 
     CourseConfig configCourse;
 
-    @Autowired
     ChickenshockClient chickenshockClient;
 
     @Autowired
+    public void ChickenshockClient(final ChickenshockClient chickenshockClient) {
+        this.chickenshockClient = chickenshockClient;
+    }
+
     FinitequizClient finitequizClient;
+
     @Autowired
+    public void FinitequizClient(final FinitequizClient finitequizClient) {
+        this.finitequizClient = finitequizClient;
+    }
+
     TowercrushClient towercrushClient;
 
     @Autowired
+    public void TowercrushClient(final TowercrushClient towercrushClient) {
+        this.towercrushClient = towercrushClient;
+    }
+
     CrosswordpuzzleClient crosswordpuzzleClient;
+
+    @Autowired
+    public void CrosswordpuzzleClient(final CrosswordpuzzleClient crosswordpuzzleClient) {
+        this.crosswordpuzzleClient = crosswordpuzzleClient;
+    }
 
     @Autowired
     BugfinderClient bugfinderClient;
@@ -358,7 +377,7 @@ public class CourseService {
                 return new MinigameTask(
                     Minigame.BUGFINDER,
                     minigameTask.getDescription(),
-                        cloneId,
+                    cloneId,
                     minigameTask.getIndex()
                 );
             } catch (final FeignException e) {
@@ -421,7 +440,12 @@ public class CourseService {
             }
         }
     }
-    private MinigameTask cloneTowercrush(final MinigameTask minigameTask, final String accessToken, final Set<String> errorMessages) {
+
+    private MinigameTask cloneTowercrush(
+        final MinigameTask minigameTask,
+        final String accessToken,
+        final Set<String> errorMessages
+    ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.TOWERCRUSH, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {

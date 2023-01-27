@@ -3,7 +3,6 @@ package de.unistuttgart.overworldbackend.service;
 import de.unistuttgart.overworldbackend.data.AchievementStatistic;
 import de.unistuttgart.overworldbackend.data.AchievementStatisticDTO;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
-import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.AchievementStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 import java.util.List;
@@ -17,11 +16,19 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class AchievementStatisticService {
 
-    @Autowired
     private PlayerRepository playerRepository;
 
     @Autowired
+    public void PlayerRepository(final PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
     private AchievementStatisticRepository achievementStatisticRepository;
+
+    @Autowired
+    public void AchievementStatisticRepository(final AchievementStatisticRepository achievementStatisticRepository) {
+        this.achievementStatisticRepository = achievementStatisticRepository;
+    }
 
     /**
      * Returns all achievement statistics for a given player.
@@ -80,15 +87,12 @@ public class AchievementStatisticService {
         final AchievementStatistic achievementStatistic = getAchievementStatisticFromPlayer(playerId, achievementTitle);
         try {
             achievementStatistic.setProgress(achievementStatisticDTO.getProgress());
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                String.format("The new progress cannot be smaller than the current one")
+                "The new progress cannot be smaller than the current one"
             );
         }
-        final AchievementStatistic updatedAchievementStatistic = achievementStatisticRepository.save(
-            achievementStatistic
-        );
-        return updatedAchievementStatistic;
+        return achievementStatisticRepository.save(achievementStatistic);
     }
 }
