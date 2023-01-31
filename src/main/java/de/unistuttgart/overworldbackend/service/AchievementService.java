@@ -7,8 +7,6 @@ import de.unistuttgart.overworldbackend.data.enums.AchievementCategory;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
-import java.util.Arrays;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -16,16 +14,26 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @Transactional
 @Slf4j
 public class AchievementService {
 
-    @Autowired
     private AchievementRepository achievementRepository;
 
     @Autowired
+    public void AchievementRepository(final AchievementRepository achievementRepository) {
+        this.achievementRepository = achievementRepository;
+    }
+
     private PlayerRepository playerRepository;
+    @Autowired
+    public void PlayerRepository(final PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     /**
      * Checks for all players the current achievements adds new created achievements to the player and removes none existing achievements.

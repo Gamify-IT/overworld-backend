@@ -2,21 +2,30 @@ package de.unistuttgart.overworldbackend.service;
 
 import de.unistuttgart.overworldbackend.data.Area;
 import de.unistuttgart.overworldbackend.data.AreaLocationDTO;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class AreaService {
 
-    @Autowired
     private DungeonService dungeonService;
 
     @Autowired
+    public void DungeonService(final DungeonService dungeonService) {
+        this.dungeonService = dungeonService;
+    }
+
     private WorldService worldService;
+
+    @Autowired
+    public void WorldService(final WorldService worldService) {
+        this.worldService = worldService;
+    }
 
     public Area getAreaFromAreaLocationDTO(final int courseId, final AreaLocationDTO areaLocationDTO) {
         return areaLocationDTO.getDungeonIndex() != null && areaLocationDTO.getDungeonIndex() != 0
