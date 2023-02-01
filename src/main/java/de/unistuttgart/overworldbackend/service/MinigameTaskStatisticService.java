@@ -16,12 +16,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MinigameTaskStatisticService {
 
-    private PlayerTaskStatisticRepository playerTaskStatisticRepository;
-
     @Autowired
-    public void PlayerTaskStatisticRepository(final PlayerTaskStatisticRepository playerTaskStatisticRepository) {
-        this.playerTaskStatisticRepository = playerTaskStatisticRepository;
-    }
+    private PlayerTaskStatisticRepository playerTaskStatisticRepository;
 
     public static final List<Integer> DEFAULT_DISTRIBUTION_PERCENTAGES = Arrays.asList(0, 25, 50, 75, 100);
 
