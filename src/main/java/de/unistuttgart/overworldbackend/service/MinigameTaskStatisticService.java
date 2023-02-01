@@ -11,15 +11,17 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @Slf4j
 public class MinigameTaskStatisticService {
 
-    @Autowired
     private PlayerTaskStatisticRepository playerTaskStatisticRepository;
+
+    @Autowired
+    public void PlayerTaskStatisticRepository(final PlayerTaskStatisticRepository playerTaskStatisticRepository) {
+        this.playerTaskStatisticRepository = playerTaskStatisticRepository;
+    }
 
     public static final List<Integer> DEFAULT_DISTRIBUTION_PERCENTAGES = Arrays.asList(0, 25, 50, 75, 100);
 
@@ -103,7 +105,7 @@ public class MinigameTaskStatisticService {
         );
         final List<MinigameHighscoreDistribution> highscoreDistributions = new ArrayList<>();
         for (int i = 0; i < highscorePercentagesToUse.size() - 1; i++) {
-            MinigameHighscoreDistribution highscoreDistribution = new MinigameHighscoreDistribution();
+            final MinigameHighscoreDistribution highscoreDistribution = new MinigameHighscoreDistribution();
             highscoreDistribution.setFromPercentage(highscorePercentagesToUse.get(i));
             highscoreDistribution.setToPercentage(highscorePercentagesToUse.get(i + 1));
             highscoreDistributions.add(highscoreDistribution);
@@ -112,12 +114,18 @@ public class MinigameTaskStatisticService {
         // calculate score time borders to time spent distribution percentage
         int currentStatisticIndex = 0;
         for (final MinigameHighscoreDistribution highscoreDistribution : highscoreDistributions) {
+            if (currentStatisticIndex >= playerTaskStatistics.size()) {
+                break;
+            }
             final int endIndex = (int) (
                 (highscoreDistribution.getToPercentage() / 100.0) * (playerTaskStatistics.size() - 1)
             );
             PlayerTaskStatistic currentStatistic = playerTaskStatistics.get(currentStatisticIndex);
             highscoreDistribution.setFromScore(currentStatistic.getHighscore());
             while (currentStatisticIndex <= endIndex) {
+                if (currentStatisticIndex >= playerTaskStatistics.size()) {
+                    break;
+                }
                 currentStatistic = playerTaskStatistics.get(currentStatisticIndex);
                 highscoreDistribution.addCount();
                 currentStatisticIndex++;
