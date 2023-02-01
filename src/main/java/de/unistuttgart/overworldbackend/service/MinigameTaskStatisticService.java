@@ -118,7 +118,7 @@ public class MinigameTaskStatisticService {
             );
             PlayerTaskStatistic currentStatistic = playerTaskStatistics.get(currentStatisticIndex);
             highscoreDistribution.setFromScore(currentStatistic.getHighscore());
-            while (currentStatisticIndex <= endIndex || currentStatisticIndex >= playerTaskStatistics.size()) {
+            while (currentStatisticIndex <= endIndex && currentStatisticIndex < playerTaskStatistics.size()) {
                 currentStatistic = playerTaskStatistics.get(currentStatisticIndex);
                 highscoreDistribution.addCount();
                 currentStatisticIndex++;
