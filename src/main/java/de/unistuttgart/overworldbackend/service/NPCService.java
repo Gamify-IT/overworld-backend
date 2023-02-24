@@ -17,20 +17,40 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class NPCService {
 
-    @Autowired
     private NPCRepository npcRepository;
 
     @Autowired
+    public void NPCRepository(final NPCRepository npcRepository) {
+        this.npcRepository = npcRepository;
+    }
+
     private WorldService worldService;
 
     @Autowired
+    public void WorldService(final WorldService worldService) {
+        this.worldService = worldService;
+    }
+
     private DungeonService dungeonService;
 
     @Autowired
+    public void DungeonService(final DungeonService dungeonService) {
+        this.dungeonService = dungeonService;
+    }
+
     private NPCMapper npcMapper;
 
     @Autowired
+    public void NPCMapper(final NPCMapper npcMapper) {
+        this.npcMapper = npcMapper;
+    }
+
     private PlayerNPCStatisticRepository playerNPCStatisticRepository;
+
+    @Autowired
+    public void PlayerNPCStatisticRepository(final PlayerNPCStatisticRepository playerNPCStatisticRepository) {
+        this.playerNPCStatisticRepository = playerNPCStatisticRepository;
+    }
 
     /**
      * Get a NPC from a world by its index and a course by its id

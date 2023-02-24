@@ -17,14 +17,26 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class PlayerService {
 
-    @Autowired
     private PlayerRepository playerRepository;
 
     @Autowired
+    public void PlayerRepository(final PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
     private PlayerMapper playerMapper;
 
     @Autowired
+    public void PlayerMapper(final PlayerMapper playerMapper) {
+        this.playerMapper = playerMapper;
+    }
+
     private AchievementRepository achievementRepository;
+
+    @Autowired
+    public void AchievementRepository(final AchievementRepository achievementRepository) {
+        this.achievementRepository = achievementRepository;
+    }
 
     /**
      * get all players

@@ -19,14 +19,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/players/{playerId}/keybindings")
 public class KeybindingController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private KeybindingMapper keybindingMapper;
 
     @Autowired
+    public void KeybindingMapper(final KeybindingMapper keybindingMapper) {
+        this.keybindingMapper = keybindingMapper;
+    }
+
     private KeybindingService keybindingService;
+
+    @Autowired
+    public void KeybindingService(final KeybindingService keybindingService) {
+        this.keybindingService = keybindingService;
+    }
 
     @Operation(summary = "Get all keybindings")
     @GetMapping("")

@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/internal")
 public class NPCInputController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     PlayerNPCStatisticService playerNPCStatisticService;
+
+    @Autowired
+    public void PlayerNPCStatisticService(final PlayerNPCStatisticService playerNPCStatisticService) {
+        this.playerNPCStatisticService = playerNPCStatisticService;
+    }
 
     @Valid
     @Operation(summary = "Submit statistics for a NPC for a player")

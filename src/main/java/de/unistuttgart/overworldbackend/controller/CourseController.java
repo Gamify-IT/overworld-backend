@@ -23,14 +23,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses")
 public class CourseController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private CourseService courseService;
 
     @Autowired
+    public void CourseService(final CourseService courseService) {
+        this.courseService = courseService;
+    }
+
     private CourseMapper courseMapper;
+
+    @Autowired
+    public void CourseMapper(final CourseMapper courseMapper) {
+        this.courseMapper = courseMapper;
+    }
 
     @Operation(summary = "Get all courses")
     @GetMapping("")

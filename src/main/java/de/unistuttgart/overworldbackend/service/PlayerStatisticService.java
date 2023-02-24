@@ -17,26 +17,54 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class PlayerStatisticService {
 
-    @Autowired
     private CourseService courseService;
 
     @Autowired
+    public void CourseService(final CourseService courseService) {
+        this.courseService = courseService;
+    }
+
     private PlayerStatisticRepository playerstatisticRepository;
 
     @Autowired
+    public void PlayerStatisticRepository(final PlayerStatisticRepository playerstatisticRepository) {
+        this.playerstatisticRepository = playerstatisticRepository;
+    }
+
     private PlayerTaskStatisticRepository playerTaskStatisticRepository;
 
     @Autowired
+    public void PlayerTaskStatisticRepository(final PlayerTaskStatisticRepository playerTaskStatisticRepository) {
+        this.playerTaskStatisticRepository = playerTaskStatisticRepository;
+    }
+
     private PlayerStatisticMapper playerstatisticMapper;
 
     @Autowired
+    public void PlayerStatisticMapper(final PlayerStatisticMapper playerStatisticMapper) {
+        this.playerstatisticMapper = playerStatisticMapper;
+    }
+
     private AreaLocationMapper areaLocationMapper;
 
     @Autowired
+    public void AreaLocationMapper(final AreaLocationMapper areaLocationMapper) {
+        this.areaLocationMapper = areaLocationMapper;
+    }
+
     private AreaService areaService;
 
     @Autowired
+    public void AreaService(final AreaService areaService) {
+        this.areaService = areaService;
+    }
+
     private WorldService worldService;
+
+    @Autowired
+    public void WorldService(final WorldService worldService) {
+        this.worldService = worldService;
+    }
 
     /**
      * get statistics from a player course

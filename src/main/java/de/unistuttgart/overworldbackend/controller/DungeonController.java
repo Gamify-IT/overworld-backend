@@ -19,14 +19,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/worlds/{worldIndex}/dungeons")
 public class DungeonController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private DungeonService dungeonService;
 
     @Autowired
+    public void DungeonService(final DungeonService dungeonService) {
+        this.dungeonService = dungeonService;
+    }
+
     private DungeonMapper dungeonMapper;
+
+    @Autowired
+    public void DungeonMapper(final DungeonMapper dungeonMapper) {
+        this.dungeonMapper = dungeonMapper;
+    }
 
     @Operation(summary = "Get all dungeons of a world")
     @GetMapping("")

@@ -16,11 +16,19 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class WorldService {
 
-    @Autowired
     private WorldRepository worldRepository;
 
     @Autowired
+    public void WorldRepository(final WorldRepository worldRepository) {
+        this.worldRepository = worldRepository;
+    }
+
     private WorldMapper worldMapper;
+
+    @Autowired
+    public void WorldMapper(final WorldMapper worldMapper) {
+        this.worldMapper = worldMapper;
+    }
 
     /**
      * Get a world of a course

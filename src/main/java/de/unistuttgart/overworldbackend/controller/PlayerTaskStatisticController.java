@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/playerstatistics")
 public class PlayerTaskStatisticController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private PlayerTaskStatisticService playerTaskStatisticService;
+
+    @Autowired
+    public void PlayerTaskStatisticService(final PlayerTaskStatisticService playerTaskStatisticService) {
+        this.playerTaskStatisticService = playerTaskStatisticService;
+    }
 
     @Operation(summary = "Get all minigame statistics of a player")
     @GetMapping("/{playerId}/player-task-statistics")

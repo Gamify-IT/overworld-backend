@@ -5,13 +5,12 @@ import de.unistuttgart.overworldbackend.data.PlayerTaskStatistic;
 import de.unistuttgart.overworldbackend.data.statistics.MinigameHighscoreDistribution;
 import de.unistuttgart.overworldbackend.data.statistics.MinigameSuccessRateStatistic;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
@@ -115,12 +114,18 @@ public class MinigameTaskStatisticService {
         // calculate score time borders to time spent distribution percentage
         int currentStatisticIndex = 0;
         for (final MinigameHighscoreDistribution highscoreDistribution : highscoreDistributions) {
+            if (currentStatisticIndex >= playerTaskStatistics.size()) {
+                break;
+            }
             final int endIndex = (int) (
                 (highscoreDistribution.getToPercentage() / 100.0) * (playerTaskStatistics.size() - 1)
             );
             PlayerTaskStatistic currentStatistic = playerTaskStatistics.get(currentStatisticIndex);
             highscoreDistribution.setFromScore(currentStatistic.getHighscore());
             while (currentStatisticIndex <= endIndex) {
+                if (currentStatisticIndex >= playerTaskStatistics.size()) {
+                    break;
+                }
                 currentStatistic = playerTaskStatistics.get(currentStatisticIndex);
                 highscoreDistribution.addCount();
                 currentStatisticIndex++;

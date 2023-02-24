@@ -5,13 +5,12 @@ import de.unistuttgart.overworldbackend.data.AchievementStatisticDTO;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import de.unistuttgart.overworldbackend.repositories.AchievementStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -25,6 +24,7 @@ public class AchievementStatisticService {
     }
 
     private PlayerRepository playerRepository;
+
     @Autowired
     public void PlayerRepository(final PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;

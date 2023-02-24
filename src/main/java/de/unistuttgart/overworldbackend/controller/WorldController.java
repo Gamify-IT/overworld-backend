@@ -19,14 +19,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/worlds")
 public class WorldController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private WorldMapper worldMapper;
 
     @Autowired
+    public void WorldMapper(final WorldMapper worldMapper) {
+        this.worldMapper = worldMapper;
+    }
+
     private WorldService worldService;
+
+    @Autowired
+    public void WorldService(final WorldService worldService) {
+        this.worldService = worldService;
+    }
 
     @Operation(summary = "Get all worlds from a course by its id")
     @GetMapping("")

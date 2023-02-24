@@ -21,23 +21,47 @@ public class PlayerNPCStatisticService {
 
     private static final long GAINED_KNOWLEDGE_PER_NPC = 100;
 
-    @Autowired
     PlayerStatisticService playerStatisticService;
 
     @Autowired
+    public void PlayerStatisticService(final PlayerStatisticService playerStatisticService) {
+        this.playerStatisticService = playerStatisticService;
+    }
+
     PlayerNPCStatisticMapper playerNPCStatisticMapper;
 
     @Autowired
+    public void PlayerNPCStatisticMapper(final PlayerNPCStatisticMapper playerNPCStatisticMapper) {
+        this.playerNPCStatisticMapper = playerNPCStatisticMapper;
+    }
+
     PlayerNPCStatisticRepository playerNPCStatisticRepository;
 
     @Autowired
+    public void PlayerNPCStatisticRepository(final PlayerNPCStatisticRepository playerNPCStatisticRepository) {
+        this.playerNPCStatisticRepository = playerNPCStatisticRepository;
+    }
+
     NPCRepository npcRepository;
 
     @Autowired
+    public void NPCRepository(final NPCRepository npcRepository) {
+        this.npcRepository = npcRepository;
+    }
+
     PlayerStatisticRepository playerstatisticRepository;
 
     @Autowired
+    public void PlayerStatisticRepository(PlayerStatisticRepository playerstatisticRepository) {
+        this.playerstatisticRepository = playerstatisticRepository;
+    }
+
     PlayerNPCActionLogRepository playerNPCActionLogRepository;
+
+    @Autowired
+    public void PlayerNPCActionLogRepository(PlayerNPCActionLogRepository playerNPCActionLogRepository) {
+        this.playerNPCActionLogRepository = playerNPCActionLogRepository;
+    }
 
     /**
      * Gets a list of all NPC statistics of a player of the given course

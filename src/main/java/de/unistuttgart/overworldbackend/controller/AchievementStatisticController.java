@@ -19,14 +19,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/players/{playerId}/achievements")
 public class AchievementStatisticController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private AchievementStatisticMapper achievementStatisticMapper;
 
     @Autowired
+    public void AchievementStatisticMapper(final AchievementStatisticMapper achievementStatisticMapper) {
+        this.achievementStatisticMapper = achievementStatisticMapper;
+    }
+
     private AchievementStatisticService achievementStatisticService;
+
+    @Autowired
+    public void AchievementStatisticService(final AchievementStatisticService achievementStatisticService) {
+        this.achievementStatisticService = achievementStatisticService;
+    }
 
     @Operation(summary = "Get all achievements")
     @GetMapping("")

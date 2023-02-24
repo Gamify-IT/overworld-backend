@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/teleporters")
 public class TeleporterInputController {
 
-    @Autowired
     private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private PlayerStatisticService playerStatisticService;
+
+    @Autowired
+    public void PlayerStatisticService(final PlayerStatisticService playerStatisticService) {
+        this.playerStatisticService = playerStatisticService;
+    }
 
     @Operation(summary = "Add a teleporter to a players unlocked teleporter list")
     @PostMapping("")

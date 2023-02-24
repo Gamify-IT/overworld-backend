@@ -22,26 +22,54 @@ public class PlayerTaskStatisticService {
     private static final long MAX_KNOWLEDGE = 100;
     private static final double RETRY_KNOWLEDGE = 0.02;
 
-    @Autowired
     MinigameTaskService minigameTaskService;
 
     @Autowired
+    public void MinigameTaskService(final MinigameTaskService minigameTaskService) {
+        this.minigameTaskService = minigameTaskService;
+    }
+
     PlayerStatisticService playerStatisticService;
 
     @Autowired
+    public void PlayerStatisticService(final PlayerStatisticService playerStatisticService) {
+        this.playerStatisticService = playerStatisticService;
+    }
+
     PlayerTaskStatisticMapper playerTaskStatisticMapper;
 
     @Autowired
+    public void PlayerTaskStatisticMapper(final PlayerTaskStatisticMapper playerTaskStatisticMapper) {
+        this.playerTaskStatisticMapper = playerTaskStatisticMapper;
+    }
+
     PlayerTaskStatisticRepository playerTaskStatisticRepository;
 
     @Autowired
+    public void PlayerTaskStatisticRepository(final PlayerTaskStatisticRepository playerTaskStatisticRepository) {
+        this.playerTaskStatisticRepository = playerTaskStatisticRepository;
+    }
+
     MinigameTaskRepository minigameTaskRepository;
 
     @Autowired
+    public void MinigameTaskRepository(final MinigameTaskRepository minigameTaskRepository) {
+        this.minigameTaskRepository = minigameTaskRepository;
+    }
+
     PlayerStatisticRepository playerstatisticRepository;
 
     @Autowired
+    public void PlayerStatisticRepository(final PlayerStatisticRepository playerstatisticRepository) {
+        this.playerstatisticRepository = playerstatisticRepository;
+    }
+
     PlayerTaskActionLogRepository playerTaskActionLogRepository;
+
+    @Autowired
+    public void PlayerTaskActionLogRepository(final PlayerTaskActionLogRepository playerTaskActionLogRepository) {
+        this.playerTaskActionLogRepository = playerTaskActionLogRepository;
+    }
 
     /**
      * Gets a list of all playerTaskStatistics of a player of the given course

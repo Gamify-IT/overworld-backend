@@ -18,20 +18,40 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class MinigameTaskService {
 
-    @Autowired
     private MinigameTaskRepository minigameTaskRepository;
 
     @Autowired
+    public void MinigameTaskRepository(final MinigameTaskRepository minigameTaskRepository) {
+        this.minigameTaskRepository = minigameTaskRepository;
+    }
+
     private AreaService areaService;
 
     @Autowired
+    public void AreaService(final AreaService areaService) {
+        this.areaService = areaService;
+    }
+
     private WorldService worldService;
 
     @Autowired
+    public void WorldService(final WorldService worldService) {
+        this.worldService = worldService;
+    }
+
     private DungeonService dungeonService;
 
     @Autowired
+    public void DungeonService(final DungeonService dungeonService) {
+        this.dungeonService = dungeonService;
+    }
+
     private MinigameTaskMapper minigameTaskMapper;
+
+    @Autowired
+    public void MinigameTaskMapper(final MinigameTaskMapper minigameTaskMapper) {
+        this.minigameTaskMapper = minigameTaskMapper;
+    }
 
     /**
      * Get a minigame task of an area

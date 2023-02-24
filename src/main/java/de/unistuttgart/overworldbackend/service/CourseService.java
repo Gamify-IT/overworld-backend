@@ -39,26 +39,54 @@ public class CourseService {
 
     CourseConfig configCourse;
 
-    @Autowired
     ChickenshockClient chickenshockClient;
 
     @Autowired
+    public void ChickenshockClient(final ChickenshockClient chickenshockClient) {
+        this.chickenshockClient = chickenshockClient;
+    }
+
     FinitequizClient finitequizClient;
 
     @Autowired
+    public void FinitequizClient(final FinitequizClient finitequizClient) {
+        this.finitequizClient = finitequizClient;
+    }
+
     TowercrushClient towercrushClient;
 
     @Autowired
+    public void TowercruchClient(final TowercrushClient towercrushClient) {
+        this.towercrushClient = towercrushClient;
+    }
+
     CrosswordpuzzleClient crosswordpuzzleClient;
 
     @Autowired
+    public void CrosswordpuzzleClient(final CrosswordpuzzleClient crosswordpuzzleClient) {
+        this.crosswordpuzzleClient = crosswordpuzzleClient;
+    }
+
     BugfinderClient bugfinderClient;
 
     @Autowired
+    public void BugfinderClient(final BugfinderClient bugfinderClient) {
+        this.bugfinderClient = bugfinderClient;
+    }
+
     private CourseRepository courseRepository;
 
     @Autowired
+    public void courseRepository(final CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
+
     private CourseMapper courseMapper;
+
+    @Autowired
+    public void CourseMapper(final CourseMapper courseMapper) {
+        this.courseMapper = courseMapper;
+    }
 
     public CourseService() {
         configCourse = new CourseConfig();
@@ -453,7 +481,7 @@ public class CourseService {
     private MinigameTask cloneTowercrush(
         final MinigameTask minigameTask,
         final String accessToken,
-        Set<String> errorMessages
+        final Set<String> errorMessages
     ) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.TOWERCRUSH, minigameTask.getDescription(), null, minigameTask.getIndex());

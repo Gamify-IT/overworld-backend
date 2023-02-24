@@ -14,17 +14,33 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class BookService {
 
-    @Autowired
     private BookRepository bookRepository;
 
     @Autowired
+    public void BookRepository(final BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
     private WorldService worldService;
 
     @Autowired
+    public void WorldService(final WorldService worldService) {
+        this.worldService = worldService;
+    }
+
     private DungeonService dungeonService;
 
     @Autowired
+    public void DungeonService(final DungeonService dungeonService) {
+        this.dungeonService = dungeonService;
+    }
+
     private BookMapper bookMapper;
+
+    @Autowired
+    public void BookMapper(final BookMapper bookMapper) {
+        this.bookMapper = bookMapper;
+    }
 
     /**
      * Get a book from a world by its index and a course by its id

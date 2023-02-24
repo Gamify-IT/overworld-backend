@@ -19,11 +19,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/worlds/{worldIndex}")
 public class MinigameTaskController {
 
-    @Autowired
     private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private MinigameTaskService minigameTaskService;
+
+    @Autowired
+    public void MinigameTaskService(final MinigameTaskService minigameTaskService) {
+        this.minigameTaskService = minigameTaskService;
+    }
 
     @Operation(summary = "Get all task from a world")
     @GetMapping("/minigame-tasks")

@@ -19,11 +19,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/players")
 public class PlayerController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private PlayerService playerService;
+
+    @Autowired
+    public void PlayerService(final PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     @Operation(summary = "Get all players")
     @GetMapping("")

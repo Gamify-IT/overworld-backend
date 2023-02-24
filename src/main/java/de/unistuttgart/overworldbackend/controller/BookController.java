@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/worlds/{worldIndex}")
 public class BookController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private BookService bookService;
+
+    @Autowired
+    public void BookService(final BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @Operation(summary = "Update a book by its index in a world")
     @PutMapping("/books/{bookIndex}")

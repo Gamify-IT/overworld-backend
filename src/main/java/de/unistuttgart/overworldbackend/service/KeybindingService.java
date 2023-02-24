@@ -19,11 +19,19 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class KeybindingService {
 
-    @Autowired
     private PlayerRepository playerRepository;
 
     @Autowired
+    public void PlayerRepository(final PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
     private KeybindingRepository keybindingRepository;
+
+    @Autowired
+    public void KeybindingRepository(final KeybindingRepository keybindingRepository) {
+        this.keybindingRepository = keybindingRepository;
+    }
 
     /**
      * Checks for all players the current keybindings, adds newly created keybindings to the player, and removes none existing keybindings.

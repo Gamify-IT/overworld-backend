@@ -16,11 +16,19 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class DungeonService {
 
-    @Autowired
     private DungeonRepository dungeonRepository;
 
     @Autowired
+    public void DungeonRepository(final DungeonRepository dungeonRepository) {
+        this.dungeonRepository = dungeonRepository;
+    }
+
     private DungeonMapper dungeonMapper;
+
+    @Autowired
+    public void DungeonMapper(final DungeonMapper dungeonMapper) {
+        this.dungeonMapper = dungeonMapper;
+    }
 
     /**
      * Get a dungeon of a course and a world

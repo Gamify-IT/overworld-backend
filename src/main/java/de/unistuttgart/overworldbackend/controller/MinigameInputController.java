@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/internal")
 public class MinigameInputController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     PlayerTaskStatisticService playerTaskStatisticService;
+
+    @Autowired
+    public void PlayerTaskStatisticService(final PlayerTaskStatisticService playerTaskStatisticService) {
+        this.playerTaskStatisticService = playerTaskStatisticService;
+    }
 
     @Operation(summary = "Submit statistics from a minigame run")
     @PostMapping("/submit-game-pass")

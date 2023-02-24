@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/courses/{courseId}/worlds/{worldIndex}")
 public class NPCController {
 
-    @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private NPCService npcService;
+
+    @Autowired
+    public void NPCService(final NPCService npcService) {
+        this.npcService = npcService;
+    }
 
     @Operation(summary = "Update a NPC by its index in a world")
     @PutMapping("/npcs/{npcIndex}")

@@ -22,14 +22,26 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/courses/{courseId}/worlds/{worldIndex}")
 public class MinigameTaskStatisticController {
 
-    @Autowired
     private JWTValidatorService jwtValidatorService;
 
     @Autowired
+    public void JWTValidatorService(final JWTValidatorService jwtValidatorService) {
+        this.jwtValidatorService = jwtValidatorService;
+    }
+
     private MinigameTaskService minigameTaskService;
 
     @Autowired
+    public void MinigameTaskService(final MinigameTaskService minigameTaskService) {
+        this.minigameTaskService = minigameTaskService;
+    }
+
     private MinigameTaskStatisticService minigameTaskStatisticService;
+
+    @Autowired
+    public void MinigameTaskStatisticService(final MinigameTaskStatisticService minigameTaskStatisticService) {
+        this.minigameTaskStatisticService = minigameTaskStatisticService;
+    }
 
     @Operation(summary = "Get the success rate statistic of task by its index from a world")
     @GetMapping("/minigame-tasks/{taskIndex}/statistics/success-rate")
