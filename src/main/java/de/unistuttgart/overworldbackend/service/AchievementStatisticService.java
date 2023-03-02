@@ -3,7 +3,6 @@ package de.unistuttgart.overworldbackend.service;
 import de.unistuttgart.overworldbackend.data.AchievementStatistic;
 import de.unistuttgart.overworldbackend.data.AchievementStatisticDTO;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
-import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.AchievementStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 import java.util.List;
@@ -73,21 +72,19 @@ public class AchievementStatisticService {
      * @return the updated achievement statistic
      */
     public AchievementStatistic updateAchievementStatistic(
-            final String playerId,
-            final AchievementTitle achievementTitle,
-            final AchievementStatisticDTO achievementStatisticDTO
-            ) {
+        final String playerId,
+        final AchievementTitle achievementTitle,
+        final AchievementStatisticDTO achievementStatisticDTO
+    ) {
         final AchievementStatistic achievementStatistic = getAchievementStatisticFromPlayer(playerId, achievementTitle);
         try {
             achievementStatistic.setProgress(achievementStatisticDTO.getProgress());
-        } catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                String.format("The new progress cannot be smaller than the current one")
+                "The new progress cannot be smaller than the current one"
             );
         }
-        final AchievementStatistic updatedAchievementStatistic = achievementStatisticRepository.save(achievementStatistic);
-        return updatedAchievementStatistic;
+        return achievementStatisticRepository.save(achievementStatistic);
     }
 }

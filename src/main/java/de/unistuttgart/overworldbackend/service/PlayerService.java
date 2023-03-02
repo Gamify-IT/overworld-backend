@@ -1,12 +1,12 @@
 package de.unistuttgart.overworldbackend.service;
 
 import de.unistuttgart.overworldbackend.data.*;
+import de.unistuttgart.overworldbackend.data.enums.Binding;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerMapper;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -72,6 +72,10 @@ public class PlayerService {
         final Player newPlayer = new Player(playerRegistrationDTO.getUserId(), playerRegistrationDTO.getUsername());
         for (final Achievement achievement : achievementRepository.findAll()) {
             newPlayer.getAchievementStatistics().add(new AchievementStatistic(newPlayer, achievement));
+        }
+        final Binding[] bindings = Binding.values();
+        for (final Binding binding : bindings) {
+            newPlayer.getKeybindings().add(new Keybinding(newPlayer, binding, ""));
         }
         final Player savedPlayer = playerRepository.save(newPlayer);
         return playerMapper.playerToPlayerDTO(savedPlayer);
