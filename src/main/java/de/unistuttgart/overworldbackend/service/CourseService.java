@@ -1,7 +1,6 @@
 package de.unistuttgart.overworldbackend.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import aj.org.objectweb.asm.TypeReference;
 import de.unistuttgart.overworldbackend.client.*;
 import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.config.CourseConfig;
@@ -24,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
@@ -236,7 +236,7 @@ public class CourseService {
         final CourseInitialData courseInitialData,
         final String accessToken
     ) {
-        final Set<String> errorMessages = new HashSet<>();
+        final Set<String> errorMessages = Collections.synchronizedSet(new HashSet<>());
         final Course course = getCourse(id);
         final Course cloneCourse = new Course(
             courseInitialData.getCourseName(),

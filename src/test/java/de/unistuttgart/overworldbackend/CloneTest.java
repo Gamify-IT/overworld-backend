@@ -34,6 +34,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -46,6 +47,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @AutoConfigureMockMvc
+@Transactional
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CloneTest {
@@ -61,7 +63,7 @@ public class CloneTest {
         new File("src/test/resources/docker-compose-test.yaml")
     )
         .withPull(true)
-        .withRemoveImages(DockerComposeContainer.RemoveImages.LOCAL)
+        .withRemoveImages(DockerComposeContainer.RemoveImages.ALL)
         .withEnv("LOCAL_URL", postgresDB.getHost())
         .withExposedService("overworld-db", 5432, Wait.forListeningPort())
         .withExposedService("reverse-proxy", 80)
@@ -76,10 +78,6 @@ public class CloneTest {
         .waitingFor(
             "reverse-proxy",
             Wait.forHttp("/minigames/finitequiz/api/v1/configurations").forPort(80).forStatusCode(400)
-        )
-        .waitingFor(
-            "reverse-proxy",
-            Wait.forHttp("/minigames/towercrush/api/v1/configurations").forPort(80).forStatusCode(400)
         )
         .waitingFor(
             "reverse-proxy",
@@ -115,10 +113,6 @@ public class CloneTest {
         registry.add(
             "finitequiz.url",
             () -> String.format("http://%s/minigames/finitequiz/api/v1", compose.getServiceHost("reverse-proxy", 80))
-        );
-        registry.add(
-            "towercrush.url",
-            () -> String.format("http://%s/minigames/towercrush/api/v1", compose.getServiceHost("reverse-proxy", 80))
         );
         registry.add(
             "crosswordpuzzle.url",

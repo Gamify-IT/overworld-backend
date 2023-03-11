@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.client;
 
+import de.unistuttgart.overworldbackend.data.minigames.towercrush.TowercrushConfiguration;
 import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.CookieValue;
