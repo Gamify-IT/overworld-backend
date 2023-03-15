@@ -346,23 +346,26 @@ public class CourseService {
             );
         } else {
             try {
-                UUID cloneId;
+                UUID cloneId = null;
                 switch (minigameTask.getGame()) {
                     case NONE:
                         return new MinigameTask(Minigame.NONE, null, minigameTask.getIndex());
                     case CHICKENSHOCK:
                         cloneId = chickenshockClient.postClone(accessToken, minigameTask.getConfigurationId());
+                        break;
                     case FINITEQUIZ:
                         cloneId = finitequizClient.postClone(accessToken, minigameTask.getConfigurationId());
+                        break;
                     case TOWERCRUSH:
                         cloneId = towercrushClient.postClone(accessToken, minigameTask.getConfigurationId());
+                        break;
                     case CROSSWORDPUZZLE:
                         cloneId = crosswordpuzzleClient.postClone(accessToken, minigameTask.getConfigurationId());
+                        break;
                     case BUGFINDER:
                         cloneId = bugfinderClient.postClone(accessToken, minigameTask.getConfigurationId());
+                        break;
                     default:
-                        errorMessages.add(String.format("minigame %s doesn't exist", minigameTask.getGame()));
-                        cloneId = null;
                         minigameTask.setGame(Minigame.NONE);
                 }
                 return new MinigameTask(
