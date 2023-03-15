@@ -16,19 +16,11 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class AchievementStatisticService {
 
+    @Autowired
     private PlayerRepository playerRepository;
 
     @Autowired
-    public void PlayerRepository(final PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
-
     private AchievementStatisticRepository achievementStatisticRepository;
-
-    @Autowired
-    public void AchievementStatisticRepository(final AchievementStatisticRepository achievementStatisticRepository) {
-        this.achievementStatisticRepository = achievementStatisticRepository;
-    }
 
     /**
      * Returns all achievement statistics for a given player.
