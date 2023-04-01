@@ -13,8 +13,6 @@ import de.unistuttgart.overworldbackend.data.minigames.chickenshock.Chickenshock
 import de.unistuttgart.overworldbackend.data.minigames.crosswordpuzzle.CrosswordpuzzleConfiguration;
 import de.unistuttgart.overworldbackend.data.minigames.finitequiz.FinitequizConfiguration;
 import de.unistuttgart.overworldbackend.data.minigames.towercrush.TowercrushConfiguration;
-import de.unistuttgart.overworldbackend.data.minigames.memory.MemoryCard;
-import de.unistuttgart.overworldbackend.data.minigames.memory.MemoryCardPair;
 import de.unistuttgart.overworldbackend.data.minigames.memory.MemoryConfiguration;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import feign.FeignException;
@@ -24,7 +22,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.Null;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -459,7 +456,7 @@ public class CourseService {
             return new MinigameTask(Minigame.MEMORY, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
             try{
-                MemoryConfiguration config = MemoryClient.getConfiguration (
+                MemoryConfiguration config = memoryClient.getConfiguration (
                 accessToken,
                 minigameTask.getConfigurationId()
                 );

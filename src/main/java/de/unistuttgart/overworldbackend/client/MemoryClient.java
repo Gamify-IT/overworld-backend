@@ -11,15 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(value = "memoryClient", url = "${memory.url}/configurations")
 public interface MemoryClient {
     @GetMapping("/{id}")
-    static
     MemoryConfiguration getConfiguration(
         @CookieValue("access_token") final String accessToken,
         @PathVariable("id") UUID id
-    ) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getConfiguration'");
-    }
-
+    ); 
     @PostMapping("/")
     MemoryConfiguration postConfiguration(
         @CookieValue("access_token") final String accessToken,
