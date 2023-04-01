@@ -13,6 +13,9 @@ import de.unistuttgart.overworldbackend.data.minigames.chickenshock.Chickenshock
 import de.unistuttgart.overworldbackend.data.minigames.crosswordpuzzle.CrosswordpuzzleConfiguration;
 import de.unistuttgart.overworldbackend.data.minigames.finitequiz.FinitequizConfiguration;
 import de.unistuttgart.overworldbackend.data.minigames.towercrush.TowercrushConfiguration;
+import de.unistuttgart.overworldbackend.data.minigames.memory.MemoryCard;
+import de.unistuttgart.overworldbackend.data.minigames.memory.MemoryCardPair;
+import de.unistuttgart.overworldbackend.data.minigames.memory.MemoryConfiguration;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import feign.FeignException;
 import java.io.IOException;
@@ -20,6 +23,9 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import javax.validation.constraints.Null;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +58,9 @@ public class CourseService {
     CrosswordpuzzleClient crosswordpuzzleClient;
 
     @Autowired
+    MemoryClient memoryClient;
+
+    @Autowired
     BugfinderClient bugfinderClient;
 
     @Autowired
@@ -73,16 +82,16 @@ public class CourseService {
     }
 
     /**
-     * @throws ResponseStatusException (404) when course by its id could not be found
+     * @throws ResponseStatusException (404) when course by its id could not be
+     *                                 found
      * @param id the id of the course searching for
      * @return the found course
      */
     public Course getCourse(final int id) {
         return courseRepository
-            .findById(id)
-            .orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no course with id %s.", id))
-            );
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("There is no course with id %s.", id)));
     }
 
     /**
@@ -90,8 +99,9 @@ public class CourseService {
      *
      * Only the course name and description is updatable.
      *
-     * @throws ResponseStatusException (404) if course, world or dungeon by its id do not exist
-     * @param courseId the id of the course that should get updated
+     * @throws ResponseStatusException (404) if course, world or dungeon by its id
+     *                                 do not exist
+     * @param courseId  the id of the course that should get updated
      * @param courseDTO the updated parameters
      * @return the updated course as DTO
      */
@@ -108,10 +118,12 @@ public class CourseService {
     /**
      * Create a course with initial data.
      *
-     * Creates a course with pre generated worlds, dungeons, minigame tasks and npcs.
+     * Creates a course with pre generated worlds, dungeons, minigame tasks and
+     * npcs.
      *
      * @param courseInit the initial data with the course should be created with
-     * @return the created course as DTO with all its generated worlds, dungeons, minigame tasks and npcs
+     * @return the created course as DTO with all its generated worlds, dungeons,
+     *         minigame tasks and npcs
      */
     public CourseDTO createCourse(final CourseInitialData courseInit) {
         final List<World> worlds = new ArrayList<>();
@@ -119,18 +131,18 @@ public class CourseService {
         configCourse.getWorlds().forEach(worldConfig -> configureWorld(worlds, worldId.getAndIncrement(), worldConfig));
 
         final Course course = new Course(
-            courseInit.getCourseName(),
-            courseInit.getSemester(),
-            courseInit.getDescription(),
-            DEFAULT_IS_ACTIVE,
-            worlds
-        );
+                courseInit.getCourseName(),
+                courseInit.getSemester(),
+                courseInit.getDescription(),
+                DEFAULT_IS_ACTIVE,
+                worlds);
         courseRepository.save(course);
         return courseMapper.courseToCourseDTO(course);
     }
 
     /**
      * Returns all courses
+     * 
      * @return all courses
      */
     public List<Course> getAllCourses() {
@@ -157,37 +169,34 @@ public class CourseService {
         final List<Dungeon> dungeons = new ArrayList<>();
         final AtomicInteger dungeonId = new AtomicInteger(1);
         worldConfig
-            .getDungeons()
-            .forEach(dungeonConfig -> dungeons.add(configureDungeon(dungeonId.getAndIncrement(), dungeonConfig)));
+                .getDungeons()
+                .forEach(dungeonConfig -> dungeons.add(configureDungeon(dungeonId.getAndIncrement(), dungeonConfig)));
         configureArea(
-            minigames,
-            npcs,
-            books,
-            worldConfig.getNumberOfMinigames(),
-            worldConfig.getNumberOfNPCs(),
-            worldConfig.getNumberOfBooks()
-        );
+                minigames,
+                npcs,
+                books,
+                worldConfig.getNumberOfMinigames(),
+                worldConfig.getNumberOfNPCs(),
+                worldConfig.getNumberOfBooks());
         final World world = new World(
-            worldConfig.getStaticName(),
-            "",
-            false,
-            minigames,
-            npcs,
-            books,
-            dungeons,
-            worldId
-        );
+                worldConfig.getStaticName(),
+                "",
+                false,
+                minigames,
+                npcs,
+                books,
+                dungeons,
+                worldId);
         worlds.add(world);
     }
 
     private void configureArea(
-        final Set<MinigameTask> minigames,
-        final Set<NPC> npcs,
-        final Set<Book> books,
-        final int numberOfMinigames,
-        final int numberOfNPCs,
-        final int numberOfBooks
-    ) {
+            final Set<MinigameTask> minigames,
+            final Set<NPC> npcs,
+            final Set<Book> books,
+            final int numberOfMinigames,
+            final int numberOfNPCs,
+            final int numberOfBooks) {
         for (int minigameIndex = 1; minigameIndex <= numberOfMinigames; minigameIndex++) {
             final MinigameTask minigame = new MinigameTask(null, null, minigameIndex);
             minigames.add(minigame);
@@ -207,111 +216,111 @@ public class CourseService {
         final Set<NPC> npcs = new HashSet<>();
         final Set<Book> books = new HashSet<>();
         configureArea(
-            minigames,
-            npcs,
-            books,
-            dungeonConfig.getNumberOfMinigames(),
-            dungeonConfig.getNumberOfNPCs(),
-            dungeonConfig.getNumberOfBooks()
-        );
+                minigames,
+                npcs,
+                books,
+                dungeonConfig.getNumberOfMinigames(),
+                dungeonConfig.getNumberOfNPCs(),
+                dungeonConfig.getNumberOfBooks());
         return new Dungeon(dungeonConfig.getStaticName(), "", false, minigames, npcs, books, dungeonId);
     }
 
     public CourseCloneDTO cloneCourse(
-        final int id,
-        final CourseInitialData courseInitialData,
-        final String accessToken
-    ) {
+            final int id,
+            final CourseInitialData courseInitialData,
+            final String accessToken) {
         final Set<String> errorMessages = Collections.synchronizedSet(new HashSet<>());
         final Course course = getCourse(id);
         final Course cloneCourse = new Course(
-            courseInitialData.getCourseName(),
-            courseInitialData.getSemester(),
-            courseInitialData.getDescription(),
-            DEFAULT_IS_ACTIVE,
-            course
-                .getWorlds()
-                .parallelStream()
-                .map(world -> cloneWorld(world, accessToken, errorMessages))
-                .collect(Collectors.toCollection(ArrayList::new))
-        );
+                courseInitialData.getCourseName(),
+                courseInitialData.getSemester(),
+                courseInitialData.getDescription(),
+                DEFAULT_IS_ACTIVE,
+                course
+                        .getWorlds()
+                        .parallelStream()
+                        .map(world -> cloneWorld(world, accessToken, errorMessages))
+                        .collect(Collectors.toCollection(ArrayList::new)));
 
         courseRepository.save(cloneCourse);
         final CourseDTO courseDTO = courseMapper.courseToCourseDTO(cloneCourse);
         return new CourseCloneDTO(
-            courseDTO.getId(),
-            courseDTO.getCourseName(),
-            courseDTO.getSemester(),
-            courseDTO.getDescription(),
-            courseDTO.isActive(),
-            courseDTO.getWorlds(),
-            errorMessages
-        );
+                courseDTO.getId(),
+                courseDTO.getCourseName(),
+                courseDTO.getSemester(),
+                courseDTO.getDescription(),
+                courseDTO.isActive(),
+                courseDTO.getWorlds(),
+                errorMessages);
     }
 
     /**
      * Clones a world
      *
-     * Configured needs to calculated because minigames can become not configured if the minigame-backend isn't available.
-     * @param oldWorld world to be cloned
+     * Configured needs to calculated because minigames can become not configured if
+     * the minigame-backend isn't available.
+     * 
+     * @param oldWorld    world to be cloned
      * @param accessToken access Token in the cookie
      * @return cloned world
      */
     private World cloneWorld(final World oldWorld, final String accessToken, final Set<String> errorMessages) {
         final World world = new World(
-            oldWorld.getStaticName(),
-            oldWorld.getTopicName(),
-            false,
-            oldWorld.getMinigameTasks().stream().anyMatch(minigame -> Minigame.isConfigured(minigame.getGame())),
-            oldWorld
-                .getMinigameTasks()
-                .parallelStream()
-                .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken, errorMessages))
-                .collect(Collectors.toCollection(HashSet::new)),
-            oldWorld.getNpcs().parallelStream().map(this::cloneNPC).collect(Collectors.toCollection(HashSet::new)),
-            oldWorld.getBooks().parallelStream().map(this::cloneBook).collect(Collectors.toCollection(HashSet::new)),
-            oldWorld
-                .getDungeons()
-                .parallelStream()
-                .map(dungeon -> cloneDungeon(dungeon, accessToken, errorMessages))
-                .sorted(Comparator.comparingInt(Area::getIndex))
-                .collect(Collectors.toCollection(ArrayList::new)),
-            oldWorld.getIndex()
-        );
+                oldWorld.getStaticName(),
+                oldWorld.getTopicName(),
+                false,
+                oldWorld.getMinigameTasks().stream().anyMatch(minigame -> Minigame.isConfigured(minigame.getGame())),
+                oldWorld
+                        .getMinigameTasks()
+                        .parallelStream()
+                        .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken, errorMessages))
+                        .collect(Collectors.toCollection(HashSet::new)),
+                oldWorld.getNpcs().parallelStream().map(this::cloneNPC).collect(Collectors.toCollection(HashSet::new)),
+                oldWorld.getBooks().parallelStream().map(this::cloneBook)
+                        .collect(Collectors.toCollection(HashSet::new)),
+                oldWorld
+                        .getDungeons()
+                        .parallelStream()
+                        .map(dungeon -> cloneDungeon(dungeon, accessToken, errorMessages))
+                        .sorted(Comparator.comparingInt(Area::getIndex))
+                        .collect(Collectors.toCollection(ArrayList::new)),
+                oldWorld.getIndex());
         world.setConfigured(
-            world.getMinigameTasks().stream().anyMatch((minigameTask -> Minigame.isConfigured(minigameTask.getGame())))
-        );
+                world.getMinigameTasks().stream()
+                        .anyMatch((minigameTask -> Minigame.isConfigured(minigameTask.getGame()))));
         return world;
     }
 
     /**
      * Clones a dungeon
      *
-     * Configured needs to calculated because minigames can become not configured if the minigame-backend isn't available.
-     * @param oldDungeon dungeon to be cloned
+     * Configured needs to calculated because minigames can become not configured if
+     * the minigame-backend isn't available.
+     * 
+     * @param oldDungeon  dungeon to be cloned
      * @param accessToken access Token in the cookie
      * @return cloned dungeon
      */
     private Dungeon cloneDungeon(final Dungeon oldDungeon, final String accessToken, final Set<String> errorMessages) {
         final Dungeon dungeon = new Dungeon(
-            oldDungeon.getStaticName(),
-            oldDungeon.getTopicName(),
-            false,
-            oldDungeon
-                .getMinigameTasks()
-                .parallelStream()
-                .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken, errorMessages))
-                .collect(Collectors.toCollection(HashSet::new)),
-            oldDungeon.getNpcs().parallelStream().map(this::cloneNPC).collect(Collectors.toCollection(HashSet::new)),
-            oldDungeon.getBooks().parallelStream().map(this::cloneBook).collect(Collectors.toCollection(HashSet::new)),
-            oldDungeon.getIndex()
-        );
+                oldDungeon.getStaticName(),
+                oldDungeon.getTopicName(),
+                false,
+                oldDungeon
+                        .getMinigameTasks()
+                        .parallelStream()
+                        .map(minigameTask -> cloneMinigameTask(minigameTask, accessToken, errorMessages))
+                        .collect(Collectors.toCollection(HashSet::new)),
+                oldDungeon.getNpcs().parallelStream().map(this::cloneNPC)
+                        .collect(Collectors.toCollection(HashSet::new)),
+                oldDungeon.getBooks().parallelStream().map(this::cloneBook)
+                        .collect(Collectors.toCollection(HashSet::new)),
+                oldDungeon.getIndex());
         dungeon.setConfigured(
-            dungeon
-                .getMinigameTasks()
-                .stream()
-                .anyMatch((minigameTask -> Minigame.isConfigured(minigameTask.getGame())))
-        );
+                dungeon
+                        .getMinigameTasks()
+                        .stream()
+                        .anyMatch((minigameTask -> Minigame.isConfigured(minigameTask.getGame()))));
         return dungeon;
     }
 
@@ -324,10 +333,9 @@ public class CourseService {
     }
 
     private MinigameTask cloneMinigameTask(
-        final MinigameTask minigameTask,
-        final String accessToken,
-        final Set<String> errorMessages
-    ) {
+            final MinigameTask minigameTask,
+            final String accessToken,
+            final Set<String> errorMessages) {
         if (minigameTask.getGame() == null) {
             return new MinigameTask(null, minigameTask.getDescription(), null, minigameTask.getIndex());
         }
@@ -344,6 +352,8 @@ public class CourseService {
                 return cloneCrosswordpuzzle(minigameTask, accessToken, errorMessages);
             case BUGFINDER:
                 return cloneBugfinder(minigameTask, accessToken, errorMessages);
+            case MEMORY:
+                return cloneMemory(minigameTask, accessToken, errorMessages);
             default:
                 errorMessages.add(String.format("minigame %s doesn't exist", minigameTask.getGame()));
                 return new MinigameTask(Minigame.NONE, "", null, minigameTask.getIndex());
@@ -351,32 +361,29 @@ public class CourseService {
     }
 
     private MinigameTask cloneBugfinder(
-        final MinigameTask minigameTask,
-        final String accessToken,
-        final Set<String> errorMessages
-    ) {
+            final MinigameTask minigameTask,
+            final String accessToken,
+            final Set<String> errorMessages) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.BUGFINDER, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
             try {
                 BugfinderConfiguration config = bugfinderClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
+                        accessToken,
+                        minigameTask.getConfigurationId());
                 config.setId(null);
                 config
-                    .getCodes()
-                    .forEach(bugfinderCode -> {
-                        bugfinderCode.setId(null);
-                        bugfinderCode.getWords().forEach(bugfinderWord -> bugfinderWord.setId(null));
-                    });
+                        .getCodes()
+                        .forEach(bugfinderCode -> {
+                            bugfinderCode.setId(null);
+                            bugfinderCode.getWords().forEach(bugfinderWord -> bugfinderWord.setId(null));
+                        });
                 config = bugfinderClient.postConfiguration(accessToken, config);
                 return new MinigameTask(
-                    Minigame.BUGFINDER,
-                    minigameTask.getDescription(),
-                    config.getId(),
-                    minigameTask.getIndex()
-                );
+                        Minigame.BUGFINDER,
+                        minigameTask.getDescription(),
+                        config.getId(),
+                        minigameTask.getIndex());
             } catch (final FeignException e) {
                 log.debug(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("bugfinder-backend not present");
@@ -386,32 +393,28 @@ public class CourseService {
     }
 
     private MinigameTask cloneCrosswordpuzzle(
-        final MinigameTask minigameTask,
-        final String accessToken,
-        final Set<String> errorMessages
-    ) {
+            final MinigameTask minigameTask,
+            final String accessToken,
+            final Set<String> errorMessages) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(
-                Minigame.CROSSWORDPUZZLE,
-                minigameTask.getDescription(),
-                null,
-                minigameTask.getIndex()
-            );
+                    Minigame.CROSSWORDPUZZLE,
+                    minigameTask.getDescription(),
+                    null,
+                    minigameTask.getIndex());
         } else {
             try {
                 CrosswordpuzzleConfiguration config = crosswordpuzzleClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
+                        accessToken,
+                        minigameTask.getConfigurationId());
                 config.setId(null);
                 config.getQuestions().forEach(crosswordpuzzleQuestion -> crosswordpuzzleQuestion.setId(null));
                 config = crosswordpuzzleClient.postConfiguration(accessToken, config);
                 return new MinigameTask(
-                    Minigame.CROSSWORDPUZZLE,
-                    minigameTask.getDescription(),
-                    config.getId(),
-                    minigameTask.getIndex()
-                );
+                        Minigame.CROSSWORDPUZZLE,
+                        minigameTask.getDescription(),
+                        config.getId(),
+                        minigameTask.getIndex());
             } catch (final FeignException e) {
                 log.debug(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("crosswordpuzzle-backend not present");
@@ -421,27 +424,24 @@ public class CourseService {
     }
 
     private MinigameTask cloneFinitequiz(
-        final MinigameTask minigameTask,
-        final String accessToken,
-        final Set<String> errorMessages
-    ) {
+            final MinigameTask minigameTask,
+            final String accessToken,
+            final Set<String> errorMessages) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.FINITEQUIZ, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
             try {
                 FinitequizConfiguration config = finitequizClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
+                        accessToken,
+                        minigameTask.getConfigurationId());
                 config.setId(null);
                 config.getQuestions().forEach(finitequizQuestion -> finitequizQuestion.setId(null));
                 config = finitequizClient.postConfiguration(accessToken, config);
                 return new MinigameTask(
-                    Minigame.FINITEQUIZ,
-                    minigameTask.getDescription(),
-                    config.getId(),
-                    minigameTask.getIndex()
-                );
+                        Minigame.FINITEQUIZ,
+                        minigameTask.getDescription(),
+                        config.getId(),
+                        minigameTask.getIndex());
             } catch (final FeignException e) {
                 log.debug(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("finitequiz-backend not present");
@@ -450,28 +450,55 @@ public class CourseService {
         }
     }
 
-    private MinigameTask cloneTowercrush(
+    private MinigameTask cloneMemory(
         final MinigameTask minigameTask,
         final String accessToken,
         Set<String> errorMessages
-    ) {
+    ){ 
+        if (minigameTask.getConfigurationId() == null){ 
+            return new MinigameTask(Minigame.MEMORY, minigameTask.getDescription(), null, minigameTask.getIndex());
+        } else {
+            try{
+                MemoryConfiguration config = MemoryClient.getConfiguration (
+                accessToken,
+                minigameTask.getConfigurationId()
+                );
+                config.setId(null);
+                config.getPairs().forEach(memoryPair-> memoryPair.setId(null));
+                config = memoryClient.postConfiguration(accessToken, config);
+                return new MinigameTask(
+                    Minigame.MEMORY,
+                    minigameTask.getDescription(),
+                    config.getId(),
+                    minigameTask.getIndex()
+                );
+            } catch (final FeignException e) {
+                log.debug(CLONE_ERROR_MESSAGE, e);
+                errorMessages.add("memory-backend not present");
+                return new MinigameTask(Minigame.MEMORY, "", null, minigameTask.getIndex());
+            }
+        }
+    }
+
+    private MinigameTask cloneTowercrush(
+            final MinigameTask minigameTask,
+            final String accessToken,
+            Set<String> errorMessages) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(Minigame.TOWERCRUSH, minigameTask.getDescription(), null, minigameTask.getIndex());
         } else {
             try {
                 TowercrushConfiguration config = towercrushClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
+                        accessToken,
+                        minigameTask.getConfigurationId());
                 config.setId(null);
                 config.getQuestions().forEach(towercrushQuestion -> towercrushQuestion.setId(null));
                 config = towercrushClient.postConfiguration(accessToken, config);
                 return new MinigameTask(
-                    Minigame.TOWERCRUSH,
-                    minigameTask.getDescription(),
-                    config.getId(),
-                    minigameTask.getIndex()
-                );
+                        Minigame.TOWERCRUSH,
+                        minigameTask.getDescription(),
+                        config.getId(),
+                        minigameTask.getIndex());
             } catch (final FeignException e) {
                 log.debug(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("towercrush-backend not present");
@@ -481,32 +508,28 @@ public class CourseService {
     }
 
     private MinigameTask cloneChickenshock(
-        final MinigameTask minigameTask,
-        final String accessToken,
-        final Set<String> errorMessages
-    ) {
+            final MinigameTask minigameTask,
+            final String accessToken,
+            final Set<String> errorMessages) {
         if (minigameTask.getConfigurationId() == null) {
             return new MinigameTask(
-                Minigame.CHICKENSHOCK,
-                minigameTask.getDescription(),
-                null,
-                minigameTask.getIndex()
-            );
+                    Minigame.CHICKENSHOCK,
+                    minigameTask.getDescription(),
+                    null,
+                    minigameTask.getIndex());
         } else {
             try {
                 ChickenshockConfiguration config = chickenshockClient.getConfiguration(
-                    accessToken,
-                    minigameTask.getConfigurationId()
-                );
+                        accessToken,
+                        minigameTask.getConfigurationId());
                 config.setId(null);
                 config.getQuestions().forEach(chickenshockQuestion -> chickenshockQuestion.setId(null));
                 config = chickenshockClient.postConfiguration(accessToken, config);
                 return new MinigameTask(
-                    Minigame.CHICKENSHOCK,
-                    minigameTask.getDescription(),
-                    config.getId(),
-                    minigameTask.getIndex()
-                );
+                        Minigame.CHICKENSHOCK,
+                        minigameTask.getDescription(),
+                        config.getId(),
+                        minigameTask.getIndex());
             } catch (final FeignException e) {
                 log.debug(CLONE_ERROR_MESSAGE, e);
                 errorMessages.add("chickenshock-backend not present");
@@ -514,4 +537,5 @@ public class CourseService {
             }
         }
     }
+
 }
