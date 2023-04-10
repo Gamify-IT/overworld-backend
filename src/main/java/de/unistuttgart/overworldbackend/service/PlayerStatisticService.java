@@ -62,6 +62,18 @@ public class PlayerStatisticService {
     }
 
     /**
+     * get statistics from a player course
+     *
+     * @param courseId the id of the course
+     * @param userId   the playerId of the player searching for
+     * @return the found playerstatistic
+     * @throws ResponseStatusException (404) when playerstatistic with courseId and userId could not be found
+     */
+    public Set<PlayerStatistic> getPlayerStatisticsFromCourse(final int courseId) {
+        return playerstatisticRepository.findByCourseId(courseId);
+    }
+
+    /**
      * Create a playerstatistic with initial data in a course.
      *
      * @param courseId the id of the course where the playerstatistic will be created
