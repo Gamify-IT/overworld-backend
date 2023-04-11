@@ -128,7 +128,7 @@ services:
 
   crosswordpuzzle-backend:
     container_name:   crosswordpuzzle-backend
-    image: ghcr.io/gamify-it/crosswordpuzzle-backend:maintenance-clone-config
+    image: ghcr.io/gamify-it/crosswordpuzzle-backend:main
     pull_policy: always
     restart: always
     expose:
@@ -147,7 +147,7 @@ services:
 
   chickenshock-backend:
     container_name:   chickenshock-backend
-    image: ghcr.io/gamify-it/chickenshock-backend:maintenance-clone-config
+    image: ghcr.io/gamify-it/chickenshock-backend:main
     pull_policy: always
     restart: always
     expose:
@@ -166,7 +166,7 @@ services:
 
   finitequiz-backend:
     container_name: finitequiz-backend
-    image: ghcr.io/gamify-it/finitequiz-backend:maintenance-clone-config
+    image: ghcr.io/gamify-it/finitequiz-backend:main
     pull_policy: always
     restart: always
     expose:
@@ -184,7 +184,7 @@ services:
       - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
   bugfinder-backend:
-    image: ghcr.io/gamify-it/bugfinder-backend:maintenance-clone-config
+    image: ghcr.io/gamify-it/bugfinder-backend:main
     pull_policy: always
     restart: always
     expose:
