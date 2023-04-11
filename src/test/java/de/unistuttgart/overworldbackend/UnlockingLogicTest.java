@@ -1,5 +1,9 @@
 package de.unistuttgart.overworldbackend;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
@@ -12,6 +16,9 @@ import de.unistuttgart.overworldbackend.service.CourseService;
 import de.unistuttgart.overworldbackend.service.MinigameTaskService;
 import de.unistuttgart.overworldbackend.service.PlayerStatisticService;
 import de.unistuttgart.overworldbackend.service.PlayerTaskStatisticService;
+import java.util.Optional;
+import java.util.UUID;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +30,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import javax.transaction.Transactional;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 @AutoConfigureMockMvc
 @Transactional

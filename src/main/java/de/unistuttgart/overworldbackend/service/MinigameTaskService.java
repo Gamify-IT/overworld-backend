@@ -201,6 +201,7 @@ public class MinigameTaskService {
      * Unlocks an area if the player has already unlocked a world or dungeon with a higher index
      * @param area Area which might get unlocked
      * @param playerStatistic statistic of the player
+     * @throws ResponseStatusException (400) if playerStatistic is not initialized
      */
     private void unlockAreaIfProgressFurther(final Area area, final PlayerStatistic playerStatistic) {
         final AreaComparator areaComparator = new AreaComparator();
