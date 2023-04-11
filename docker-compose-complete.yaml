@@ -223,7 +223,7 @@ services:
       - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
   towercrush-backend:
-    image: ghcr.io/gamify-it/towercrush-backend:maintenance-clone-config
+    image: ghcr.io/gamify-it/towercrush-backend:main
     pull_policy: always
     restart: always
     expose:
