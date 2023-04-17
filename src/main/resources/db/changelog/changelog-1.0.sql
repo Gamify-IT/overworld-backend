@@ -304,7 +304,7 @@ ALTER TABLE "book" ADD CONSTRAINT "fkrow3o1i3tcpejmaggbpv1d4fr" FOREIGN KEY ("co
 ALTER TABLE "player_statistic_unlocked_teleporters" ADD CONSTRAINT "fktpvtctd86u2sbre1bij25qpjw" FOREIGN KEY ("unlocked_teleporters_id") REFERENCES "teleporter" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 -- changeset delvh:unique-constraints-for-statistics-1
-ALTER TABLE "player_npc_statistic" ADD CONSTRAINT "uk04l2vwuyj3u1gde7oanv" UNIQUE ("player_statistic_id", "npc_id", "course_id");
+ALTER TABLE "playernpcstatistic" ADD CONSTRAINT "uk04l2vwuyj3u1gde7oanv" UNIQUE ("player_statistic_id", "npc_id", "course_id");
 
 -- changeset delvh:unique-constraints-for-statistics-2
 ALTER TABLE "player_task_statistic" ADD CONSTRAINT "uk27n56n1liyicdgpg3lzo" UNIQUE ("player_statistic_id", "minigame_task_id", "course_id");
