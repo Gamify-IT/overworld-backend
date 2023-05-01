@@ -1,9 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
@@ -47,6 +44,13 @@ public class PlayerStatistic {
 
     @NotNull
     String username;
+
+    Date date;
+
+    @PrePersist
+    private void prePersistDate() {
+        date = new Date();
+    }
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();
