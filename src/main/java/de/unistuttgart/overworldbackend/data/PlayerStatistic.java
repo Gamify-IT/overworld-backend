@@ -36,7 +36,7 @@ public class PlayerStatistic {
     @ManyToOne(cascade = CascadeType.ALL)
     Area currentArea;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     Course course;
 
     @NotNull
@@ -45,11 +45,11 @@ public class PlayerStatistic {
     @NotNull
     String username;
 
-    Date date;
+    Calendar date;
 
     @PrePersist
     private void prePersistDate() {
-        date = new Date();
+        date = Calendar.getInstance();
     }
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

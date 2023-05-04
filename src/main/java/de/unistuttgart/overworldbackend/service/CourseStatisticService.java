@@ -5,13 +5,9 @@ import de.unistuttgart.overworldbackend.data.Dungeon;
 import de.unistuttgart.overworldbackend.data.PlayerStatistic;
 import de.unistuttgart.overworldbackend.data.PlayerTaskStatistic;
 import de.unistuttgart.overworldbackend.data.comparator.AreaComparator;
-import de.unistuttgart.overworldbackend.data.statistics.ActivePlayersPlaytime;
-import de.unistuttgart.overworldbackend.data.statistics.CompletedMinigames;
-import de.unistuttgart.overworldbackend.data.statistics.PlayerJoinedStatistic;
-import de.unistuttgart.overworldbackend.data.statistics.UnlockedAreaAmount;
+import de.unistuttgart.overworldbackend.data.statistics.*;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -136,12 +132,19 @@ public class CourseStatisticService {
     ) {
         playerJoinedStatistic
             .getJoined()
-            .stream()
-            .filter(playerJoined ->
-                isSameDay(dateToCalendar(playerJoined.getDate()), dateToCalendar(playerStatistic.getDate()))
-            )
+            .parallelStream()
+            .filter(playerJoined -> isSameDay(playerJoined.getDate(), playerStatistic.getDate()))
             .findFirst()
-            .ifPresent(playerJoined -> playerJoined.setPlayers(playerJoined.getPlayers() + 1));
+            .ifPresentOrElse(
+                playerJoined -> {
+                    playerJoined.setPlayers(playerJoined.getPlayers() + 1);
+                    playerJoinedStatistic.addPlayer();
+                },
+                () -> {
+                    playerJoinedStatistic.getJoined().add(new PlayerJoined(playerStatistic.getDate(), 1));
+                    playerJoinedStatistic.addPlayer();
+                }
+            );
     }
 
     private static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
@@ -150,11 +153,5 @@ public class CourseStatisticService {
             cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
             cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
         );
-    }
-
-    private static Calendar dateToCalendar(final Date date) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
     }
 }

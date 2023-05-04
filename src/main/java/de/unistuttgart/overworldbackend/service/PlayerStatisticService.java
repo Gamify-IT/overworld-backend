@@ -84,20 +84,18 @@ public class PlayerStatisticService {
         final int courseId,
         final PlayerRegistrationDTO playerRegistrationDTO
     ) {
-        final Optional<PlayerStatistic> existingPlayerstatistic = playerstatisticRepository.findByCourseIdAndUserId(
-            courseId,
-            playerRegistrationDTO.getUserId()
-        );
-        if (existingPlayerstatistic.isPresent()) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                String.format(
-                    "There is already a playerstatistic for userId %s in course %s",
-                    playerRegistrationDTO.getUserId(),
-                    courseId
-                )
-            );
-        }
+        playerstatisticRepository
+            .findByCourseIdAndUserId(courseId, playerRegistrationDTO.getUserId())
+            .ifPresent(playerStatistic -> {
+                throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    String.format(
+                        "There is already a playerstatistic for userId %s in course %s",
+                        playerRegistrationDTO.getUserId(),
+                        courseId
+                    )
+                );
+            });
         final Course course = courseService.getCourse(courseId);
         final World firstWorld = getFirstWorld(courseId);
 
