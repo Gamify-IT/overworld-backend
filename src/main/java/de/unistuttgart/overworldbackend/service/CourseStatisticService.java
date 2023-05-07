@@ -90,13 +90,15 @@ public class CourseStatisticService {
     private List<UnlockedAreaAmount> createInitialAreaAmount(final Course course) {
         final List<UnlockedAreaAmount> unlockedAreaAmounts = new ArrayList<>();
         int level = 0;
-        for (int i = 0; i < course.getWorlds().size(); i++) {
-            final World world = course.getWorlds().get(i);
+        final List<World> worlds = course.getWorlds();
+        worlds.sort(Comparator.comparingInt(World::getIndex));
+        for (final World world : worlds) {
+            final List<Dungeon> dungeons = world.getDungeons();
+            dungeons.sort(Comparator.comparingInt(Dungeon::getIndex));
             if (world.isConfigured() || world.isActive()) {
                 level++;
                 unlockedAreaAmounts.add(new UnlockedAreaAmount(level, getAreaName(world), 0));
-                for (int j = 0; j < world.getDungeons().size(); j++) {
-                    final Dungeon dungeon = world.getDungeons().get(j);
+                for (final Dungeon dungeon : dungeons) {
                     if (dungeon.isConfigured() || dungeon.isActive()) {
                         level++;
                         unlockedAreaAmounts.add(new UnlockedAreaAmount(level, getAreaName(dungeon), 0));
