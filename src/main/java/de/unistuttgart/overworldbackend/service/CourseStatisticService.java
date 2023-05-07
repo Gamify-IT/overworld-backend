@@ -1,10 +1,6 @@
 package de.unistuttgart.overworldbackend.service;
 
-import de.unistuttgart.overworldbackend.data.Area;
-import de.unistuttgart.overworldbackend.data.Dungeon;
-import de.unistuttgart.overworldbackend.data.PlayerStatistic;
-import de.unistuttgart.overworldbackend.data.PlayerTaskStatistic;
-import de.unistuttgart.overworldbackend.data.comparator.AreaComparator;
+import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.statistics.*;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import java.time.Duration;
@@ -12,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -68,33 +65,44 @@ public class CourseStatisticService {
         playerStatisticRepository
             .findByCourseId(courseId)
             .forEach(playerStatistic ->
-                unlockedAreaAmounts
-                    .parallelStream()
-                    .filter(unlockedAreaAmount ->
-                        unlockedAreaAmount.getLevel() == (playerStatistic.getUnlockedAreas().size())
-                    )
-                    .findFirst()
-                    .ifPresentOrElse(
-                        unlockedAreaAmount -> unlockedAreaAmount.setPlayers(unlockedAreaAmount.getPlayers() + 1),
-                        () -> {
-                            final AreaComparator areaComparator = new AreaComparator();
-                            final Area maxArea = playerStatistic
-                                .getUnlockedAreas()
-                                .parallelStream()
-                                .max(areaComparator)
-                                .orElse(playerStatistic.getCurrentArea());
-                            unlockedAreaAmounts.add(
-                                new UnlockedAreaAmount(
-                                    playerStatistic.getUnlockedAreas().size(),
-                                    getAreaName(maxArea),
-                                    1
-                                )
+                playerStatistic
+                    .getUnlockedAreas()
+                    .forEach(area -> {
+                        final String name = getAreaName(area);
+                        unlockedAreaAmounts
+                            .parallelStream()
+                            .filter(unlockedAreaAmount -> unlockedAreaAmount.getName().equals(name))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                unlockedArea -> unlockedArea.setPlayers(unlockedArea.getPlayers() + 1),
+                                () -> unlockedAreaAmounts.add(new UnlockedAreaAmount(getLevel(area), name, 1))
                             );
-                        }
-                    )
+                    })
             );
         unlockedAreaAmounts.sort(Comparator.comparingInt(UnlockedAreaAmount::getLevel));
         return unlockedAreaAmounts;
+    }
+
+    private int getLevel(final Area area) {
+        final AtomicInteger level = new AtomicInteger(0);
+        final Course course = area.getCourse();
+        for (int i = 0; i < course.getWorlds().size(); i++) {
+            final World world = course.getWorlds().get(i);
+            if (world.equals(area)) {
+                return level.incrementAndGet();
+            } else {
+                level.incrementAndGet();
+                for (int j = 0; j < world.getDungeons().size(); j++) {
+                    final Dungeon dungeon = world.getDungeons().get(j);
+                    if (dungeon.equals(area)) {
+                        return level.incrementAndGet();
+                    } else {
+                        level.incrementAndGet();
+                    }
+                }
+            }
+        }
+        return level.get();
     }
 
     /**
