@@ -29,24 +29,29 @@ public class CourseStatisticService {
 
     /**
      * Get the amount of players that joined at a specific date
-     * @param CourseId id of the course
+     * @param courseId id of the course
      * @return player joined statistic
      */
-    public PlayerJoinedStatistic getPlayerJoinedStatistic(final int CourseId) {
+    public PlayerJoinedStatistic getPlayerJoinedStatistic(final int courseId) {
         final PlayerJoinedStatistic playerJoinedStatistic = new PlayerJoinedStatistic();
         playerStatisticRepository
-            .findByCourseId(CourseId)
-            .forEach(playerStatistic -> addPlayer(playerStatistic, playerJoinedStatistic));
+            .findByCourseId(courseId)
+            .forEach(playerStatistic -> addPlayerJoined(playerStatistic, playerJoinedStatistic));
         return playerJoinedStatistic;
     }
 
     /**
      * Inoperative method.
-     * @param courseId
-     * @return
+     * @param courseId id of the course
+     * @return last played statistic
      */
-    public List<ActivePlayersPlaytime> getActivePlayersPlaytime(final int courseId) {
-        return null;
+    public List<LastPlayed> getActivePlayersPlaytime(final int courseId) {
+        final List<LastPlayed> lastPlayed = new ArrayList<>();
+        playerStatisticRepository
+            .findByCourseId(courseId)
+            .forEach(playerStatistic -> addLastPlayed(playerStatistic, lastPlayed));
+        lastPlayed.sort(Comparator.comparing(LastPlayed::getLastPlayed));
+        return lastPlayed;
     }
 
     /**
@@ -129,7 +134,18 @@ public class CourseStatisticService {
         return name;
     }
 
-    private static void addPlayer(
+    private static void addLastPlayed(final PlayerStatistic playerStatistic, final List<LastPlayed> lastPlayed) {
+        lastPlayed
+            .parallelStream()
+            .filter(lastPlayedStatistic -> isSameDay(lastPlayedStatistic.getLastPlayed(), playerStatistic.getDate()))
+            .findFirst()
+            .ifPresentOrElse(
+                lastPlayedStatistic -> lastPlayedStatistic.setPlayers(lastPlayedStatistic.getPlayers() + 1),
+                () -> lastPlayed.add(new LastPlayed(playerStatistic.getDate(), 1))
+            );
+    }
+
+    private static void addPlayerJoined(
         final PlayerStatistic playerStatistic,
         final PlayerJoinedStatistic playerJoinedStatistic
     ) {

@@ -53,11 +53,18 @@ public class PlayerStatistic {
     @CreationTimestamp
     LocalDateTime date;
 
+    LocalDateTime lastActive;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerNPCStatistic> playerNPCStatistics = new HashSet<>();
+
+    @PrePersist
+    public void prePersist() {
+        lastActive = LocalDateTime.now();
+    }
 
     long knowledge = 0;
 

@@ -8,11 +8,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
 import de.unistuttgart.overworldbackend.data.mapper.CourseMapper;
 import de.unistuttgart.overworldbackend.data.statistics.CompletedMinigames;
+import de.unistuttgart.overworldbackend.data.statistics.LastPlayed;
 import de.unistuttgart.overworldbackend.data.statistics.PlayerJoinedStatistic;
 import de.unistuttgart.overworldbackend.data.statistics.UnlockedAreaAmount;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
@@ -229,6 +231,7 @@ public class CourseStatisticTest {
         fullURL = String.format("/courses/%s/statistic", initialCourse.getId());
 
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
         doNothing().when(jwtValidatorService).validateTokenOrThrow("testToken");
         when(jwtValidatorService.extractUserId("testToken")).thenReturn("testUser");
@@ -252,6 +255,21 @@ public class CourseStatisticTest {
                 playerJoinedStatistic.getJoined().stream().findFirst().get().getDate()
             )
         );
+    }
+
+    @Test
+    void testGetLastPlayedStatistic() throws Exception {
+        final MvcResult result = mvc
+            .perform(get(fullURL + "/last-played").cookie(cookie).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        final List<LastPlayed> lastPlayedList = List.of(
+            objectMapper.readValue(result.getResponse().getContentAsString(), LastPlayed[].class)
+        );
+        assertEquals(1, lastPlayedList.size());
+        assertEquals(41, lastPlayedList.get(0).getPlayers());
+        assertTrue(isSameDay(lastPlayedList.get(0).getLastPlayed(), LocalDateTime.now()));
     }
 
     @Test

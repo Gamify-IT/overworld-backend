@@ -1,8 +1,8 @@
 package de.unistuttgart.overworldbackend.controller;
 
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
-import de.unistuttgart.overworldbackend.data.statistics.ActivePlayersPlaytime;
 import de.unistuttgart.overworldbackend.data.statistics.CompletedMinigames;
+import de.unistuttgart.overworldbackend.data.statistics.LastPlayed;
 import de.unistuttgart.overworldbackend.data.statistics.PlayerJoinedStatistic;
 import de.unistuttgart.overworldbackend.data.statistics.UnlockedAreaAmount;
 import de.unistuttgart.overworldbackend.service.CourseStatisticService;
@@ -36,14 +36,14 @@ public class CourseStatisticController {
         return courseStatisticService.getPlayerJoinedStatistic(courseId);
     }
 
-    @Operation(summary = "Active Players Playtime")
-    @GetMapping("/active-players")
-    public List<ActivePlayersPlaytime> getActivePlayers(
+    @Operation(summary = "Last time a player played")
+    @GetMapping("/last-played")
+    public List<LastPlayed> getActivePlayers(
         @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
-        log.debug("get player joined statistic");
+        log.debug("get last active players statistic");
         return courseStatisticService.getActivePlayersPlaytime(courseId);
     }
 

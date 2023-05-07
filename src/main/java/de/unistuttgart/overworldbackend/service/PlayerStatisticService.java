@@ -6,6 +6,7 @@ import de.unistuttgart.overworldbackend.data.mapper.AreaLocationMapper;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerStatisticMapper;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
+import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -250,6 +251,14 @@ public class PlayerStatisticService {
                     );
             }
         }
+    }
+
+    public PlayerStatisticDTO setActive(final int CourseId, final String playerId) {
+        final PlayerStatistic playerStatistic = getPlayerStatisticFromCourse(CourseId, playerId);
+        playerStatistic.setLastActive(LocalDateTime.now());
+        return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
+            playerstatisticRepository.save(playerStatistic)
+        );
     }
 
     /**
