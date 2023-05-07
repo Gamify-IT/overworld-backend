@@ -18,6 +18,7 @@ import de.unistuttgart.overworldbackend.data.statistics.UnlockedAreaAmount;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.service.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
@@ -236,7 +237,7 @@ public class CourseStatisticTest {
     @Test
     void testGetPlayerJoinedStatistic() throws Exception {
         final MvcResult result = mvc
-            .perform(get(fullURL + "/player-joined").cookie(cookie).contentType(MediaType.APPLICATION_JSON))
+            .perform(get(fullURL + "/players-joined").cookie(cookie).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
 
@@ -299,11 +300,11 @@ public class CourseStatisticTest {
         assertEquals(2, completedMinigames.size());
     }
 
-    private static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
+    private static boolean isSameDay(final LocalDateTime date1, final LocalDateTime date2) {
         return (
-            cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-            cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
-            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+            date1.getDayOfYear() == date2.getDayOfYear() &&
+            date1.getYear() == date2.getYear() &&
+            date1.getMonthValue() == date2.getMonthValue()
         );
     }
 }

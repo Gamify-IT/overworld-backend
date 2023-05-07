@@ -1,10 +1,15 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 /**
  * The statistic of a player in a course.
@@ -45,12 +50,8 @@ public class PlayerStatistic {
     @NotNull
     String username;
 
-    Calendar date;
-
-    @PrePersist
-    private void prePersistDate() {
-        date = Calendar.getInstance();
-    }
+    @CreationTimestamp
+    LocalDateTime date;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();

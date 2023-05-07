@@ -8,7 +8,7 @@ import de.unistuttgart.overworldbackend.data.statistics.UnlockedAreaAmount;
 import de.unistuttgart.overworldbackend.service.CourseStatisticService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Set;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class CourseStatisticController {
     CourseStatisticService courseStatisticService;
 
     @Operation(summary = "Player joined the course")
-    @GetMapping("/player-joined")
+    @GetMapping("/players-joined")
     public PlayerJoinedStatistic getPlayerJoinedStatistic(
         @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
@@ -38,7 +38,7 @@ public class CourseStatisticController {
 
     @Operation(summary = "Active Players Playtime")
     @GetMapping("/active-players")
-    public Set<ActivePlayersPlaytime> getActivePlayers(
+    public List<ActivePlayersPlaytime> getActivePlayers(
         @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
     ) {
@@ -49,7 +49,7 @@ public class CourseStatisticController {
 
     @Operation(summary = "Unlocked areas")
     @GetMapping("/unlocked-areas")
-    public Set<UnlockedAreaAmount> getPlayerUnlocked(
+    public List<UnlockedAreaAmount> getPlayerUnlocked(
         @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
     ) {
@@ -60,7 +60,7 @@ public class CourseStatisticController {
 
     @Operation(summary = "Completed minigames by players")
     @GetMapping("/completed-minigames")
-    public Set<CompletedMinigames> getCompletedMinigames(
+    public List<CompletedMinigames> getCompletedMinigames(
         @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
     ) {

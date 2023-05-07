@@ -1,6 +1,6 @@
 package de.unistuttgart.overworldbackend.data.statistics;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PlayerJoined {
 
-    Calendar date;
+    LocalDateTime date;
     int players;
 }

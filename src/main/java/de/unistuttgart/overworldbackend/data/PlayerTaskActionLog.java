@@ -1,11 +1,12 @@
 package de.unistuttgart.overworldbackend.data;
 
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 /**
  * An action log to log a player's minigame run.
@@ -28,7 +29,8 @@ public class PlayerTaskActionLog {
     @ManyToOne
     Course course;
 
-    Date date;
+    @CreationTimestamp
+    LocalDateTime date;
 
     long score;
 
@@ -40,9 +42,4 @@ public class PlayerTaskActionLog {
 
     @Enumerated(EnumType.STRING)
     Minigame game;
-
-    @PrePersist
-    private void prePersistDate() {
-        date = new Date();
-    }
 }

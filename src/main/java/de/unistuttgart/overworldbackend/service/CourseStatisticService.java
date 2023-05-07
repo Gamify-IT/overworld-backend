@@ -7,9 +7,10 @@ import de.unistuttgart.overworldbackend.data.PlayerTaskStatistic;
 import de.unistuttgart.overworldbackend.data.comparator.AreaComparator;
 import de.unistuttgart.overworldbackend.data.statistics.*;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public class CourseStatisticService {
      * @param courseId
      * @return
      */
-    public Set<ActivePlayersPlaytime> getActivePlayersPlaytime(final int courseId) {
+    public List<ActivePlayersPlaytime> getActivePlayersPlaytime(final int courseId) {
         return null;
     }
 
@@ -53,8 +54,8 @@ public class CourseStatisticService {
      * @param courseId id of the course
      * @return set of unlocked areas amount
      */
-    public Set<UnlockedAreaAmount> getUnlockedAreas(final int courseId) {
-        final Set<UnlockedAreaAmount> unlockedAreaAmounts = new HashSet<>();
+    public List<UnlockedAreaAmount> getUnlockedAreas(final int courseId) {
+        final List<UnlockedAreaAmount> unlockedAreaAmounts = new ArrayList<>();
         playerStatisticRepository
             .findByCourseId(courseId)
             .forEach(playerStatistic ->
@@ -83,6 +84,7 @@ public class CourseStatisticService {
                         }
                     )
             );
+        unlockedAreaAmounts.sort(Comparator.comparingInt(UnlockedAreaAmount::getLevel));
         return unlockedAreaAmounts;
     }
 
@@ -91,8 +93,8 @@ public class CourseStatisticService {
      * @param courseId id of the course
      * @return set of completed minigames with the amount of players that completed this amount of minigames
      */
-    public Set<CompletedMinigames> getCompletedMinigames(final int courseId) {
-        final Set<CompletedMinigames> completedMinigames = new HashSet<>();
+    public List<CompletedMinigames> getCompletedMinigames(final int courseId) {
+        final List<CompletedMinigames> completedMinigames = new ArrayList<>();
         playerStatisticRepository
             .findByCourseId(courseId)
             .forEach(playerStatistic -> {
@@ -113,6 +115,7 @@ public class CourseStatisticService {
                         () -> completedMinigames.add(new CompletedMinigames(amountCompletedMinigames, 1))
                     );
             });
+        completedMinigames.sort(Comparator.comparingInt(CompletedMinigames::getAmountOfCompletedMinigames));
         return completedMinigames;
     }
 
@@ -147,11 +150,11 @@ public class CourseStatisticService {
             );
     }
 
-    private static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
+    private static boolean isSameDay(final LocalDateTime date1, final LocalDateTime date2) {
         return (
-            cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-            cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
-            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+            date1.getDayOfYear() == date2.getDayOfYear() &&
+            date1.getYear() == date2.getYear() &&
+            date1.getMonthValue() == date2.getMonthValue()
         );
     }
 }
