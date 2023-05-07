@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 
 /**
  * The statistic of a player in a course.
@@ -50,7 +49,6 @@ public class PlayerStatistic {
     @NotNull
     String username;
 
-    @CreationTimestamp
     LocalDateTime date;
 
     LocalDateTime lastActive;
@@ -62,8 +60,9 @@ public class PlayerStatistic {
     Set<PlayerNPCStatistic> playerNPCStatistics = new HashSet<>();
 
     @PrePersist
-    public void prePersist() {
+    void onCreate() {
         lastActive = LocalDateTime.now();
+        date = LocalDateTime.now();
     }
 
     long knowledge = 0;

@@ -6,7 +6,6 @@ import java.util.UUID;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 
 /**
  * An action log to log a player's minigame run.
@@ -29,8 +28,12 @@ public class PlayerTaskActionLog {
     @ManyToOne
     Course course;
 
-    @CreationTimestamp
     LocalDateTime date;
+
+    @PrePersist
+    void onCreate() {
+        date = LocalDateTime.now();
+    }
 
     long score;
 
