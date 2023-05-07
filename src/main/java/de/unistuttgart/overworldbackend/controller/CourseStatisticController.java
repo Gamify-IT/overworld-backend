@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "CourseStatistic", description = "get the statistics of a course")
 @RestController
 @Slf4j
-@RequestMapping("/courses/{courseId}/statistic")
+@RequestMapping("/courses/{courseId}/statistics")
 public class CourseStatisticController {
 
     @Autowired
@@ -38,13 +38,13 @@ public class CourseStatisticController {
 
     @Operation(summary = "Last time a player played")
     @GetMapping("/last-played")
-    public List<LastPlayed> getActivePlayers(
+    public List<LastPlayed> getLastPlayed(
         @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get last active players statistic");
-        return courseStatisticService.getActivePlayersPlaytime(courseId);
+        return courseStatisticService.getLastPlayed(courseId);
     }
 
     @Operation(summary = "Unlocked areas")

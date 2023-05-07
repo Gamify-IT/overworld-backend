@@ -7,6 +7,7 @@ import de.unistuttgart.overworldbackend.data.PlayerTaskStatistic;
 import de.unistuttgart.overworldbackend.data.comparator.AreaComparator;
 import de.unistuttgart.overworldbackend.data.statistics.*;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CourseStatisticService {
+
+    static final List<Integer> LAST_PLAYED_RANGE = List.of(1, 3, 12, 24, 3 * 24, 7 * 24, 14 * 24);
 
     @Autowired
     PlayerStatisticRepository playerStatisticRepository;
@@ -45,12 +48,13 @@ public class CourseStatisticService {
      * @param courseId id of the course
      * @return last played statistic
      */
-    public List<LastPlayed> getActivePlayersPlaytime(final int courseId) {
+    public List<LastPlayed> getLastPlayed(final int courseId) {
         final List<LastPlayed> lastPlayed = new ArrayList<>();
+        LAST_PLAYED_RANGE.forEach(range -> lastPlayed.add(new LastPlayed(range, 0)));
         playerStatisticRepository
             .findByCourseId(courseId)
             .forEach(playerStatistic -> addLastPlayed(playerStatistic, lastPlayed));
-        lastPlayed.sort(Comparator.comparing(LastPlayed::getLastPlayed));
+        lastPlayed.sort(Comparator.comparing(LastPlayed::getHour));
         return lastPlayed;
     }
 
@@ -137,12 +141,23 @@ public class CourseStatisticService {
     private static void addLastPlayed(final PlayerStatistic playerStatistic, final List<LastPlayed> lastPlayed) {
         lastPlayed
             .parallelStream()
-            .filter(lastPlayedStatistic -> isSameDay(lastPlayedStatistic.getLastPlayed(), playerStatistic.getDate()))
+            .filter(lastPlayedStatistic -> isInRange(lastPlayedStatistic, playerStatistic.getDate()))
             .findFirst()
-            .ifPresentOrElse(
-                lastPlayedStatistic -> lastPlayedStatistic.setPlayers(lastPlayedStatistic.getPlayers() + 1),
-                () -> lastPlayed.add(new LastPlayed(playerStatistic.getDate(), 1))
-            );
+            .ifPresent(lastPlayedStatistic -> lastPlayedStatistic.setPlayers(lastPlayedStatistic.getPlayers() + 1));
+    }
+
+    private static boolean isInRange(final LastPlayed lastPlayed, final LocalDateTime date) {
+        final long minutes = Duration.between(LocalDateTime.now(), date).toMinutes();
+        if (minutes < lastPlayed.getHour() * 60L) {
+            for (int i = 0; i < LAST_PLAYED_RANGE.size(); i++) {
+                if (lastPlayed.getHour() == LAST_PLAYED_RANGE.get(i)) {
+                    if (i == 0) {
+                        return true;
+                    } else return LAST_PLAYED_RANGE.get(i - 1) * 60L > minutes;
+                }
+            }
+        } else return lastPlayed.getHour() == LAST_PLAYED_RANGE.get(LAST_PLAYED_RANGE.size() - 1);
+        return false;
     }
 
     private static void addPlayerJoined(

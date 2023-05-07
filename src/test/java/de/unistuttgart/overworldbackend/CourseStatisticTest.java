@@ -228,7 +228,7 @@ public class CourseStatisticTest {
 
         playerTaskStatisticService.submitData(playerTaskStatisticData);
 
-        fullURL = String.format("/courses/%s/statistic", initialCourse.getId());
+        fullURL = String.format("/courses/%s/statistics", initialCourse.getId());
 
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -267,9 +267,9 @@ public class CourseStatisticTest {
         final List<LastPlayed> lastPlayedList = List.of(
             objectMapper.readValue(result.getResponse().getContentAsString(), LastPlayed[].class)
         );
-        assertEquals(1, lastPlayedList.size());
+        assertEquals(7, lastPlayedList.size());
         assertEquals(41, lastPlayedList.get(0).getPlayers());
-        assertTrue(isSameDay(lastPlayedList.get(0).getLastPlayed(), LocalDateTime.now()));
+        assertEquals(1, lastPlayedList.get(0).getHour());
     }
 
     @Test
