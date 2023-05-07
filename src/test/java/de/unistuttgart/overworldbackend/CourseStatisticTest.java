@@ -288,7 +288,7 @@ public class CourseStatisticTest {
             1,
             unlockedAreas.stream().filter(unlockedAreaAmount -> unlockedAreaAmount.getLevel() == 2).toList().size()
         );
-        assertEquals(2, unlockedAreas.size());
+        assertEquals(3, unlockedAreas.size());
         assertEquals(41, unlockedAreas.get(0).getPlayers());
         assertEquals(1, unlockedAreas.get(1).getPlayers());
     }

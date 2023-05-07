@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourseStatisticService {
 
     static final List<Integer> LAST_PLAYED_RANGE = List.of(1, 3, 12, 24, 3 * 24, 7 * 24, 14 * 24);
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     PlayerStatisticRepository playerStatisticRepository;
@@ -61,7 +63,7 @@ public class CourseStatisticService {
      * @return set of unlocked areas amount
      */
     public List<UnlockedAreaAmount> getUnlockedAreas(final int courseId) {
-        final List<UnlockedAreaAmount> unlockedAreaAmounts = new ArrayList<>();
+        final List<UnlockedAreaAmount> unlockedAreaAmounts = createInitialAreaAmount(courseService.getCourse(courseId));
         playerStatisticRepository
             .findByCourseId(courseId)
             .forEach(playerStatistic ->
@@ -73,36 +75,37 @@ public class CourseStatisticService {
                             .parallelStream()
                             .filter(unlockedAreaAmount -> unlockedAreaAmount.getName().equals(name))
                             .findFirst()
-                            .ifPresentOrElse(
-                                unlockedArea -> unlockedArea.setPlayers(unlockedArea.getPlayers() + 1),
-                                () -> unlockedAreaAmounts.add(new UnlockedAreaAmount(getLevel(area), name, 1))
-                            );
+                            .ifPresent(unlockedArea -> unlockedArea.setPlayers(unlockedArea.getPlayers() + 1));
                     })
             );
         unlockedAreaAmounts.sort(Comparator.comparingInt(UnlockedAreaAmount::getLevel));
         return unlockedAreaAmounts;
     }
 
-    private int getLevel(final Area area) {
-        final AtomicInteger level = new AtomicInteger(0);
-        final Course course = area.getCourse();
+    /**
+     * Create initial area amount wit
+     * @param course course to get the areas from
+     * @return initial list of unlocked area amount
+     */
+    private List<UnlockedAreaAmount> createInitialAreaAmount(final Course course) {
+        final List<UnlockedAreaAmount> unlockedAreaAmounts = new ArrayList<>();
+        int level = 0;
         for (int i = 0; i < course.getWorlds().size(); i++) {
             final World world = course.getWorlds().get(i);
-            if (world.equals(area)) {
-                return level.incrementAndGet();
-            } else {
-                level.incrementAndGet();
+            if (world.isConfigured() || world.isActive()) {
+                level++;
+                unlockedAreaAmounts.add(new UnlockedAreaAmount(level, getAreaName(world), 0));
                 for (int j = 0; j < world.getDungeons().size(); j++) {
                     final Dungeon dungeon = world.getDungeons().get(j);
-                    if (dungeon.equals(area)) {
-                        return level.incrementAndGet();
-                    } else {
-                        level.incrementAndGet();
+                    if (dungeon.isConfigured() || dungeon.isActive()) {
+                        level++;
+                        unlockedAreaAmounts.add(new UnlockedAreaAmount(level, getAreaName(dungeon), 0));
                     }
                 }
             }
         }
-        return level.get();
+
+        return unlockedAreaAmounts;
     }
 
     /**
