@@ -1,15 +1,14 @@
 package de.unistuttgart.overworldbackend.data;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 /**
  * The statistic of a player in a course.
