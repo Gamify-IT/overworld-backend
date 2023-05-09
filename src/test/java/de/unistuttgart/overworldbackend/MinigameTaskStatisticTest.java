@@ -105,7 +105,7 @@ public class MinigameTaskStatisticTest {
         world.setDungeons(List.of());
         world.setConfigured(true);
 
-        List<World> worlds = new ArrayList<>();
+        final List<World> worlds = new ArrayList<>();
         worlds.add(world);
 
         final Course course = new Course("PSE", "SS-22", "Basic lecture of computer science students", true, worlds);

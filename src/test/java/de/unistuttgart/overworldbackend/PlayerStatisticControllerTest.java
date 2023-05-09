@@ -158,7 +158,6 @@ class PlayerStatisticControllerTest {
         playerstatistic.setUnlockedAreas(unlockedAreas);
         playerstatistic.setCompletedDungeons(new ArrayList<>());
         initialPlayerStatistic = playerstatisticRepository.save(playerstatistic);
-        System.out.println(initialPlayerStatistic.getDate());
         initialPlayerStatisticDTO = playerstatisticMapper.playerStatisticToPlayerstatisticDTO(initialPlayerStatistic);
 
         assertNotNull(initialCourse.getCourseName());

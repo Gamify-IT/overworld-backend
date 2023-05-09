@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 public class CourseStatisticController {
 
     @Autowired
-    JWTValidatorService jwtValidatorService;
+    private JWTValidatorService jwtValidatorService;
 
     @Autowired
-    CourseStatisticService courseStatisticService;
+    private CourseStatisticService courseStatisticService;
 
     @Operation(summary = "Player joined the course")
     @GetMapping("/players-joined")

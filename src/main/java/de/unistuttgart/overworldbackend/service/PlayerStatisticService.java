@@ -253,8 +253,14 @@ public class PlayerStatisticService {
         }
     }
 
-    public PlayerStatisticDTO setActive(final int CourseId, final String playerId) {
-        final PlayerStatistic playerStatistic = getPlayerStatisticFromCourse(CourseId, playerId);
+    /**
+     * Sets the last active time of a player to the current time
+     * @param courseId the id of the course
+     * @param playerId the id of the player
+     * @return the updated player statistic
+     */
+    public PlayerStatisticDTO setActive(final int courseId, final String playerId) {
+        final PlayerStatistic playerStatistic = getPlayerStatisticFromCourse(courseId, playerId);
         playerStatistic.setLastActive(LocalDateTime.now());
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             playerstatisticRepository.save(playerStatistic)

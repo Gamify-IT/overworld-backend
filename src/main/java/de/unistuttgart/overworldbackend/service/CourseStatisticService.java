@@ -3,11 +3,6 @@ package de.unistuttgart.overworldbackend.service;
 import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.statistics.*;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 @Service
 @Transactional
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CourseStatisticService {
 
+    // time in hours
     static final List<Integer> LAST_PLAYED_RANGE = List.of(1, 3, 12, 24, 3 * 24, 7 * 24, 14 * 24);
 
     @Autowired
@@ -147,23 +149,27 @@ public class CourseStatisticService {
     }
 
     private String getAreaName(final Area maxArea) {
-        final String name;
         if (maxArea instanceof Dungeon dungeon) {
-            name = dungeon.getWorld().getStaticName() + " - " + dungeon.getStaticName();
+            return dungeon.getWorld().getStaticName() + " - " + dungeon.getStaticName();
         } else {
-            name = maxArea.getStaticName();
+            return maxArea.getStaticName();
         }
-        return name;
     }
 
     private static void addLastPlayed(final PlayerStatistic playerStatistic, final List<LastPlayed> lastPlayed) {
         lastPlayed
             .parallelStream()
-            .filter(lastPlayedStatistic -> isInRange(lastPlayedStatistic, playerStatistic.getDate()))
+            .filter(lastPlayedStatistic -> isInRange(lastPlayedStatistic, playerStatistic.getCreated()))
             .findFirst()
             .ifPresent(lastPlayedStatistic -> lastPlayedStatistic.setPlayers(lastPlayedStatistic.getPlayers() + 1));
     }
 
+    /**
+     * Check if the date is in the range of the last played statistic
+     * @param lastPlayed last played statistic
+     * @param date date to check
+     * @return true if the date is in the range of the last played statistic
+     */
     private static boolean isInRange(final LastPlayed lastPlayed, final LocalDateTime date) {
         final long minutes = Duration.between(LocalDateTime.now(), date).toMinutes();
         if (minutes < lastPlayed.getHour() * 60L) {
@@ -178,6 +184,11 @@ public class CourseStatisticService {
         return false;
     }
 
+    /**
+     * Add the player to the player joined statistic if day already exists, otherwise create a new day
+     * @param playerStatistic player statistic to get the date from
+     * @param playerJoinedStatistic player joined statistic to add the player to
+     */
     private static void addPlayerJoined(
         final PlayerStatistic playerStatistic,
         final PlayerJoinedStatistic playerJoinedStatistic
@@ -185,7 +196,7 @@ public class CourseStatisticService {
         playerJoinedStatistic
             .getJoined()
             .parallelStream()
-            .filter(playerJoined -> isSameDay(playerJoined.getDate(), playerStatistic.getDate()))
+            .filter(playerJoined -> isSameDay(playerJoined.getDate(), playerStatistic.getCreated()))
             .findFirst()
             .ifPresentOrElse(
                 playerJoined -> {
@@ -193,7 +204,7 @@ public class CourseStatisticService {
                     playerJoinedStatistic.addPlayer();
                 },
                 () -> {
-                    playerJoinedStatistic.getJoined().add(new PlayerJoined(playerStatistic.getDate(), 1));
+                    playerJoinedStatistic.getJoined().add(new PlayerJoined(playerStatistic.getCreated(), 1));
                     playerJoinedStatistic.addPlayer();
                 }
             );
