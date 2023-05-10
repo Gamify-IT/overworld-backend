@@ -35,6 +35,10 @@ public class PlayerStatisticDTO {
     String userId;
     String username;
 
+    float logoutXPosition;
+    float logoutYPosition;
+    String logoutScene;
+
     LocalDateTime created;
 
     LocalDateTime lastActive;
