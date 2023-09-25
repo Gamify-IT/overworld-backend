@@ -23,7 +23,7 @@ public class AreaMap {
     @ManyToOne
     Course course;
 
-    @ManyToOne
+    @OneToOne
     Area area;
 
     boolean generatedArea;

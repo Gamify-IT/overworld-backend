@@ -71,6 +71,9 @@ public class Area {
     @ManyToOne
     Course course;
 
+    @OneToOne
+    AreaMap areaMap;
+
     protected Area( //NOSONAR
         final String staticName,
         final String topicName,
