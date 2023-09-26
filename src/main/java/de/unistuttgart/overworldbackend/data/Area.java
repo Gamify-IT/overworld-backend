@@ -90,6 +90,7 @@ public class Area {
         this.npcs = npcs;
         this.books = books;
         this.index = index;
+        areaMap = new AreaMap(this);
     }
 
     protected Area(
@@ -110,6 +111,7 @@ public class Area {
         this.npcs = npcs;
         this.books = books;
         this.index = index;
+        areaMap = new AreaMap(this);
     }
 
     @Override

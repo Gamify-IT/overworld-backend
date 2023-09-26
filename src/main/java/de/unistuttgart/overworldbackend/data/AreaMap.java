@@ -31,4 +31,10 @@ public class AreaMap {
     @Nullable
     @OneToOne
     CustomAreaMap customAreaMap;
+
+    public AreaMap(Area area){
+        this.area = area;
+        course = area.getCourse();
+        generatedArea = false;
+    }
 }
