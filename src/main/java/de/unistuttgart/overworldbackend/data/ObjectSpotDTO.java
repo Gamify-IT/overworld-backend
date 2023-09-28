@@ -24,5 +24,5 @@ public class ObjectSpotDTO {
     UUID id;
 
     AreaLocationDTO location;
-    Position position;
+    PositionDTO position;
 }

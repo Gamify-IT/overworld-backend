@@ -9,6 +9,7 @@ import de.unistuttgart.overworldbackend.repositories.AreaMapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class AreaMapService {
 
     /**
      * Get the AreaMap from a world by its index and a course by its id
+     * @throws ResponseStatusException (404) if world with its index could not be found in the course
      * @param courseId the id of the course
      * @param worldIndex the index of the world
      * @return the found AreaMap
@@ -55,6 +57,7 @@ public class AreaMapService {
 
     /**
      * Get the AreaMap from a dungeon by its index, the world its in by its index and a course by its id
+     * @throws ResponseStatusException (404) if dungeon with its index could not be found in the course
      * @param courseId the id of the course
      * @param worldIndex the index of the world
      * @param dungeonIndex the index of the dungeon
@@ -88,6 +91,7 @@ public class AreaMapService {
 
     /**
      * Update an area map of a world by its id from a course
+     * @throws ResponseStatusException (404) if world with its index could not be found in the course
      * @param courseId the id of the course the world is part of
      * @param worldIndex the index of the world
      * @param areaMapDTO the updated area map
@@ -101,6 +105,7 @@ public class AreaMapService {
 
     /**
      * Update an area map of a dungeon by its id from a course
+     * @throws ResponseStatusException (404) if dungeon with its index could not be found in the course
      * @param courseId the id of the course the dungeon is part of
      * @param worldIndex the index of the world
      * @param dungeonIndex the index of the dungeon
