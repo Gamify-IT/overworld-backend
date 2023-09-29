@@ -9,6 +9,10 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import java.util.UUID;
 
+/**
+ * Represents the state of an area map, whether it is a generated area map or a default one
+ * It contains a flag and, if it is a generated area map, a custom area map
+ */
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "course_id", "area_id" }) })
 @Data
@@ -32,7 +36,7 @@ public class AreaMap {
     boolean generatedArea;
 
     @Nullable
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     CustomAreaMap customAreaMap;
 
     public AreaMap(Area area){

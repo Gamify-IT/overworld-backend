@@ -14,8 +14,8 @@ import java.util.Set;
  * It contains the layout and all objects.
  */
 @Entity
-@Getter
-@Setter
+@Table
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
