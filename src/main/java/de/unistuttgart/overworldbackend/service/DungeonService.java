@@ -36,7 +36,7 @@ public class DungeonService {
         areaConfig = new AreaConfig();
         final ObjectMapper mapper = new ObjectMapper();
 
-        final InputStream inputStream = TypeReference.class.getResourceAsStream("/config.json");
+        final InputStream inputStream = TypeReference.class.getResourceAsStream("/areaConfig.json");
         try {
             areaConfig = mapper.readValue(inputStream, AreaConfig.class);
         } catch (final IOException e) {
