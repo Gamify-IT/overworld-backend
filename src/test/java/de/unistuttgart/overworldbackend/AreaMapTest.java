@@ -96,10 +96,10 @@ public class AreaMapTest {
         world.setStaticName("World 1");
         world.setTopicName("Topic");
         world.setActive(true);
-        world.setMinigameTasks(Set.of());
-        world.setNpcs(Set.of());
-        world.setBooks(Set.of());
-        world.setDungeons(List.of());
+        world.setMinigameTasks(new HashSet<>());
+        world.setNpcs(new HashSet<>());
+        world.setBooks(new HashSet<>());
+        world.setDungeons(new ArrayList<>());
         AreaMap areaMap = new AreaMap(world);
         world.setAreaMap(areaMap);
 
@@ -108,7 +108,7 @@ public class AreaMapTest {
                 "SS-23",
                 "Basic lecture of computer science students",
                 true,
-                Arrays.asList(world)
+                List.of(world)
         );
 
         initialCourse = courseRepository.save(course);
