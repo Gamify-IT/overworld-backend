@@ -39,6 +39,31 @@ public class AreaMapController {
         return areaMapMapper.areaMapsToAreaMapDTOs(areaMapService.getAllAreaMapsFromCourse(courseId));
     }
 
+    @Operation(summary = "Get area map of a world by its index from a course by its id")
+    @GetMapping("/{worldIndex}")
+    public AreaMapDTO getAreaMapFromWorld(
+            @PathVariable final int courseId,
+            @PathVariable final int worldIndex,
+            @CookieValue("access_token") final String accessToken
+    ){
+        jwtValidatorService.validateTokenOrThrow(accessToken);
+        log.debug("get area map from world {} of course {}", worldIndex, courseId);
+        return areaMapMapper.areaMapToAreaMapDTO(areaMapService.getAreaMapFromWorld(courseId, worldIndex));
+    }
+
+    @Operation(summary = "Get area map of a dungeon by its index from a course by its id")
+    @GetMapping("/{worldIndex}/dungeon/{dungeonIndex}")
+    public AreaMapDTO getAreaMapFromDungeon(
+            @PathVariable final int courseId,
+            @PathVariable final int worldIndex,
+            @PathVariable final int dungeonIndex,
+            @CookieValue("access_token") final String accessToken
+    ){
+        jwtValidatorService.validateTokenOrThrow(accessToken);
+        log.debug("get area map from dungeon {} of world {} of course {}", dungeonIndex, worldIndex, courseId);
+        return areaMapMapper.areaMapToAreaMapDTO(areaMapService.getAreaMapFromDungeon(courseId, worldIndex, dungeonIndex));
+    }
+
     @Operation(summary = "Update a area map from a world by its index from a course")
     @PutMapping("/{worldIndex}")
     public AreaMapDTO updateAreaMapFromWorld(
