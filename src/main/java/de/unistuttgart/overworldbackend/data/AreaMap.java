@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "course_id", "area_id" }) })
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -21,6 +21,7 @@ public class AreaMap {
     @GeneratedValue(generator = "uuid")
     UUID id;
 
+    @JsonBackReference(value = "course-area-maps")
     @ManyToOne
     Course course;
 

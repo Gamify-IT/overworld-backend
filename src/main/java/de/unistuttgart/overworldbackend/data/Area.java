@@ -72,8 +72,8 @@ public class Area {
     @ManyToOne
     Course course;
 
-    @JsonBackReference(value = "area-map")
-    @OneToOne
+    @JsonManagedReference(value = "area-map")
+    @OneToOne(cascade = CascadeType.ALL)
     AreaMap areaMap;
 
     protected Area( //NOSONAR
