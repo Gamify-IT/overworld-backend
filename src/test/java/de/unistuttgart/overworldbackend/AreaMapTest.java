@@ -212,7 +212,7 @@ public class AreaMapTest {
 
         assertNotNull(updatedAreaMapDTOResult.getAreaMapDTO());
 
-        assertEquals(AreaStyle.CAVE, updatedAreaMapDTOResult.getAreaMapDTO().getStyle());
+        assertEquals("CAVE", updatedAreaMapDTOResult.getAreaMapDTO().getStyle().toString());
 
         assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getSizeX());
         assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getSizeY());
