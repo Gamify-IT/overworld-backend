@@ -24,7 +24,7 @@ public class ObjectSpot {
     @ManyToOne
     Area area;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     Position position;
 
     protected ObjectSpot(
