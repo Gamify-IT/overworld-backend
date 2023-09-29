@@ -3,6 +3,7 @@ package de.unistuttgart.overworldbackend.service;
 import aj.org.objectweb.asm.TypeReference;
 import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.config.AreaConfig;
+import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.DungeonMapper;
 import de.unistuttgart.overworldbackend.repositories.DungeonRepository;
 
@@ -31,6 +32,9 @@ public class DungeonService {
 
     @Autowired
     private DungeonMapper dungeonMapper;
+
+    @Autowired
+    private AreaMapMapper areaMapMapper;
 
     public DungeonService(){
         areaConfig = new AreaConfig();
@@ -126,6 +130,17 @@ public class DungeonService {
      */
     public void updateDungeonContent(final int courseId, final int worldIndex, final int dungeonIndex, final AreaMapDTO areaMapDTO){
         final Dungeon dungeon = getDungeonByIndexFromCourse(courseId, worldIndex, dungeonIndex);
+
+        AreaMap newAreaMap = areaMapMapper.areaMapDTOToAreaMap(areaMapDTO);
+        dungeon.getAreaMap().setGeneratedArea(newAreaMap.isGeneratedArea());
+        if(newAreaMap.isGeneratedArea())
+        {
+            dungeon.getAreaMap().setCustomAreaMap(newAreaMap.getCustomAreaMap());
+        }
+        else
+        {
+            dungeon.getAreaMap().setCustomAreaMap(null);
+        }
 
         if(areaMapDTO.isGeneratedArea())
         {

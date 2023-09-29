@@ -3,6 +3,7 @@ package de.unistuttgart.overworldbackend.service;
 import aj.org.objectweb.asm.TypeReference;
 import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.config.AreaConfig;
+import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.WorldMapper;
 import de.unistuttgart.overworldbackend.repositories.WorldRepository;
 
@@ -29,6 +30,9 @@ public class WorldService {
 
     @Autowired
     private WorldMapper worldMapper;
+
+    @Autowired
+    private AreaMapMapper areaMapMapper;
 
     public WorldService(){
         areaConfig = new AreaConfig();
@@ -114,6 +118,17 @@ public class WorldService {
      */
     public void updateWorldContent(final int courseId, final int worldIndex, final AreaMapDTO areaMapDTO){
         final World world = getWorldByIndexFromCourse(courseId, worldIndex);
+
+        AreaMap newAreaMap = areaMapMapper.areaMapDTOToAreaMap(areaMapDTO);
+        world.getAreaMap().setGeneratedArea(newAreaMap.isGeneratedArea());
+        if(newAreaMap.isGeneratedArea())
+        {
+            world.getAreaMap().setCustomAreaMap(newAreaMap.getCustomAreaMap());
+        }
+        else
+        {
+            world.getAreaMap().setCustomAreaMap(null);
+        }
 
         if(areaMapDTO.isGeneratedArea())
         {

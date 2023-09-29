@@ -24,12 +24,6 @@ import java.util.Set;
 public class AreaMapService {
 
     @Autowired
-    private AreaMapRepository areaMapRepository;
-
-    @Autowired
-    private AreaService areaService;
-
-    @Autowired
     private WorldService worldService;
 
     @Autowired
@@ -37,9 +31,6 @@ public class AreaMapService {
 
     @Autowired
     private AreaMapMapper areaMapMapper;
-
-    @Autowired
-    private CustomAreaMapMapper customAreaMapMapper;
 
     /**
      * Get the AreaMap from a world by its index and a course by its id
@@ -98,10 +89,9 @@ public class AreaMapService {
      * @return the updated area map as DTO
      */
     public AreaMapDTO updateAreaMapOfWorld(final int courseId, final int worldIndex, final AreaMapDTO areaMapDTO){
-        final AreaMap areaMap = getAreaMapFromWorld(courseId, worldIndex);
-        final AreaMapDTO updatedAreaMapDTO = updateAreaMap(areaMapDTO, areaMap);
         worldService.updateWorldContent(courseId, worldIndex, areaMapDTO);
-        return updatedAreaMapDTO;
+        final AreaMap updatedAreaMap = getAreaMapFromWorld(courseId, worldIndex);
+        return areaMapMapper.areaMapToAreaMapDTO(updatedAreaMap);
     }
 
     /**
@@ -114,31 +104,8 @@ public class AreaMapService {
      * @return the updated area map as DTO
      */
     public AreaMapDTO updateAreaMapOfDungeon(final int courseId, final int worldIndex, final int dungeonIndex, final AreaMapDTO areaMapDTO){
-        final AreaMap areaMap = getAreaMapFromDungeon(courseId, worldIndex, dungeonIndex);
-        final AreaMapDTO updatedAreaMapDTO = updateAreaMap(areaMapDTO, areaMap);
         dungeonService.updateDungeonContent(courseId, worldIndex, dungeonIndex, areaMapDTO);
-        return updatedAreaMapDTO;
-    }
-
-    /**
-     * Updates an area map with a given area map DTO
-     * @param areaMapDTO the updated area map
-     * @param areaMap the area map to be updated
-     * @return the updated area map as DTO
-     */
-    private AreaMapDTO updateAreaMap(AreaMapDTO areaMapDTO, AreaMap areaMap) {
-        areaMap.setGeneratedArea(areaMapDTO.isGeneratedArea());
-        if(areaMap.isGeneratedArea())
-        {
-            CustomAreaMapDTO customAreaMapDTO = areaMapDTO.getAreaMapDTO();
-            CustomAreaMap customAreaMap = customAreaMapMapper.customAreaMapDTOToCustomAreaMap(customAreaMapDTO);
-            areaMap.setCustomAreaMap(customAreaMap);
-        }
-        else
-        {
-            areaMap.setCustomAreaMap(null);
-        }
-        final AreaMap updatedAreaMap = areaMapRepository.save(areaMap);
+        final AreaMap updatedAreaMap = getAreaMapFromDungeon(courseId, worldIndex, dungeonIndex);
         return areaMapMapper.areaMapToAreaMapDTO(updatedAreaMap);
     }
 }
