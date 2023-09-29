@@ -100,7 +100,8 @@ public class AreaMapTest {
         world.setNpcs(Set.of());
         world.setBooks(Set.of());
         world.setDungeons(List.of());
-        world.setAreaMap(new AreaMap());
+        AreaMap areaMap = new AreaMap(world);
+        world.setAreaMap(areaMap);
 
         final Course course = new Course(
                 "Gamify",

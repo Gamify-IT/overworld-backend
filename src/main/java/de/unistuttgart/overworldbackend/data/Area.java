@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.HashSet;
 import java.util.Objects;
@@ -71,6 +72,7 @@ public class Area {
     @ManyToOne
     Course course;
 
+    @JsonBackReference(value = "area-map")
     @OneToOne
     AreaMap areaMap;
 

@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,6 +24,7 @@ public class AreaMap {
     @ManyToOne
     Course course;
 
+    @JsonBackReference(value = "area-map")
     @OneToOne
     Area area;
 
