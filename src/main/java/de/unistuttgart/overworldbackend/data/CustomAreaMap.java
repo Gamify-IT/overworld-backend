@@ -25,7 +25,7 @@ public class CustomAreaMap {
     @GeneratedValue(generator = "uuid")
     UUID id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     Layout layout;
 
     AreaStyle style;
