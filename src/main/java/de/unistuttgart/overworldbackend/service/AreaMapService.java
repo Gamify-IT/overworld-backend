@@ -98,9 +98,10 @@ public class AreaMapService {
      * @return the updated area map as DTO
      */
     public AreaMapDTO updateAreaMapOfWorld(final int courseId, final int worldIndex, final AreaMapDTO areaMapDTO){
-        worldService.updateWorldContent(courseId, worldIndex, areaMapDTO);
         final AreaMap areaMap = getAreaMapFromWorld(courseId, worldIndex);
-        return updateAreaMap(areaMapDTO, areaMap);
+        final AreaMapDTO updatedAreaMapDTO = updateAreaMap(areaMapDTO, areaMap);
+        worldService.updateWorldContent(courseId, worldIndex, areaMapDTO);
+        return updatedAreaMapDTO;
     }
 
     /**
@@ -113,9 +114,10 @@ public class AreaMapService {
      * @return the updated area map as DTO
      */
     public AreaMapDTO updateAreaMapOfDungeon(final int courseId, final int worldIndex, final int dungeonIndex, final AreaMapDTO areaMapDTO){
-        dungeonService.updateDungeonContent(courseId, worldIndex, dungeonIndex, areaMapDTO);
         final AreaMap areaMap = getAreaMapFromDungeon(courseId, worldIndex, dungeonIndex);
-        return updateAreaMap(areaMapDTO, areaMap);
+        final AreaMapDTO updatedAreaMapDTO = updateAreaMap(areaMapDTO, areaMap);
+        dungeonService.updateDungeonContent(courseId, worldIndex, dungeonIndex, areaMapDTO);
+        return updatedAreaMapDTO;
     }
 
     /**
