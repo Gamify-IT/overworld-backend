@@ -144,13 +144,13 @@ public class DungeonService {
 
         if(areaMapDTO.isGeneratedArea())
         {
-            if(areaMapDTO.getAreaMapDTO() == null)
+            if(areaMapDTO.getCustomAreaMap() == null)
             {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No custom area map provided");
             }
-            updateMinigames(dungeon, areaMapDTO.getAreaMapDTO().getMinigameSpots().size());
-            updateNPCs(dungeon, areaMapDTO.getAreaMapDTO().getNpcSpots().size());
-            updateBooks(dungeon, areaMapDTO.getAreaMapDTO().getBookSpots().size());
+            updateMinigames(dungeon, areaMapDTO.getCustomAreaMap().getMinigameSpots().size());
+            updateNPCs(dungeon, areaMapDTO.getCustomAreaMap().getNpcSpots().size());
+            updateBooks(dungeon, areaMapDTO.getCustomAreaMap().getBookSpots().size());
         }
         else
         {

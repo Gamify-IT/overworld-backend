@@ -190,7 +190,7 @@ public class AreaMapTest {
     void updateAreaMap() throws Exception {
         final AreaMapDTO updatedAreaMapDTO = areaMapMapper.areaMapToAreaMapDTO(initialAreaMap);
         updatedAreaMapDTO.setGeneratedArea(true);
-        updatedAreaMapDTO.setAreaMapDTO(getSmallCustomAreaMapDTO());
+        updatedAreaMapDTO.setCustomAreaMap(getSmallCustomAreaMapDTO());
 
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
@@ -210,21 +210,21 @@ public class AreaMapTest {
 
         assertTrue(updatedAreaMapDTOResult.isGeneratedArea());
 
-        assertNotNull(updatedAreaMapDTOResult.getAreaMapDTO());
+        assertNotNull(updatedAreaMapDTOResult.getCustomAreaMap());
 
-        assertEquals(AreaStyle.CAVE, updatedAreaMapDTOResult.getAreaMapDTO().getStyle());
+        assertEquals(AreaStyle.CAVE, updatedAreaMapDTOResult.getCustomAreaMap().getStyle());
 
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getSizeX());
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getSizeY());
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getLayers());
-        assertEquals("tile", updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getTiles());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getSizeX());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getSizeY());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getLayers());
+        assertEquals("tile", updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getTiles());
 
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getMinigameSpots().size());
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getNpcSpots().size());
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getBookSpots().size());
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getTeleporterSpots().size());
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getBarrierSpots().size());
-        assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getSceneTransitions().size());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getMinigameSpots().size());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getNpcSpots().size());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getBookSpots().size());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getTeleporterSpots().size());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getBarrierSpots().size());
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getSceneTransitionSpots().size());
     }
 
     /**
@@ -235,7 +235,7 @@ public class AreaMapTest {
     void updateAreaMap_CreateObjects() throws Exception {
         final AreaMapDTO updatedAreaMapDTO = areaMapMapper.areaMapToAreaMapDTO(initialAreaMap);
         updatedAreaMapDTO.setGeneratedArea(true);
-        updatedAreaMapDTO.setAreaMapDTO(getBigCustomAreaMapDTO());
+        updatedAreaMapDTO.setCustomAreaMap(getBigCustomAreaMapDTO());
 
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
@@ -268,7 +268,7 @@ public class AreaMapTest {
     void updateAreaMap_CreateDungeons() throws Exception {
         final AreaMapDTO updatedAreaMapDTO = areaMapMapper.areaMapToAreaMapDTO(initialAreaMap);
         updatedAreaMapDTO.setGeneratedArea(true);
-        updatedAreaMapDTO.setAreaMapDTO(getBigCustomAreaMapDTO());
+        updatedAreaMapDTO.setCustomAreaMap(getBigCustomAreaMapDTO());
 
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
@@ -305,7 +305,7 @@ public class AreaMapTest {
     void updateAreaMap_RemovesObjects() throws Exception {
         final AreaMapDTO updatedAreaMapDTO = areaMapMapper.areaMapToAreaMapDTO(initialAreaMap);
         updatedAreaMapDTO.setGeneratedArea(true);
-        updatedAreaMapDTO.setAreaMapDTO(getSmallCustomAreaMapDTO());
+        updatedAreaMapDTO.setCustomAreaMap(getSmallCustomAreaMapDTO());
 
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
@@ -338,7 +338,7 @@ public class AreaMapTest {
     void updateAreaMap_RemoveDungeons() throws Exception {
         final AreaMapDTO updatedAreaMapDTO = areaMapMapper.areaMapToAreaMapDTO(initialAreaMap);
         updatedAreaMapDTO.setGeneratedArea(true);
-        updatedAreaMapDTO.setAreaMapDTO(getSmallCustomAreaMapDTO());
+        updatedAreaMapDTO.setCustomAreaMap(getSmallCustomAreaMapDTO());
 
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
@@ -393,7 +393,7 @@ public class AreaMapTest {
         );
 
         assertFalse(updatedAreaMapDTOResult.isGeneratedArea());
-        assertNull(updatedAreaMapDTOResult.getAreaMapDTO());
+        assertNull(updatedAreaMapDTOResult.getCustomAreaMap());
     }
 
     /**
@@ -502,7 +502,7 @@ public class AreaMapTest {
         sceneTransitionSpotDTO.setSize(size);
         sceneTransitionSpotDTO.setAreaToLoad(areaLocationDTO);
         sceneTransitionSpotDTO.setFacingDirection(FacingDirection.SOUTH);
-        customAreaMapDTO.setSceneTransitions(List.of(sceneTransitionSpotDTO));
+        customAreaMapDTO.setSceneTransitionSpots(List.of(sceneTransitionSpotDTO));
 
         return customAreaMapDTO;
     }
@@ -580,7 +580,7 @@ public class AreaMapTest {
         {
             dungeons.add(sceneTransitionSpotDTO);
         }
-        customAreaMapDTO.setSceneTransitions(dungeons);
+        customAreaMapDTO.setSceneTransitionSpots(dungeons);
 
         return customAreaMapDTO;
     }

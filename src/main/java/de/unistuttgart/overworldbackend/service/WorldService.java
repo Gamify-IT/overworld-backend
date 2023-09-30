@@ -132,14 +132,14 @@ public class WorldService {
 
         if(areaMapDTO.isGeneratedArea())
         {
-            if(areaMapDTO.getAreaMapDTO() == null)
+            if(areaMapDTO.getCustomAreaMap() == null)
             {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No custom area map provided");
             }
-            updateMinigames(world, areaMapDTO.getAreaMapDTO().getMinigameSpots().size());
-            updateNPCs(world, areaMapDTO.getAreaMapDTO().getNpcSpots().size());
-            updateBooks(world, areaMapDTO.getAreaMapDTO().getBookSpots().size());
-            updateDungeons(world, areaMapDTO.getAreaMapDTO().getSceneTransitions().size());
+            updateMinigames(world, areaMapDTO.getCustomAreaMap().getMinigameSpots().size());
+            updateNPCs(world, areaMapDTO.getCustomAreaMap().getNpcSpots().size());
+            updateBooks(world, areaMapDTO.getCustomAreaMap().getBookSpots().size());
+            updateDungeons(world, areaMapDTO.getCustomAreaMap().getSceneTransitionSpots().size());
         }
         else
         {
