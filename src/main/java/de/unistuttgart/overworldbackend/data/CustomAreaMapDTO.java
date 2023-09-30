@@ -45,5 +45,5 @@ public class CustomAreaMapDTO {
     List<TeleporterSpotDTO> teleporterSpots;
 
     @ElementCollection
-    List<SceneTransitionSpotDTO> sceneTransitions;
+    List<SceneTransitionSpotDTO> sceneTransitionSpots;
 }

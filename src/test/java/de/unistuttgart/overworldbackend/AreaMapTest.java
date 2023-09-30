@@ -212,7 +212,7 @@ public class AreaMapTest {
 
         assertNotNull(updatedAreaMapDTOResult.getAreaMapDTO());
 
-        assertEquals("CAVE", updatedAreaMapDTOResult.getAreaMapDTO().getStyle().toString());
+        assertEquals(AreaStyle.CAVE, updatedAreaMapDTOResult.getAreaMapDTO().getStyle());
 
         assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getSizeX());
         assertEquals(1, updatedAreaMapDTOResult.getAreaMapDTO().getLayout().getSizeY());
@@ -508,7 +508,7 @@ public class AreaMapTest {
     }
 
     /**
-     * Creates and returns a custo area map dto containing more than default of each object type
+     * Creates and returns a custom area map dto containing more than default of each object type
      * @return
      */
     private CustomAreaMapDTO getBigCustomAreaMapDTO() {

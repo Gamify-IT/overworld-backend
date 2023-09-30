@@ -27,5 +27,5 @@ public class AreaMapDTO {
     boolean generatedArea;
 
     @Nullable
-    CustomAreaMapDTO areaMapDTO;
+    CustomAreaMapDTO customAreaMap;
 }
