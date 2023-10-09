@@ -22,13 +22,13 @@ public class ObjectSpot {
     UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    Area area;
+    AreaLocation area;
 
     @ManyToOne(cascade = CascadeType.ALL)
     Position position;
 
     protected ObjectSpot(
-            final Area area,
+            final AreaLocation area,
             final Position position
     ) {
         this.area = area;

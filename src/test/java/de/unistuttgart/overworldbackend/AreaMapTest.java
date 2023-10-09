@@ -452,7 +452,7 @@ public class AreaMapTest {
 
         AreaLocationDTO areaLocationDTO = new AreaLocationDTO();
         areaLocationDTO.setWorldIndex(1);
-        areaLocationDTO.setDungeonIndex(null);
+        areaLocationDTO.setDungeonIndex(0);
 
         PositionDTO position = new PositionDTO();
         position.setX(0);
@@ -524,7 +524,7 @@ public class AreaMapTest {
 
         AreaLocationDTO areaLocationDTO = new AreaLocationDTO();
         areaLocationDTO.setWorldIndex(1);
-        areaLocationDTO.setDungeonIndex(null);
+        areaLocationDTO.setDungeonIndex(0);
 
         PositionDTO position = new PositionDTO();
         position.setX(0);
