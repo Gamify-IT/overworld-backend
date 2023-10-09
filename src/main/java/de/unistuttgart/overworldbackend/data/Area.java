@@ -34,7 +34,7 @@ public class Area {
     /**
      * A name given by the Gamify-IT development team to be displayed in the overworld.
      */
-    @NotNull
+    //@NotNull
     String staticName;
 
     /**
