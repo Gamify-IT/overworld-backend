@@ -21,7 +21,7 @@ public class TeleporterSpot extends ObjectSpot{
     String name;
 
     public TeleporterSpot(
-            final Area area,
+            final AreaLocation area,
             final Position position,
             final int index,
             final String name

@@ -28,7 +28,7 @@ public class SceneTransitionSpot extends ObjectSpot{
     FacingDirection facingDirection;
 
     public SceneTransitionSpot(
-            final Area area,
+            final AreaLocation area,
             final Position position,
             final Position size,
             final Area areaToLoad,

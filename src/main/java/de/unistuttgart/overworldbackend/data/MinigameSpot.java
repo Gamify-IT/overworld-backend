@@ -19,7 +19,7 @@ public class MinigameSpot extends ObjectSpot{
     int index;
 
     public MinigameSpot(
-            final Area area,
+            final AreaLocation area,
             final Position position,
             final int index
     ) {

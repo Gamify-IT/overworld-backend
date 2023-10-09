@@ -19,7 +19,7 @@ public class BookSpot extends ObjectSpot{
     int index;
 
     public BookSpot(
-            final Area area,
+            final AreaLocation area,
             final Position position,
             final int index
     ) {

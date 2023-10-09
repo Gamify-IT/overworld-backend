@@ -21,7 +21,7 @@ public class BarrierSpot extends ObjectSpot{
     int destinationAreaIndex;
 
     public BarrierSpot(
-            final Area area,
+            final AreaLocation area,
             final Position position,
             final BarrierType type,
             final int destinationAreaIndex

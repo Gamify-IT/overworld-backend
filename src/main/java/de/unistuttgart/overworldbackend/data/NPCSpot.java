@@ -25,7 +25,7 @@ public class NPCSpot extends ObjectSpot{
     String iconName;
 
     public NPCSpot(
-            final Area area,
+            final AreaLocation area,
             final Position position,
             final int index,
             final String name,
