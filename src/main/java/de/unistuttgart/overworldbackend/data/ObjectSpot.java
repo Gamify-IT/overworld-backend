@@ -21,7 +21,7 @@ public class ObjectSpot {
     @GeneratedValue(generator = "uuid")
     UUID id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     Area area;
 
     @ManyToOne(cascade = CascadeType.ALL)
