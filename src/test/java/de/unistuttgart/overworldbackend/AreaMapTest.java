@@ -459,13 +459,13 @@ public class AreaMapTest {
         position.setY(0);
 
         MinigameSpotDTO minigameSpotDTO = new MinigameSpotDTO();
-        minigameSpotDTO.setLocation(areaLocationDTO);
+        minigameSpotDTO.setArea(areaLocationDTO);
         minigameSpotDTO.setPosition(position);
         minigameSpotDTO.setIndex(1);
         customAreaMapDTO.setMinigameSpots(List.of(minigameSpotDTO));
 
         NPCSpotDTO npcSpotDTO = new NPCSpotDTO();
-        npcSpotDTO.setLocation(areaLocationDTO);
+        npcSpotDTO.setArea(areaLocationDTO);
         npcSpotDTO.setPosition(position);
         npcSpotDTO.setIndex(1);
         npcSpotDTO.setName("NPC");
@@ -474,27 +474,27 @@ public class AreaMapTest {
         customAreaMapDTO.setNpcSpots(List.of(npcSpotDTO));
 
         BookSpotDTO bookSpotDTO = new BookSpotDTO();
-        bookSpotDTO.setLocation(areaLocationDTO);
+        bookSpotDTO.setArea(areaLocationDTO);
         bookSpotDTO.setPosition(position);
         bookSpotDTO.setIndex(1);
         customAreaMapDTO.setBookSpots(List.of(bookSpotDTO));
 
         TeleporterSpotDTO teleporterSpotDTO = new TeleporterSpotDTO();
-        teleporterSpotDTO.setLocation(areaLocationDTO);
+        teleporterSpotDTO.setArea(areaLocationDTO);
         teleporterSpotDTO.setPosition(position);
         teleporterSpotDTO.setIndex(1);
         teleporterSpotDTO.setName("Teleporter 1");
         customAreaMapDTO.setTeleporterSpots(List.of(teleporterSpotDTO));
 
         BarrierSpotDTO barrierSpotDTO = new BarrierSpotDTO();
-        barrierSpotDTO.setLocation(areaLocationDTO);
+        barrierSpotDTO.setArea(areaLocationDTO);
         barrierSpotDTO.setPosition(position);
         barrierSpotDTO.setType(BarrierType.worldBarrier);
         barrierSpotDTO.setDestinationAreaIndex(2);
         customAreaMapDTO.setBarrierSpots(List.of(barrierSpotDTO));
 
         SceneTransitionSpotDTO sceneTransitionSpotDTO = new SceneTransitionSpotDTO();
-        sceneTransitionSpotDTO.setLocation(areaLocationDTO);
+        sceneTransitionSpotDTO.setArea(areaLocationDTO);
         sceneTransitionSpotDTO.setPosition(position);
         PositionDTO size = new PositionDTO();
         size.setX(1);
@@ -531,7 +531,7 @@ public class AreaMapTest {
         position.setY(0);
 
         MinigameSpotDTO minigameSpotDTO = new MinigameSpotDTO();
-        minigameSpotDTO.setLocation(areaLocationDTO);
+        minigameSpotDTO.setArea(areaLocationDTO);
         minigameSpotDTO.setPosition(position);
         minigameSpotDTO.setIndex(1);
         List<MinigameSpotDTO> minigameSpots = new ArrayList<>();
@@ -542,7 +542,7 @@ public class AreaMapTest {
         customAreaMapDTO.setMinigameSpots(minigameSpots);
 
         NPCSpotDTO npcSpotDTO = new NPCSpotDTO();
-        npcSpotDTO.setLocation(areaLocationDTO);
+        npcSpotDTO.setArea(areaLocationDTO);
         npcSpotDTO.setPosition(position);
         npcSpotDTO.setIndex(1);
         npcSpotDTO.setName("NPC");
@@ -556,7 +556,7 @@ public class AreaMapTest {
         customAreaMapDTO.setNpcSpots(npcSpots);
 
         BookSpotDTO bookSpotDTO = new BookSpotDTO();
-        bookSpotDTO.setLocation(areaLocationDTO);
+        bookSpotDTO.setArea(areaLocationDTO);
         bookSpotDTO.setPosition(position);
         bookSpotDTO.setIndex(1);
         List<BookSpotDTO> books = new ArrayList<>();
@@ -567,7 +567,7 @@ public class AreaMapTest {
         customAreaMapDTO.setBookSpots(books);
 
         SceneTransitionSpotDTO sceneTransitionSpotDTO = new SceneTransitionSpotDTO();
-        sceneTransitionSpotDTO.setLocation(areaLocationDTO);
+        sceneTransitionSpotDTO.setArea(areaLocationDTO);
         sceneTransitionSpotDTO.setPosition(position);
         PositionDTO size = new PositionDTO();
         size.setX(1);

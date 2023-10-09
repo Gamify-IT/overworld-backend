@@ -23,6 +23,6 @@ public class ObjectSpotDTO {
     @Nullable
     UUID id;
 
-    AreaLocationDTO location;
+    AreaLocationDTO area;
     PositionDTO position;
 }

@@ -22,7 +22,7 @@ public class ObjectSpot {
     UUID id;
 
     @ManyToOne
-    Area location;
+    Area area;
 
     @ManyToOne(cascade = CascadeType.ALL)
     Position position;
@@ -31,7 +31,7 @@ public class ObjectSpot {
             final Area area,
             final Position position
     ) {
-        location = area;
+        this.area = area;
         this.position = position;
     }
 }
