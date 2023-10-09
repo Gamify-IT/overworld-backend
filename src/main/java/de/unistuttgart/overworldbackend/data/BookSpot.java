@@ -17,13 +17,16 @@ import javax.persistence.Entity;
 public class BookSpot extends ObjectSpot{
 
     int index;
+    String name;
 
     public BookSpot(
             final AreaLocation area,
             final Position position,
-            final int index
+            final int index,
+            final String name
     ) {
         super(area, position);
         this.index = index;
+        this.name = name;
     }
 }

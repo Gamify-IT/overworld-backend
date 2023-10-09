@@ -477,6 +477,7 @@ public class AreaMapTest {
         bookSpotDTO.setArea(areaLocationDTO);
         bookSpotDTO.setPosition(position);
         bookSpotDTO.setIndex(1);
+        bookSpotDTO.setName("Book");
         customAreaMapDTO.setBookSpots(List.of(bookSpotDTO));
 
         TeleporterSpotDTO teleporterSpotDTO = new TeleporterSpotDTO();
@@ -559,6 +560,7 @@ public class AreaMapTest {
         bookSpotDTO.setArea(areaLocationDTO);
         bookSpotDTO.setPosition(position);
         bookSpotDTO.setIndex(1);
+        bookSpotDTO.setName("Book");
         List<BookSpotDTO> books = new ArrayList<>();
         for(int i=0; i<10; i++)
         {

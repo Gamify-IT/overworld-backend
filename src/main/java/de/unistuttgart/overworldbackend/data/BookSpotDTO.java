@@ -18,4 +18,5 @@ import lombok.experimental.FieldDefaults;
 public class BookSpotDTO extends ObjectSpotDTO{
 
     int index;
+    String name;
 }
