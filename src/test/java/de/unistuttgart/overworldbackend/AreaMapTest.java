@@ -212,12 +212,14 @@ public class AreaMapTest {
 
         assertNotNull(updatedAreaMapDTOResult.getCustomAreaMap());
 
-        assertEquals(AreaStyle.CAVE, updatedAreaMapDTOResult.getCustomAreaMap().getStyle());
-
+        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getArea().getWorldIndex());
+        assertEquals(0, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getArea().getDungeonIndex());
         assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getSizeX());
         assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getSizeY());
-        assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getLayers());
-        assertEquals("tile", updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getTiles());
+        assertEquals("DRUNKARDS_WALK", updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getGeneratorType());
+        assertEquals("seed", updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getSeed());
+        assertEquals(66, updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getAccessability());
+        assertEquals("SAVANNA", updatedAreaMapDTOResult.getCustomAreaMap().getLayout().getStyle());
 
         assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getMinigameSpots().size());
         assertEquals(1, updatedAreaMapDTOResult.getCustomAreaMap().getNpcSpots().size());
@@ -441,13 +443,18 @@ public class AreaMapTest {
      */
     private CustomAreaMapDTO getSmallCustomAreaMapDTO() {
         CustomAreaMapDTO customAreaMapDTO = new CustomAreaMapDTO();
-        customAreaMapDTO.setStyle(AreaStyle.CAVE);
 
         LayoutDTO layoutDTO = new LayoutDTO();
+        AreaLocationDTO area = new AreaLocationDTO();
+        area.setWorldIndex(1);
+        area.setDungeonIndex(0);
+        layoutDTO.setArea(area);
         layoutDTO.setSizeX(1);
         layoutDTO.setSizeY(1);
-        layoutDTO.setLayers(1);
-        layoutDTO.setTiles("tile");
+        layoutDTO.setGeneratorType("DRUNKARDS_WALK");
+        layoutDTO.setSeed("seed");
+        layoutDTO.setAccessability(66);
+        layoutDTO.setStyle("SAVANNA");
         customAreaMapDTO.setLayout(layoutDTO);
 
         AreaLocationDTO areaLocationDTO = new AreaLocationDTO();
@@ -514,13 +521,18 @@ public class AreaMapTest {
      */
     private CustomAreaMapDTO getBigCustomAreaMapDTO() {
         CustomAreaMapDTO customAreaMapDTO = new CustomAreaMapDTO();
-        customAreaMapDTO.setStyle(AreaStyle.CAVE);
 
         LayoutDTO layoutDTO = new LayoutDTO();
+        AreaLocationDTO area = new AreaLocationDTO();
+        area.setWorldIndex(1);
+        area.setWorldIndex(0);
+        layoutDTO.setArea(area);
         layoutDTO.setSizeX(1);
         layoutDTO.setSizeY(1);
-        layoutDTO.setLayers(1);
-        layoutDTO.setTiles("tile");
+        layoutDTO.setGeneratorType("DRUNKARDS_WALK");
+        layoutDTO.setSeed("seed");
+        layoutDTO.setAccessability(66);
+        layoutDTO.setStyle("SAVANNA");
         customAreaMapDTO.setLayout(layoutDTO);
 
         AreaLocationDTO areaLocationDTO = new AreaLocationDTO();

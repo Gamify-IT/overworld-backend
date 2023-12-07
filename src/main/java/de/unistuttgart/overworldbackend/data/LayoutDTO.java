@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.lang.Nullable;
 
+import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 /**
@@ -23,8 +24,12 @@ public class LayoutDTO {
     @Nullable
     UUID id;
 
+    AreaLocationDTO area;
+
     int sizeX;
     int sizeY;
-    int layers;
-    String tiles;
+    String generatorType;
+    String seed;
+    int accessability;
+    String style;
 }

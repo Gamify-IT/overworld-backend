@@ -28,8 +28,6 @@ public class CustomAreaMap {
     @ManyToOne(cascade = CascadeType.ALL)
     Layout layout;
 
-    AreaStyle style;
-
     @OneToMany(cascade = CascadeType.ALL)
     Set<MinigameSpot> minigameSpots = new HashSet<>();
 

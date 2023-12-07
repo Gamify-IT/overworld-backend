@@ -27,7 +27,6 @@ public class CustomAreaMapDTO {
     UUID id;
 
     LayoutDTO layout;
-    AreaStyle style;
 
     @ElementCollection
     List<MinigameSpotDTO> minigameSpots;

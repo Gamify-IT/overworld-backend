@@ -3,9 +3,7 @@ package de.unistuttgart.overworldbackend.data;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 /**
@@ -23,8 +21,13 @@ public class Layout
     @GeneratedValue(generator = "uuid")
     UUID id;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    AreaLocation area;
+
     int sizeX;
     int sizeY;
-    int layers;
-    String tiles;
+    String generatorType;
+    String seed;
+    int accessability;
+    String style;
 }
