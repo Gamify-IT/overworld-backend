@@ -76,13 +76,29 @@ services:
       KC_PROXY: edge
       KC_HTTP_RELATIVE_PATH: /keycloak
       KC_HTTP_PORT: 80
+      
+  overworld-backend:
+    container_name: overworld-backend
+    image: ghcr.io/gamify-it/overworld-backend:main
+    restart: always
+    pull_policy: always
+    expose:
+      - "80"
+    depends_on:
+      - overworld-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_URL=postgresql://overworld-db:5432/postgres
+      - KEYCLOAK_ISSUER=http://localhost/keycloak/realms/Gamify-IT
+      - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
   # --- frontends ---
   # These frontend services contain the user interface of the Gamify-IT services.
   # They are pre-built and pulled from the Gamify-IT Docker registry.
   landing-page:
     container_name: landing-page
-    image: ghcr.io/gamify-it/landing-page:main
+    image: ghcr.io/gamify-it/landing-page:v1.6.0
     restart: always
     pull_policy: always
     expose:
@@ -90,7 +106,7 @@ services:
 
   overworld:
     container_name: overworld
-    image: ghcr.io/gamify-it/overworld:main
+    image: ghcr.io/gamify-it/overworld:v1.5.0
     restart: always
     pull_policy: always
     expose:
