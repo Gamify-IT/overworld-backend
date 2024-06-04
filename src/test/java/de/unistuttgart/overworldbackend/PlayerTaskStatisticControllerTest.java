@@ -190,7 +190,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                    3
             )
         );
 
@@ -212,7 +213,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                    3
             )
         );
 
@@ -234,7 +236,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                    3
             )
         );
 
@@ -260,7 +263,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                    3
             )
         );
 
