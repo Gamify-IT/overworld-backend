@@ -76,7 +76,7 @@ public class PlayerTaskStatisticController {
         return playerTaskStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);
     }
 
-    @Operation(summary = "Get leaderboard for a player of a course by  course id, player id is ream from cookie")
+    @Operation(summary = "Get leaderboard for a player of a course by  course id, player id is read from cookie")
     @GetMapping("/leaderboard")
     public Map<String, Integer> getLeaderboardOfPlayer(
             @PathVariable final int courseId,
