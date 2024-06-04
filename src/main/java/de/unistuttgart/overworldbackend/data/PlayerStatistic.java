@@ -59,6 +59,8 @@ public class PlayerStatistic {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerNPCStatistic> playerNPCStatistics = new HashSet<>();
 
+
+
     @PrePersist
     void onCreate() {
         lastActive = LocalDateTime.now();
@@ -88,4 +90,6 @@ public class PlayerStatistic {
     public void addUnlockedTeleporter(final Teleporter teleporter) {
         this.unlockedTeleporters.add(teleporter);
     }
+
+
 }

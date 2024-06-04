@@ -1,6 +1,8 @@
 package de.unistuttgart.overworldbackend.data;
 
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
+
+import java.util.Map;
 import java.util.UUID;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -32,4 +34,9 @@ public class PlayerTaskStatisticData {
 
     @NotNull
     String userId;
+
+    int rewards;
+
+
+
 }

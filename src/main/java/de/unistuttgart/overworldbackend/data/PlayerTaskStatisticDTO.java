@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
+import java.util.Map;
 import java.util.UUID;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -31,4 +32,8 @@ public class PlayerTaskStatisticDTO {
     boolean completed;
 
     MinigameTaskDTO minigameTask;
+
+    int rewards;
+
+    Map<String, Integer> leaderboard;
 }

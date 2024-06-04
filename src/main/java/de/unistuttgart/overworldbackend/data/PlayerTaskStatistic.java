@@ -1,8 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -47,6 +45,9 @@ public class PlayerTaskStatistic {
     long highscore = 0;
 
     boolean completed = false;
+
+    int rewards;
+
 
     public void addActionLog(final PlayerTaskActionLog actionLog) {
         this.playerTaskActionLogs.add(actionLog);

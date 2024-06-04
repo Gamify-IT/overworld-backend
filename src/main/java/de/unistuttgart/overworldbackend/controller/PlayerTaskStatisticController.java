@@ -5,8 +5,11 @@ import de.unistuttgart.overworldbackend.data.PlayerTaskStatisticDTO;
 import de.unistuttgart.overworldbackend.service.PlayerTaskStatisticService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +29,9 @@ public class PlayerTaskStatisticController {
     @Operation(summary = "Get all minigame statistics of a player")
     @GetMapping("/{playerId}/player-task-statistics")
     public List<PlayerTaskStatisticDTO> getPlayerTaskStatistics(
-        @PathVariable final int courseId,
-        @PathVariable final String playerId,
-        @CookieValue("access_token") final String accessToken
+            @PathVariable final int courseId,
+            @PathVariable final String playerId,
+            @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get Statistics of Player {} in the course {}", playerId, courseId);
@@ -38,10 +41,10 @@ public class PlayerTaskStatisticController {
     @Operation(summary = "Get a minigame statistic of a player by minigame statistic id")
     @GetMapping("/{playerId}/player-task-statistics/{statisticId}")
     public PlayerTaskStatisticDTO getPlayerTaskStatistic(
-        @PathVariable final int courseId,
-        @PathVariable final String playerId,
-        @PathVariable final UUID statisticId,
-        @CookieValue("access_token") final String accessToken
+            @PathVariable final int courseId,
+            @PathVariable final String playerId,
+            @PathVariable final UUID statisticId,
+            @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get statistic {}", statisticId);
@@ -51,8 +54,8 @@ public class PlayerTaskStatisticController {
     @Operation(summary = "Get all minigame statistics of a player, player id is read from cookie")
     @GetMapping("/player-task-statistics")
     public List<PlayerTaskStatisticDTO> getOwnPlayerTaskStatistics(
-        @PathVariable final int courseId,
-        @CookieValue("access_token") final String accessToken
+            @PathVariable final int courseId,
+            @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         final String playerId = jwtValidatorService.extractUserId(accessToken);
@@ -63,13 +66,25 @@ public class PlayerTaskStatisticController {
     @Operation(summary = "Get minigame statistic of a player by minigame statistic id, player id is read from cookie")
     @GetMapping("/player-task-statistics/{statisticId}")
     public PlayerTaskStatisticDTO getOwnPlayerTaskStatistic(
-        @PathVariable final int courseId,
-        @PathVariable final UUID statisticId,
-        @CookieValue("access_token") final String accessToken
+            @PathVariable final int courseId,
+            @PathVariable final UUID statisticId,
+            @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         final String playerId = jwtValidatorService.extractUserId(accessToken);
         log.debug("get statistic {}", statisticId);
         return playerTaskStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);
+    }
+
+    @Operation(summary = "Get leaderboard for a player of a course by  course id, player id is ream from cookie")
+    @GetMapping("/leaderboard")
+    public Map<String, Integer> getLeaderboardOfPlayer(
+            @PathVariable final int courseId,
+            @CookieValue("access_token") final String accessToken
+    ) {
+        jwtValidatorService.validateTokenOrThrow(accessToken);
+        final String playerId = jwtValidatorService.extractUserId(accessToken);
+        log.debug("get leaderboard of Player {} in the course {}", playerId, courseId);
+        return playerTaskStatisticService.generateLeaderboard(courseId, playerId);
     }
 }
