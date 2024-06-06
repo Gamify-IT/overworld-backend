@@ -35,5 +35,5 @@ public class PlayerTaskStatisticDTO {
 
     int rewards;
 
-    Map<String, Integer> leaderboard;
+    //Map<String, Integer> leaderboard;
 }

@@ -50,6 +50,7 @@ public class PlayerTaskStatisticService {
 
     @Autowired
     PlayerTaskStatisticService playerTaskStatisticService;
+    private List<PlayerDTO> allPlayerStatistics;
 
     /**
      * Gets a list of all playerTaskStatistics of a player of the given course
@@ -168,7 +169,7 @@ public class PlayerTaskStatisticService {
      * @param playerId
      * @return updated leaderboard with current rewardcoins
      */
-    public Map<String, Integer> generateLeaderboard(int courseId, String playerId) {
+    public Map<String, Integer> generateLeaderboard(final int courseId, final String playerId) {
 
         final Map<String, Integer> leaderboard = new HashMap<>();
 
@@ -176,8 +177,6 @@ public class PlayerTaskStatisticService {
 
         final int ownPlayerRewards = calculatePlayerRewards(ownPlayerStatistics);
         final List<PlayerDTO> allPlayerStatistics = playerService.getPlayers();
-
-
 
         boardCalculation(leaderboard, courseId, playerId, ownPlayerRewards, allPlayerStatistics);
 
