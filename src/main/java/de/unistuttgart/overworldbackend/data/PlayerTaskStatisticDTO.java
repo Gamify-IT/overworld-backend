@@ -33,7 +33,11 @@ public class PlayerTaskStatisticDTO {
 
     MinigameTaskDTO minigameTask;
 
+    int currentRewards;
+
     int rewards;
 
-    //Map<String, Integer> leaderboard;
+
+
+
 }

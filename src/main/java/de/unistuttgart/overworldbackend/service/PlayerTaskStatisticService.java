@@ -104,7 +104,9 @@ public class PlayerTaskStatisticService {
 
         playerTaskStatistic.setHighscore(Math.max(playerTaskStatistic.getHighscore(), data.getScore()));
         playerTaskStatistic.setCompleted(playerTaskStatistic.isCompleted() || checkCompleted(data.getScore()));
-        playerTaskStatistic.setRewards(data.getRewards());
+        playerTaskStatistic.setCurrentRewards(data.getRewards());
+        playerTaskStatistic.setRewards(playerTaskStatistic.getRewards() + data.getRewards());
+
 
 
         logData(data, course, playerTaskStatistic, gainedKnowledge);
@@ -162,75 +164,46 @@ public class PlayerTaskStatisticService {
     }
 
 
-    /**
-     * This method generates the leaderboard for the current player.
-     *
-     * @param courseId
-     * @param playerId
-     * @return updated leaderboard with current rewardcoins
-     */
-    public Map<String, Integer> generateLeaderboard(final int courseId, final String playerId) {
 
-        final Map<String, Integer> leaderboard = new HashMap<>();
+    ///////////////// 2. Methode
 
-        final List<PlayerTaskStatisticDTO> ownPlayerStatistics = playerTaskStatisticService.getAllStatisticsOfPlayer(courseId, playerId);
+    //// Erzeuge eine Map mit dem key "League" und Value "Map", dh jeder League wird eine Map zugeordnet mit den dazugehörigen
+    //// playern. 
+    public Map<String, Map<String, Integer>> updateLeagues(final int courseId) {
+        Map<String, Map<String, Integer>> leagues = new HashMap<>();
+        leagues.put("Wanderer", new HashMap<>());
+        leagues.put("Explorer", new HashMap<>());
+        leagues.put("Pathfinder", new HashMap<>());
+        leagues.put("Trailblazer", new HashMap<>());
 
-        final int ownPlayerRewards = calculatePlayerRewards(ownPlayerStatistics);
-        final List<PlayerDTO> allPlayerStatistics = playerService.getPlayers();
-
-        boardCalculation(leaderboard, courseId, playerId, ownPlayerRewards, allPlayerStatistics);
-
-        return sortLeaderboard(leaderboard);
-    }
-
-    /**
-     * This method calculates which players of the course are in the same league as the current player.
-     * Only players with a maximum difference of 10 reward coins compared to the current player
-     * will be added to the list.
-     *
-     * @param leaderboard
-     * @param courseId
-     * @param playerId
-     * @param ownPlayerRewards
-     * @param allPlayerStatistics
-     */
-    private void boardCalculation(final Map<String, Integer> leaderboard, final int courseId, final String playerId, final int ownPlayerRewards, final List<PlayerDTO> allPlayerStatistics) {
         for (final PlayerDTO player : allPlayerStatistics) {
-            final String currentPlayerName = player.getUsername();
             final String currentPlayerId = player.getUserId();
-
-            if (currentPlayerId.equals(playerId)) {
-                continue;
-            }
-
             final List<PlayerTaskStatisticDTO> playerStatistics = playerTaskStatisticService.getAllStatisticsOfPlayer(courseId, currentPlayerId);
-
             final int playerRewards = calculatePlayerRewards(playerStatistics);
-            final int rewardDifference = Math.abs(ownPlayerRewards - playerRewards);
 
-            if (rewardDifference <= 10) {
-                leaderboard.put(currentPlayerName, playerRewards);
-            }
+            String league = getLeague(playerRewards);
+            Map<String, Integer> playersInLeague = leagues.get(league);
+            playersInLeague.put(currentPlayerId, playerRewards);
         }
+
+        return leagues;
     }
 
-    /**
-     * This method calculates the total amount of rewards for a player
-     *
-     * @param playerStatistics
-     * @return sum of all rewards gained so far
-     */
     private int calculatePlayerRewards(List<PlayerTaskStatisticDTO> playerStatistics) {
         return playerStatistics.stream().mapToInt(PlayerTaskStatisticDTO::getRewards).sum();
     }
 
-    /**
-     * This method sorts the leaderboard in descending order of points
-     *
-     * @param leaderboard
-     * @return a map with entries sorted by points in descending order
-     */
-    private Map<String, Integer> sortLeaderboard(Map<String, Integer> leaderboard) {
-        return leaderboard.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    private String getLeague(int rewards) {
+        if (rewards <= 100) {
+            return "Wanderer";
+        } else if (rewards <= 200) {
+            return "Explorer";
+        } else if (rewards <= 300) {
+            return "Pathfinder";
+        } else {
+            return "Trailblazer";
+        }
     }
+
+
 }

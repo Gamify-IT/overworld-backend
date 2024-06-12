@@ -76,15 +76,12 @@ public class PlayerTaskStatisticController {
         return playerTaskStatisticService.getStatisticOfPlayer(courseId, playerId, statisticId);
     }
 
-    @Operation(summary = "Get leaderboard for a player of a course by  course id, player id is read from cookie")
-    @GetMapping("/leaderboard")
-    public Map<String, Integer> getLeaderboardOfPlayer(
-            @PathVariable final int courseId,
-            @CookieValue("access_token") final String accessToken
+    @Operation(summary = "Get player leagues")
+    @GetMapping("/leagues")
+    public Map<String, Map<String, Integer>> getPlayerLeagues(
+            @PathVariable final int courseId
     ) {
-        jwtValidatorService.validateTokenOrThrow(accessToken);
-        final String playerId = jwtValidatorService.extractUserId(accessToken);
-        log.debug("get leaderboard of Player {} in the course {}", playerId, courseId);
-        return playerTaskStatisticService.generateLeaderboard(courseId, playerId);
+        return playerTaskStatisticService.updateLeagues(courseId);
     }
+
 }

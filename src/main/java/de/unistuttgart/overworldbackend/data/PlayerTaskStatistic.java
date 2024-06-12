@@ -46,6 +46,9 @@ public class PlayerTaskStatistic {
 
     boolean completed = false;
 
+
+    int currentRewards;
+
     int rewards;
 
 
