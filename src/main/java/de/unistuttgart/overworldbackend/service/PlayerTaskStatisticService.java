@@ -168,7 +168,7 @@ public class PlayerTaskStatisticService {
         }
 
         playerStatisticService.checkForUnlockedAreas(minigameTask.getArea(), playerStatistic);
-        
+
         playerStatistic.addRewards(data.getRewards()); // für playerStatistic
         playerStatistic.addKnowledge(gainedKnowledge);
         playerstatisticRepository.save(playerStatistic);
