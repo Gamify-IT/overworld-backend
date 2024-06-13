@@ -2,11 +2,14 @@ package de.unistuttgart.overworldbackend.controller;
 
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import de.unistuttgart.overworldbackend.data.PlayerRegistrationDTO;
+import de.unistuttgart.overworldbackend.data.PlayerStatistic;
 import de.unistuttgart.overworldbackend.data.PlayerStatisticDTO;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerStatisticMapper;
 import de.unistuttgart.overworldbackend.service.PlayerStatisticService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.Set;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +57,16 @@ public class PlayerStatisticController {
         return playerStatisticMapper.playerStatisticToPlayerstatisticDTO(
             playerStatisticService.getPlayerStatisticFromCourse(courseId, playerId)
         );
+    }
+
+    @Operation(summary = "Get all playerStatistics in a course of all players by courseId")
+    @GetMapping("allPlayerStatistics")
+    public List<PlayerStatisticDTO> getAllPlayerStatisticsFromCourse(
+        @PathVariable final int courseId,
+        @CookieValue("access_token") final String accessToken
+    ) {
+        jwtValidatorService.validateTokenOrThrow(accessToken);
+        return playerStatisticService.getAllPlayerStatisticsFromCourse(courseId);
     }
 
     @Operation(summary = "Create a playerStatistic in a course by playerId")

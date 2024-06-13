@@ -39,6 +39,8 @@ public class PlayerStatisticService {
     @Autowired
     private WorldService worldService;
 
+
+
     /**
      * get statistics from a player course
      *
@@ -70,6 +72,22 @@ public class PlayerStatisticService {
      */
     public Set<PlayerStatistic> getPlayerStatisticsFromCourse(final int courseId) {
         return playerstatisticRepository.findByCourseId(courseId);
+    }
+
+
+
+    public List<PlayerStatisticDTO> getAllPlayerStatisticsFromCourse(final int courseId) {
+        Set<PlayerStatistic> playerStatistics = getPlayerStatisticsFromCourse(courseId);
+        List<PlayerStatisticDTO> playerStatisticDTOList = new ArrayList<>();
+
+        for (PlayerStatistic playerStatistic : playerStatistics) {
+            PlayerStatisticDTO playerStatisticDTO = playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
+                playerStatistic
+            );
+            playerStatisticDTOList.add(playerStatisticDTO);
+        }
+
+        return playerStatisticDTOList;
     }
 
     /**
@@ -112,6 +130,7 @@ public class PlayerStatisticService {
         playerstatistic.setUsername(playerRegistrationDTO.getUsername());
         playerstatistic.setCurrentArea(firstWorld);
         playerstatistic.setKnowledge(0);
+        playerstatistic.setRewards(0);
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(
             courseId,

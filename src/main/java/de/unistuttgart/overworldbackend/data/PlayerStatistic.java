@@ -59,8 +59,6 @@ public class PlayerStatistic {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerNPCStatistic> playerNPCStatistics = new HashSet<>();
 
-
-
     @PrePersist
     void onCreate() {
         lastActive = LocalDateTime.now();
@@ -68,6 +66,8 @@ public class PlayerStatistic {
     }
 
     long knowledge = 0;
+
+    int rewards = 0;
 
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
@@ -91,5 +91,7 @@ public class PlayerStatistic {
         this.unlockedTeleporters.add(teleporter);
     }
 
-
+    public void addRewards(final int gainedRewards) {
+        rewards += gainedRewards;
+    }
 }

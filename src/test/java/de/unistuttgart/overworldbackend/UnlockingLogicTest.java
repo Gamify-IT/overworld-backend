@@ -181,7 +181,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO1.getGame(),
             minigameTaskDTO1.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData1);
 
@@ -189,7 +190,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO2.getGame(),
             minigameTaskDTO2.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData2);
 
@@ -197,7 +199,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO3.getGame(),
             minigameTaskDTO3.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData3);
 
@@ -231,7 +234,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO1.getGame(),
             minigameTaskDTO1.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData1);
 
@@ -239,7 +243,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO2.getGame(),
             minigameTaskDTO2.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData2);
 
@@ -247,7 +252,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO3.getGame(),
             minigameTaskDTO3.getConfigurationId(),
             0,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData3);
 
@@ -279,7 +285,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO1.getGame(),
             minigameTaskDTO1.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData1);
 
@@ -287,7 +294,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO2.getGame(),
             minigameTaskDTO2.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData2);
 
@@ -295,7 +303,8 @@ public class UnlockingLogicTest {
             minigameTaskDTO3.getGame(),
             minigameTaskDTO3.getConfigurationId(),
             100,
-            playerStatisticDTO.getUserId()
+            playerStatisticDTO.getUserId(),
+            180
         );
         playerTaskStatisticService.submitData(playerTaskStatisticData3);
 

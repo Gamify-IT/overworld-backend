@@ -46,11 +46,9 @@ public class PlayerTaskStatistic {
 
     boolean completed = false;
 
-
-    int currentRewards;
-
     int rewards;
 
+    int totalRewards;
 
     public void addActionLog(final PlayerTaskActionLog actionLog) {
         this.playerTaskActionLogs.add(actionLog);

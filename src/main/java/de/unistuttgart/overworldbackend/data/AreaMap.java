@@ -1,13 +1,11 @@
 package de.unistuttgart.overworldbackend.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.UUID;
+import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import org.springframework.lang.Nullable;
-
-import javax.persistence.*;
-import java.util.UUID;
 
 /**
  * Represents the state of an area map, whether it is a generated area map or a default one
@@ -39,7 +37,7 @@ public class AreaMap {
     @OneToOne(cascade = CascadeType.ALL)
     CustomAreaMap customAreaMap;
 
-    public AreaMap(Area area){
+    public AreaMap(Area area) {
         this.area = area;
         course = area.getCourse();
         generatedArea = false;

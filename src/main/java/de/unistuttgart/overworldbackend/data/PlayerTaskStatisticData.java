@@ -1,16 +1,12 @@
 package de.unistuttgart.overworldbackend.data;
 
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
-
 import java.util.Map;
 import java.util.UUID;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 /**
@@ -35,8 +31,7 @@ public class PlayerTaskStatisticData {
     @NotNull
     String userId;
 
+    @Min(0)
+    @Max(10)
     int rewards;
-
-
-
 }

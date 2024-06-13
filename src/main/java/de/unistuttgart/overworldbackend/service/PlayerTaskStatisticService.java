@@ -6,10 +6,8 @@ import de.unistuttgart.overworldbackend.repositories.MinigameTaskRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskActionLogRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
-
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -48,8 +46,6 @@ public class PlayerTaskStatisticService {
     @Autowired
     PlayerService playerService;
 
-    @Autowired
-    PlayerTaskStatisticService playerTaskStatisticService;
     private List<PlayerDTO> allPlayerStatistics;
 
     /**
@@ -60,7 +56,11 @@ public class PlayerTaskStatisticService {
      * @return List of playerTaskStatisticDTOs of the player of the course
      */
     public List<PlayerTaskStatisticDTO> getAllStatisticsOfPlayer(final int courseId, final String playerId) {
-        final List<PlayerTaskStatistic> statisticList = playerTaskStatisticRepository.findByCourseId(courseId).parallelStream().filter(playerTaskStatistic -> playerTaskStatistic.getPlayerStatistic().getUserId().equals(playerId)).toList();
+        final List<PlayerTaskStatistic> statisticList = playerTaskStatisticRepository
+            .findByCourseId(courseId)
+            .parallelStream()
+            .filter(playerTaskStatistic -> playerTaskStatistic.getPlayerStatistic().getUserId().equals(playerId))
+            .toList();
         return playerTaskStatisticMapper.playerTaskStatisticsToPlayerTaskStatisticDTO(statisticList);
     }
 
@@ -72,8 +72,30 @@ public class PlayerTaskStatisticService {
      * @param statisticId id of the statistic, which is returned
      * @return playerTaskStatistic with the given statisticId
      */
-    public PlayerTaskStatisticDTO getStatisticOfPlayer(final int courseId, final String playerId, final UUID statisticId) {
-        return playerTaskStatisticMapper.playerTaskStatisticToPlayerTaskStatisticDTO(playerTaskStatisticRepository.findById(statisticId).filter(statistic -> statistic.getCourse().getId() == courseId && statistic.getPlayerStatistic().getUserId().equals(playerId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Statistic with the id %s of the course %s of the player %s not found", statisticId, courseId, playerId))));
+    public PlayerTaskStatisticDTO getStatisticOfPlayer(
+        final int courseId,
+        final String playerId,
+        final UUID statisticId
+    ) {
+        return playerTaskStatisticMapper.playerTaskStatisticToPlayerTaskStatisticDTO(
+            playerTaskStatisticRepository
+                .findById(statisticId)
+                .filter(statistic ->
+                    statistic.getCourse().getId() == courseId &&
+                    statistic.getPlayerStatistic().getUserId().equals(playerId)
+                )
+                .orElseThrow(() ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format(
+                            "Statistic with the id %s of the course %s of the player %s not found",
+                            statisticId,
+                            courseId,
+                            playerId
+                        )
+                    )
+                )
+        );
     }
 
     /**
@@ -86,28 +108,57 @@ public class PlayerTaskStatisticService {
      * @return updated playerTaskStatistic
      */
     public PlayerTaskStatisticDTO submitData(final PlayerTaskStatisticData data) {
-        final MinigameTask minigameTask = minigameTaskRepository.findByGameAndConfigurationId(data.getGame(), data.getConfigurationId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Minigame not found"));
+        final MinigameTask minigameTask = minigameTaskRepository
+            .findByGameAndConfigurationId(data.getGame(), data.getConfigurationId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Minigame not found"));
         final Course course = minigameTask.getCourse();
-        final PlayerStatistic playerStatistic = playerstatisticRepository.findByCourseIdAndUserId(course.getId(), data.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Player %s not found", data.getUserId())));
-        final PlayerTaskStatistic playerTaskStatistic = playerTaskStatisticRepository.findByMinigameTaskIdAndCourseIdAndPlayerStatisticId(minigameTask.getId(), course.getId(), playerStatistic.getId()).orElseGet(() -> {
-            final PlayerTaskStatistic newPlayerTaskStatistic = new PlayerTaskStatistic();
-            newPlayerTaskStatistic.setPlayerStatistic(playerStatistic);
-            newPlayerTaskStatistic.setMinigameTask(minigameTask);
-            newPlayerTaskStatistic.setCourse(course);
+        final PlayerStatistic playerStatistic = playerstatisticRepository
+            .findByCourseIdAndUserId(course.getId(), data.getUserId())
+            .orElseThrow(() ->
+                new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    String.format("Player %s not found", data.getUserId())
+                )
+            );
+        final PlayerTaskStatistic playerTaskStatistic = playerTaskStatisticRepository
+            .findByMinigameTaskIdAndCourseIdAndPlayerStatisticId(
+                minigameTask.getId(),
+                course.getId(),
+                playerStatistic.getId()
+            )
+            .orElseGet(() -> {
+                final PlayerTaskStatistic newPlayerTaskStatistic = new PlayerTaskStatistic();
+                newPlayerTaskStatistic.setPlayerStatistic(playerStatistic);
+                newPlayerTaskStatistic.setMinigameTask(minigameTask);
+                newPlayerTaskStatistic.setCourse(course);
 
-
-            playerStatistic.addPlayerTaskStatistic(newPlayerTaskStatistic);
-            return playerTaskStatisticRepository.findByMinigameTaskIdAndCourseIdAndPlayerStatisticId(minigameTask.getId(), course.getId(), playerStatistic.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Statistic for the minigame with the id %s of the player %s in the course %s not found.", minigameTask.getId(), playerStatistic.getId(), course.getId())));
-        });
+                playerStatistic.addPlayerTaskStatistic(newPlayerTaskStatistic);
+                return playerTaskStatisticRepository
+                    .findByMinigameTaskIdAndCourseIdAndPlayerStatisticId(
+                        minigameTask.getId(),
+                        course.getId(),
+                        playerStatistic.getId()
+                    )
+                    .orElseThrow(() ->
+                        new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            String.format(
+                                "Statistic for the minigame with the id %s of the player %s in the course %s not found.",
+                                minigameTask.getId(),
+                                playerStatistic.getId(),
+                                course.getId()
+                            )
+                        )
+                    );
+            });
 
         final long gainedKnowledge = calculateKnowledge(data.getScore(), playerTaskStatistic.getHighscore());
 
         playerTaskStatistic.setHighscore(Math.max(playerTaskStatistic.getHighscore(), data.getScore()));
         playerTaskStatistic.setCompleted(playerTaskStatistic.isCompleted() || checkCompleted(data.getScore()));
-        playerTaskStatistic.setCurrentRewards(data.getRewards());
-        playerTaskStatistic.setRewards(playerTaskStatistic.getRewards() + data.getRewards());
+        playerTaskStatistic.setRewards(data.getRewards());
 
-
+        playerTaskStatistic.setTotalRewards(playerTaskStatistic.getRewards() + data.getRewards());
 
         logData(data, course, playerTaskStatistic, gainedKnowledge);
 
@@ -117,23 +168,41 @@ public class PlayerTaskStatisticService {
         }
 
         playerStatisticService.checkForUnlockedAreas(minigameTask.getArea(), playerStatistic);
-
+        
+        playerStatistic.addRewards(data.getRewards()); // für playerStatistic
         playerStatistic.addKnowledge(gainedKnowledge);
         playerstatisticRepository.save(playerStatistic);
 
-        return playerTaskStatisticMapper.playerTaskStatisticToPlayerTaskStatisticDTO(playerTaskStatisticRepository.save(playerTaskStatistic));
+        return playerTaskStatisticMapper.playerTaskStatisticToPlayerTaskStatisticDTO(
+            playerTaskStatisticRepository.save(playerTaskStatistic)
+        );
     }
 
     private void calculateCompletedDungeon(final Dungeon dungeon, final PlayerStatistic playerStatistic) {
-        final List<PlayerTaskStatistic> playerTaskStatistics = playerTaskStatisticRepository.findByPlayerStatisticId(playerStatistic.getId());
-        final boolean dungeonCompleted = dungeon.getMinigameTasks().parallelStream().allMatch(minigameTask -> playerTaskStatistics.parallelStream().filter(playerTaskStatistic -> playerTaskStatistic.getMinigameTask().equals(minigameTask)).anyMatch(PlayerTaskStatistic::isCompleted));
+        final List<PlayerTaskStatistic> playerTaskStatistics = playerTaskStatisticRepository.findByPlayerStatisticId(
+            playerStatistic.getId()
+        );
+        final boolean dungeonCompleted = dungeon
+            .getMinigameTasks()
+            .parallelStream()
+            .allMatch(minigameTask ->
+                playerTaskStatistics
+                    .parallelStream()
+                    .filter(playerTaskStatistic -> playerTaskStatistic.getMinigameTask().equals(minigameTask))
+                    .anyMatch(PlayerTaskStatistic::isCompleted)
+            );
         if (dungeonCompleted) {
             final List<Area> completedDungeons = playerStatistic.getCompletedDungeons();
             completedDungeons.add(dungeon);
         }
     }
 
-    private void logData(final PlayerTaskStatisticData data, final Course course, final PlayerTaskStatistic currentPlayerTaskStatistic, final long gainedKnowledge) {
+    private void logData(
+        final PlayerTaskStatisticData data,
+        final Course course,
+        final PlayerTaskStatistic currentPlayerTaskStatistic,
+        final long gainedKnowledge
+    ) {
         final PlayerTaskActionLog actionLog = new PlayerTaskActionLog();
         actionLog.setPlayerTaskStatistic(currentPlayerTaskStatistic);
         actionLog.setCourse(course);
@@ -156,54 +225,18 @@ public class PlayerTaskStatisticService {
      * @return knowledge to be added
      */
     private long calculateKnowledge(final long score, final long highscore) {
-        return (long) (MAX_KNOWLEDGE * (double) Math.max(0, score - highscore) / 100 + MAX_KNOWLEDGE * RETRY_KNOWLEDGE * Math.max(0, score - Math.max(0, score - highscore)) / 100);
+        return (long) (
+            MAX_KNOWLEDGE *
+            (double) Math.max(0, score - highscore) /
+            100 +
+            MAX_KNOWLEDGE *
+            RETRY_KNOWLEDGE *
+            Math.max(0, score - Math.max(0, score - highscore)) /
+            100
+        );
     }
 
     private boolean checkCompleted(final long score) {
         return score >= COMPLETED_SCORE;
     }
-
-
-
-    ///////////////// 2. Methode
-
-    //// Erzeuge eine Map mit dem key "League" und Value "Map", dh jeder League wird eine Map zugeordnet mit den dazugehörigen
-    //// playern. 
-    public Map<String, Map<String, Integer>> updateLeagues(final int courseId) {
-        Map<String, Map<String, Integer>> leagues = new HashMap<>();
-        leagues.put("Wanderer", new HashMap<>());
-        leagues.put("Explorer", new HashMap<>());
-        leagues.put("Pathfinder", new HashMap<>());
-        leagues.put("Trailblazer", new HashMap<>());
-
-        for (final PlayerDTO player : allPlayerStatistics) {
-            final String currentPlayerId = player.getUserId();
-            final List<PlayerTaskStatisticDTO> playerStatistics = playerTaskStatisticService.getAllStatisticsOfPlayer(courseId, currentPlayerId);
-            final int playerRewards = calculatePlayerRewards(playerStatistics);
-
-            String league = getLeague(playerRewards);
-            Map<String, Integer> playersInLeague = leagues.get(league);
-            playersInLeague.put(currentPlayerId, playerRewards);
-        }
-
-        return leagues;
-    }
-
-    private int calculatePlayerRewards(List<PlayerTaskStatisticDTO> playerStatistics) {
-        return playerStatistics.stream().mapToInt(PlayerTaskStatisticDTO::getRewards).sum();
-    }
-
-    private String getLeague(int rewards) {
-        if (rewards <= 100) {
-            return "Wanderer";
-        } else if (rewards <= 200) {
-            return "Explorer";
-        } else if (rewards <= 300) {
-            return "Pathfinder";
-        } else {
-            return "Trailblazer";
-        }
-    }
-
-
 }

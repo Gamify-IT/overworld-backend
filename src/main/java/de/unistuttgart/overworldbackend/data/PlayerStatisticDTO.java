@@ -42,7 +42,5 @@ public class PlayerStatisticDTO {
 
     long knowledge;
 
-
-
-
+    int rewards;
 }
