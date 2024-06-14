@@ -39,8 +39,6 @@ public class PlayerStatisticService {
     @Autowired
     private WorldService worldService;
 
-
-
     /**
      * get statistics from a player course
      *
@@ -73,8 +71,6 @@ public class PlayerStatisticService {
     public Set<PlayerStatistic> getPlayerStatisticsFromCourse(final int courseId) {
         return playerstatisticRepository.findByCourseId(courseId);
     }
-
-
 
     public List<PlayerStatisticDTO> getAllPlayerStatisticsFromCourse(final int courseId) {
         Set<PlayerStatistic> playerStatistics = getPlayerStatisticsFromCourse(courseId);

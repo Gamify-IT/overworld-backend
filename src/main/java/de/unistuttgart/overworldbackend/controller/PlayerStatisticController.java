@@ -64,7 +64,6 @@ public class PlayerStatisticController {
     public List<PlayerStatisticDTO> getAllPlayerStatisticsFromCourse(
         @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
-
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get statistics from all players in course {}", courseId);
