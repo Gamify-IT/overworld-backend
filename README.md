@@ -43,6 +43,15 @@ You can remove the containers with:
 docker compose down
 ```
 
+If you wish to run the backend with all minigames as dependencies use:
+```sh
+docker compose -f docker-compose-complete.yaml up --build
+```
+You can remove the containers with:
+```sh
+docker compose -f docker-compose-complete.yaml down
+```
+
 ### Run local with dependencies
 To run your local build within your IDE, but also have the dependencies running in docker, follow the steps
 to build the project, then run the dependencies in docker with the following:
@@ -52,6 +61,15 @@ docker compose -f docker-compose-dev.yaml up
 You can remove the containers with:
 ```sh
 docker compose -f docker-compose-dev.yaml down
+```
+
+If you wish to also start all minigames as dependencies use:
+```sh
+docker compose -f docker-compose-complete-dev.yaml up 
+```
+You can remove the containers with:
+```sh
+docker compose -f docker-compose-complete-dev.yaml down
 ```
 
 > End of additions
