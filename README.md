@@ -1,67 +1,64 @@
-# overworld-backend
+# Overworld-backend
 
 # Development
+
 ## Getting started
+> Beginning of additions (that work)
+
 Make sure you have the following installed:
 
 - Java: [JDK 1.17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or higher
 - Maven: [Maven 3.6.3](https://maven.apache.org/download.cgi)
-- Postgres : [Postgres](https://www.postgresql.org/download/)
+- Docker: [Docker](https://www.docker.com/)
+- PostgreSQL: [PostgreSQL](https://www.postgresql.org/download/)
 
-Alternatively you can use [Docker](https://www.docker.com/)
-
-First you have to change the spring.datasource.username and the spring.datasource.password in the application.properties file. If you changed the properties of the postgres db, you also have to change spring.datasource.url.
-
-## Run 
-
+### Run
+### Project build
+To build the project, run:
 ```sh
 mvn install
 ```
-in the folder of the project.
-Go to the target folder and run 
+
+in the project folder.
+Then go to the target folder:
 ```sh
-java -jar crossword-service-0.0.1-SNAPSHOT.jar
+cd target
 ```
-
-#### Run with Docker-compose
-
-Start all dependencies with our docker-compose files.
-Check the [manual for docker-compose](https://github.com/Gamify-IT/docs/blob/main/dev-manuals/languages/docker/docker-compose.md).
-
-To run the main branch with minimal dependencies use the `docker-compose.yaml` file.\
-To run the latest changes on any other branch than `main` use the `docker-compose-dev.yaml` file.
-
-
-#### Single Container
-
-Build the Docker container with
+and run:
 ```sh
-docker build  -t overworld-backend-dev .
+java -jar overworld-backend-0.0.1-SNAPSHOT.jar
 ```
-And run it at port 8000 with 
-```
-docker run -d -p 8000:80 -e POSTGRES_URL="postgresql://host.docker.internal:5432/postgres" -e POSTGRES_USER="postgres" -e POSTGRES_PASSWORD="postgres" --name overworld-backend-dev overworld-backend-dev
-```
-
-To monitor, stop and remove the container you can use the following commands:
-```sh
-docker ps -a -f name=overworld-backend-dev
-```
-```sh
-docker stop overworld-backend-dev
-```
-```sh
-docker rm overworld-backend-dev
-```
-
-To run the prebuild container use
-```sh
-docker run -d -p 8000:80 -e POSTGRES_URL="postgresql://host.docker.internal:5432/postgres" -e POSTGRES_USER="postgres" -e POSTGRES_PASSWORD="postgres" --name overworld-backend ghcr.io/gamify-it/overworld-backend:latest
-```
+to start the application.
 
 
-### testing database
-to setup a database with docker for testing you can use
+### Build with docker
+To run your local changes as a docker container, with all necessary dependencies,
+build the Docker container with:
+
+```sh
+docker compose up --build
+```
+You can remove the containers with:
+```sh
+docker compose down
+```
+
+### Run local with dependencies
+To run your local build within your IDE, but also have the dependencies running in docker, follow the steps
+to build the project, then run the dependencies in docker with the following:
+```sh
+docker compose -f docker-compose-dev.yaml up 
+```
+You can remove the containers with:
+```sh
+docker compose -f docker-compose-dev.yaml down
+```
+
+> End of additions
+
+
+### Testing database
+to set up a database with docker for testing you can use
 ```sh
 docker run -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=postgres  --rm --name overworld-database postgres
 ```

@@ -82,9 +82,8 @@ services:
   # When you change the code, you need to rebuild and restart the container.
   overworld-backend:
     container_name: overworld-backend
-    image: ghcr.io/gamify-it/overworld-backend:main
+    build: .
     restart: always
-    pull_policy: always
     expose:
       - "80"
     depends_on:
