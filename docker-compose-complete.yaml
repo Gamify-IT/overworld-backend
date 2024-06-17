@@ -243,7 +243,7 @@ services:
   # They are pre-built and pulled from the Gamify-IT Docker registry.
   landing-page:
     container_name: landing-page
-    image: ghcr.io/gamify-it/landing-page:main
+    image: ghcr.io/gamify-it/landing-page:v1.6.0
     restart: always
     pull_policy: always
     expose:
@@ -251,7 +251,7 @@ services:
 
   overworld:
     container_name: overworld
-    image: ghcr.io/gamify-it/overworld:feature-add-books-to-world1
+    image: ghcr.io/gamify-it/overworld:v1.5.0
     restart: always
     expose:
       - "80"
