@@ -69,6 +69,8 @@ public class PlayerStatistic {
 
     int rewards = 0;
 
+    boolean showRewards = true;
+
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
     }
@@ -94,4 +96,9 @@ public class PlayerStatistic {
     public void addRewards(final int gainedRewards) {
         rewards += gainedRewards;
     }
+
+
+
+
+
 }

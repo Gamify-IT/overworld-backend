@@ -127,6 +127,8 @@ public class PlayerStatisticService {
         playerstatistic.setCurrentArea(firstWorld);
         playerstatistic.setKnowledge(0);
         playerstatistic.setRewards(0);
+        playerstatistic.setShowRewards(true);
+        playerstatistic.setUserId("");
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(
             courseId,

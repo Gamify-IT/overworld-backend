@@ -50,7 +50,13 @@ public class PlayerTaskStatistic {
 
     int totalRewards;
 
+    String userId;
+
     public void addActionLog(final PlayerTaskActionLog actionLog) {
         this.playerTaskActionLogs.add(actionLog);
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
