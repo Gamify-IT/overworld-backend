@@ -36,6 +36,4 @@ public class PlayerTaskStatisticDTO {
     int rewards;
 
     int totalRewards;
-
-    String userId;
 }

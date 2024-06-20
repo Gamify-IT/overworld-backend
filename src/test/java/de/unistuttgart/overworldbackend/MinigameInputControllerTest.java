@@ -237,6 +237,8 @@ class MinigameInputControllerTest {
         playerTaskStatisticData.setGame(initialMinigameTask.getGame());
         playerTaskStatisticData.setConfigurationId(initialMinigameTask.getConfigurationId());
         playerTaskStatisticData.setScore(80);
+        playerTaskStatisticData.setRewards(8);
+        playerTaskStatisticData.setTotalRewards(8);
 
         final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
@@ -290,6 +292,8 @@ class MinigameInputControllerTest {
             playerTaskStatisticData.setGame(minigameTask.getGame());
             playerTaskStatisticData.setConfigurationId(minigameTask.getConfigurationId());
             playerTaskStatisticData.setScore(100);
+            playerTaskStatisticData.setRewards(10);
+            playerTaskStatisticData.setTotalRewards(10);
 
             final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
@@ -317,7 +321,8 @@ class MinigameInputControllerTest {
             playerTaskStatisticData.setGame(minigameTask.getGame());
             playerTaskStatisticData.setConfigurationId(minigameTask.getConfigurationId());
             playerTaskStatisticData.setScore(80);
-
+            playerTaskStatisticData.setRewards(8);
+            playerTaskStatisticData.setTotalRewards(8);
             final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
             mvc
@@ -346,6 +351,8 @@ class MinigameInputControllerTest {
             playerTaskStatisticData.setGame(minigameTask.getGame());
             playerTaskStatisticData.setConfigurationId(minigameTask.getConfigurationId());
             playerTaskStatisticData.setScore(80);
+            playerTaskStatisticData.setRewards(8);
+            playerTaskStatisticData.setTotalRewards(8);
 
             final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
@@ -376,6 +383,8 @@ class MinigameInputControllerTest {
             playerTaskStatisticData.setGame(minigameTask.getGame());
             playerTaskStatisticData.setConfigurationId(minigameTask.getConfigurationId());
             playerTaskStatisticData.setScore(80);
+            playerTaskStatisticData.setRewards(8);
+            playerTaskStatisticData.setTotalRewards(8);
 
             final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
@@ -402,6 +411,8 @@ class MinigameInputControllerTest {
         playerTaskStatisticData.setGame(initialMinigameTask.getGame());
         playerTaskStatisticData.setConfigurationId(initialMinigameTask.getConfigurationId());
         playerTaskStatisticData.setScore(80);
+        playerTaskStatisticData.setRewards(8);
+        playerTaskStatisticData.setTotalRewards(8);
 
         final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
@@ -422,6 +433,8 @@ class MinigameInputControllerTest {
         playerTaskStatisticData.setGame(Minigame.NONE);
         playerTaskStatisticData.setConfigurationId(UUID.randomUUID());
         playerTaskStatisticData.setScore(80);
+        playerTaskStatisticData.setRewards(8);
+        playerTaskStatisticData.setTotalRewards(8);
 
         final String bodyValue = objectMapper.writeValueAsString(playerTaskStatisticData);
 
@@ -505,6 +518,8 @@ class MinigameInputControllerTest {
         playerTaskStatisticData.setGame(updatedMinigameTaskDTOResult.getGame());
         playerTaskStatisticData.setConfigurationId(updatedMinigameTaskDTOResult.getConfigurationId());
         playerTaskStatisticData.setScore(80);
+        playerTaskStatisticData.setRewards(8);
+        playerTaskStatisticData.setTotalRewards(8);
 
         final String bodyValueMinigame = objectMapper.writeValueAsString(playerTaskStatisticData);
 

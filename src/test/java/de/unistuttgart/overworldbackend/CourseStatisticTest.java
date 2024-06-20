@@ -224,6 +224,8 @@ public class CourseStatisticTest {
         playerTaskStatisticData.setGame(minigameTask.getGame());
         playerTaskStatisticData.setUserId(initialPlayerStatistic.getUserId());
         playerTaskStatisticData.setScore(100);
+        playerTaskStatisticData.setRewards(10);
+        playerTaskStatisticData.setTotalRewards(10);
         playerTaskStatisticData.setConfigurationId(minigameTask.getConfigurationId());
 
         playerTaskStatisticService.submitData(playerTaskStatisticData);
