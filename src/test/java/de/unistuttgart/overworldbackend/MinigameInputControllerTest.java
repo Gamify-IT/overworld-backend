@@ -209,6 +209,9 @@ class MinigameInputControllerTest {
         playerstatistic.setCourse(initialCourse);
         playerstatistic.setCurrentArea(initialWorld);
         playerstatistic.setKnowledge(new Random(10).nextLong());
+        playerstatistic.setRewards(new Random(10).nextInt());
+        playerstatistic.setShowRewards(false);
+        playerstatistic.setPseudonym("Traveller");
         final List<Area> unlockedAreas = new ArrayList<>();
         unlockedAreas.add(initialWorld);
         playerstatistic.setUnlockedAreas(unlockedAreas);

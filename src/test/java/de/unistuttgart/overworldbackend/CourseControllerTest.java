@@ -277,6 +277,7 @@ class CourseControllerTest {
         playerTaskStatisticData.setScore(80);
         playerTaskStatisticData.setRewards(8);
         playerTaskStatisticData.setTotalRewards(8);
+
         mvc
             .perform(
                 post("/internal/submit-game-pass")

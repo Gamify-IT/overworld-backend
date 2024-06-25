@@ -69,7 +69,9 @@ public class PlayerStatistic {
 
     int rewards = 0;
 
-    boolean showRewards = true;
+    boolean showRewards = false;
+
+    String pseudonym;
 
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
