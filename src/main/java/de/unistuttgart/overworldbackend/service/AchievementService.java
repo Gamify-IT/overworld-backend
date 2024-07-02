@@ -544,6 +544,14 @@ public class AchievementService {
             1,
             Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
         );
+        final Achievement achievement74 = new Achievement(
+            AchievementTitle.TRAVELER,
+            "Use UFO 3 times",
+            "imageName",
+            3,
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+        );
+        
 
         achievementRepository.save(achievement1);
         achievementRepository.save(achievement2);
@@ -618,6 +626,7 @@ public class AchievementService {
         achievementRepository.save(achievement71);
         achievementRepository.save(achievement72);
         achievementRepository.save(achievement73);
+        achievementRepository.save(achievement74);
 
         final List<Achievement> achievements = achievementRepository.findAll();
 
