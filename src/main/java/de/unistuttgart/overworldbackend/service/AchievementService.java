@@ -322,16 +322,16 @@ public class AchievementService {
         );
         final Achievement achievement42 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_2,
-            "Open 10 teleporters",
+            "Open 12 teleporters",
             "imageName",
-            10,
+            12,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement43 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER_WORLD_2,
             "Open all teleporters",
             "imageName",
-            19,
+            24,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement44 = new Achievement(
@@ -343,16 +343,16 @@ public class AchievementService {
         );
         final Achievement achievement45 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_3,
-            "Open 10 teleporters",
+            "Open 8 teleporters",
             "imageName",
-            10,
+            8,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement46 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER_WORLD_3,
             "Open all teleporters",
             "imageName",
-            19,
+            16,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement47 = new Achievement(
@@ -364,23 +364,23 @@ public class AchievementService {
         );
         final Achievement achievement48 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_4,
-            "Open 10 teleporters",
+            "Open 8 teleporters",
             "imageName",
-            10,
+            8,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement49 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER_WORLD_4,
             "Open all teleporters",
             "imageName",
-            19,
+            16,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement50 = new Achievement(
             AchievementTitle.TELEPORTER_BEGINNER,
-            "Open 19 teleporters in total",
+            "Open 20 teleporters in total",
             "imageName",
-            19,
+            20,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement51 = new Achievement(
@@ -394,7 +394,7 @@ public class AchievementService {
             AchievementTitle.TELEPORTER_MASTER,
             "Open all teleporters in total",
             "imageName",
-            76,
+            75,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement53 = new Achievement(
