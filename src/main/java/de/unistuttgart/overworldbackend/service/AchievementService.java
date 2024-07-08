@@ -65,49 +65,49 @@ public class AchievementService {
             "Successfully complete X minigames in a row",
             "imageName",
             0,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement6 = new Achievement(
             AchievementTitle.GOAT,
-            "Take first place in the leadreboard",
+            "Take first place in the leaderboard",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement7 = new Achievement(
             AchievementTitle.ONE_OF_THE_BEST_PLAYERS,
             "Enter top 3 in the leaderboard",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement8 = new Achievement(
             AchievementTitle.GAMER,
             "Login for 2 days in a row",
             "imageName",
             2,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement9 = new Achievement(
             AchievementTitle.PROFESSIONAL_GAMER,
             "Login for 5 days in a row",
             "imageName",
             5,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement10 = new Achievement(
             AchievementTitle.BEGINNER,
             "Play for 30 minutes",
             "imageName",
             30,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement11 = new Achievement(
             AchievementTitle.EXPERIENCED_PLAYER,
             "Play for 60 minutes",
             "imageName",
             60,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement12 = new Achievement(
             AchievementTitle.OBTAIN_XP,
@@ -128,7 +128,7 @@ public class AchievementService {
             "Use sprint for 30 seconds",
             "imageName",
             30,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement15 = new Achievement(
             AchievementTitle.MINER_WORLD_1,
@@ -507,42 +507,42 @@ public class AchievementService {
             "Successfully complete \"chickenshock\"",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement69 = new Achievement(
             AchievementTitle.MEMORY_MASTER,
             "Successfully complete \"memory\"",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement70 = new Achievement(
             AchievementTitle.FINITEQUIZ_MASTER,
             "Successfully complete \"finitequiz\"",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement71 = new Achievement(
             AchievementTitle.CROSSWORDPUZZLE_MASTER,
             "Successfully complete \"crosswordpuzzle\"",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement72 = new Achievement(
             AchievementTitle.BUGFINDER_MASTER,
             "Successfully complete \"bugfinder\"",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement73 = new Achievement(
             AchievementTitle.TOWERCRUSH_MASTER,
             "Successfully complete \"towercrush\"",
             "imageName",
             1,
-            Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.KILLING)
+            Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement74 = new Achievement(
             AchievementTitle.TRAVELER,

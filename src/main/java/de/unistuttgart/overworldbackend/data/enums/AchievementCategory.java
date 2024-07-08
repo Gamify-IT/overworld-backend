@@ -4,5 +4,5 @@ public enum AchievementCategory {
     EXPLORING,
     ACHIEVING,
     SOCIALIZING,
-    KILLING,
+    COMPETITIVE,
 }
