@@ -83,14 +83,14 @@ public class AchievementService {
         );
         final Achievement achievement8 = new Achievement(
             AchievementTitle.GAMER,
-            "Login for 2 days in a row",
+            "Login for 2 days",
             "imageName",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement9 = new Achievement(
             AchievementTitle.PROFESSIONAL_GAMER,
-            "Login for 5 days in a row",
+            "Login for 5 days",
             "imageName",
             5,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
@@ -104,9 +104,9 @@ public class AchievementService {
         );
         final Achievement achievement11 = new Achievement(
             AchievementTitle.EXPERIENCED_PLAYER,
-            "Play for 60 minutes",
+            "Play for 90 minutes",
             "imageName",
-            60,
+            90,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement12 = new Achievement(
