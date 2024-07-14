@@ -73,6 +73,8 @@ public class PlayerStatistic {
 
     String pseudonym;
 
+    float credit;
+
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
     }

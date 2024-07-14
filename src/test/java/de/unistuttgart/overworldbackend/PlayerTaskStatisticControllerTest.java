@@ -164,6 +164,7 @@ class PlayerTaskStatisticControllerTest {
         playerstatistic.setPseudonym("Traveller");
         playerstatistic.setUnlockedAreas(new ArrayList<>());
         playerstatistic.setCompletedDungeons(new ArrayList<>());
+        playerstatistic.setCredit(100);
         initialPlayerStatistic = playerStatisticRepository.save(playerstatistic);
         initialPlayerStatisticDTO = playerstatisticMapper.playerStatisticToPlayerstatisticDTO(initialPlayerStatistic);
 
