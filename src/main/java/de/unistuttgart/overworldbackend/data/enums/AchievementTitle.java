@@ -3,7 +3,6 @@ package de.unistuttgart.overworldbackend.data.enums;
 public enum AchievementTitle {
     GO_FOR_A_WALK,
     GO_FOR_A_LONGER_WALK,
-    LEVEL_UP,
     TELEPORTER_BEGINNER_WORLD_1,
     TELEPORTER_PROFESSIONAL_WORLD_1,
     TELEPORTER_MASTER_WORLD_1,
@@ -74,5 +73,6 @@ public enum AchievementTitle {
     BUGFINDER_MASTER,
     MEMORY_MASTER,
     MINIGAME_ACHIEVER,
-    TRAVELER
+    TRAVELER,
+    LEVEL_UP
 }

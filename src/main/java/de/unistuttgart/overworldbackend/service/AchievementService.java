@@ -62,7 +62,7 @@ public class AchievementService {
         );
         final Achievement achievement5 = new Achievement(
             AchievementTitle.MINIGAME_ACHIEVER,
-            "Successfully complete X minigames in a row",
+            "Successfully complete X minigames",
             "imageName",
             0,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
