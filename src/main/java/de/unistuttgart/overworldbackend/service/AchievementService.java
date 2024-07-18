@@ -35,14 +35,14 @@ public class AchievementService {
         final Achievement achievement1 = new Achievement(
             AchievementTitle.GO_FOR_A_WALK,
             "Walk 10 tiles",
-            "imageName",
+            "footImage",
             10,
             Arrays.asList(AchievementCategory.EXPLORING, AchievementCategory.ACHIEVING)
         );
         final Achievement achievement2 = new Achievement(
             AchievementTitle.GO_FOR_A_LONGER_WALK,
             "Walk 1000 tiles",
-            "imageName",
+            "footImage",
             1000,
             Arrays.asList(AchievementCategory.EXPLORING, AchievementCategory.ACHIEVING)
         );
@@ -56,14 +56,14 @@ public class AchievementService {
         final Achievement achievement4 = new Achievement(
             AchievementTitle.MINIGAME_ACHIEVER,
             "Successfully complete 2 minigames",
-            "imageName",
+            "starImage",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement5 = new Achievement(
             AchievementTitle.MINIGAME_PROFESSIONAL,
             "Successfully complete 5 minigames",
-            "imageName",
+            "starImage",
             5,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
@@ -84,35 +84,35 @@ public class AchievementService {
         final Achievement achievement8 = new Achievement(
             AchievementTitle.SPEEDRUNNER,
             "Use sprint for 30 seconds",
-            "imageName",
+            "rocketImage",
             30,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement9 = new Achievement(
             AchievementTitle.MINER_WORLD_1,
             "Unlock all dungeons in World 1",
-            "imageName",
+            "dungeonImage",
             4,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement10 = new Achievement(
             AchievementTitle.MINER_WORLD_2,
             "Unlock all dungeons in World 2",
-            "imageName",
+            "dungeonImage",
             4,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement11 = new Achievement(
             AchievementTitle.MINER_WORLD_3,
             "Unlock all dungeons in World 3",
-            "imageName",
+            "dungeonImage",
             4,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement12 = new Achievement(
             AchievementTitle.MINER_WORLD_4,
             "Unlock all dungeons in World 4",
-            "imageName",
+            "dungeonImage",
             4,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
@@ -470,63 +470,63 @@ public class AchievementService {
         final Achievement achievement63 = new Achievement(
             AchievementTitle.CHICKENSHOCK_MASTER,
             "Successfully complete \"chickenshock\"",
-            "imageName",
+            "chickenImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement64 = new Achievement(
             AchievementTitle.MEMORY_MASTER,
             "Successfully complete \"memory\"",
-            "imageName",
+            "cardImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement65 = new Achievement(
             AchievementTitle.FINITEQUIZ_MASTER,
             "Successfully complete \"finitequiz\"",
-            "imageName",
+            "brainImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement66 = new Achievement(
             AchievementTitle.CROSSWORDPUZZLE_MASTER,
             "Successfully complete \"crosswordpuzzle\"",
-            "imageName",
+            "puzzleImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement67 = new Achievement(
             AchievementTitle.BUGFINDER_MASTER,
             "Successfully complete \"bugfinder\"",
-            "imageName",
+            "bugImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement68 = new Achievement(
             AchievementTitle.TOWERCRUSH_MASTER,
             "Successfully complete \"towercrush\"",
-            "imageName",
+            "towerImage",
             1,
             Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement69 = new Achievement(
             AchievementTitle.TRAVELER,
             "Use UFO 3 times",
-            "imageName",
+            "ufoImage",
             3,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement70 = new Achievement(
             AchievementTitle.GAMER,
             "Login for 2 days",
-            "imageName",
+            "calenderImage",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement71 = new Achievement(
             AchievementTitle.PROFESSIONAL_GAMER,
             "Login for 5 days",
-            "imageName",
+            "calenderImage",
             5,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
