@@ -49,7 +49,7 @@ public class AchievementService {
         final Achievement achievement3 = new Achievement(
             AchievementTitle.SELECT_CHARACTER,
             "Change skin of your character",
-            "imageName",
+            "npcImage",
             1,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
@@ -70,14 +70,14 @@ public class AchievementService {
         final Achievement achievement6 = new Achievement(
             AchievementTitle.BEGINNER,
             "Play for 30 minutes",
-            "imageName",
+            "clockImage",
             30,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement7 = new Achievement(
             AchievementTitle.EXPERIENCED_PLAYER,
             "Play for 90 minutes",
-            "imageName",
+            "clockImage",
             90,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
         );
@@ -119,140 +119,140 @@ public class AchievementService {
         final Achievement achievement13 = new Achievement(
             AchievementTitle.OPENER_WORLD_2,
             "Unlock world 2",
-            "imageName",
+            "glassImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement14 = new Achievement(
             AchievementTitle.OPENER_WORLD_3,
             "Unlock world 3",
-            "imageName",
+            "glassImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement15 = new Achievement(
             AchievementTitle.OPENER_WORLD_4,
             "Unlock world 4",
-            "imageName",
+            "glassImage",
             1,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement16 = new Achievement(
             AchievementTitle.MINIGAME_SPOTS_FINDER,
             "Locate 2 minigame spots",
-            "imageName",
+            "minigameSpotImage",
             2,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement17 = new Achievement(
             AchievementTitle.MINIGAME_SPOTS_MASTER,
             "Locate 5 minigame spots",
-            "imageName",
+            "minigameSpotImage",
             5,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement18 = new Achievement(
             AchievementTitle.READER_LEVEL_1_WORLD_1,
             "Interact with 5 books",
-            "imageName",
+            "bookImage",
             5,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement19 = new Achievement(
             AchievementTitle.READER_LEVEL_2_WORLD_1,
             "Interact with 10 books",
-            "imageName",
+            "bookImage",
             10,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement20 = new Achievement(
             AchievementTitle.READER_LEVEL_3_WORLD_1,
             "Interact with all books",
-            "imageName",
+            "bookImage",
             25,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement21 = new Achievement(
             AchievementTitle.READER_LEVEL_1_WORLD_2,
             "Interact with 5 books",
-            "imageName",
+            "bookImage",
             5,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement22 = new Achievement(
             AchievementTitle.READER_LEVEL_2_WORLD_2,
             "Interact with 10 books",
-            "imageName",
+            "bookImage",
             10,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement23 = new Achievement(
             AchievementTitle.READER_LEVEL_3_WORLD_2,
             "Interact with all books",
-            "imageName",
+            "bookImage",
             25,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement24 = new Achievement(
             AchievementTitle.READER_LEVEL_1_WORLD_3,
             "Interact with 5 books",
-            "imageName",
+            "bookImage",
             5,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement25 = new Achievement(
             AchievementTitle.READER_LEVEL_2_WORLD_3,
             "Interact with 10 books",
-            "imageName",
+            "bookImage",
             10,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement26 = new Achievement(
             AchievementTitle.READER_LEVEL_3_WORLD_3,
             "Interact with all books",
-            "imageName",
+            "bookImage",
             25,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement27 = new Achievement(
             AchievementTitle.READER_LEVEL_1_WORLD_4,
             "Interact with 5 books",
-            "imageName",
+            "bookImage",
             5,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement28 = new Achievement(
             AchievementTitle.READER_LEVEL_2_WORLD_4,
             "Interact with 10 books",
-            "imageName",
+            "bookImage",
             10,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement29 = new Achievement(
             AchievementTitle.READER_LEVEL_3_WORLD_4,
             "Interact with all books",
-            "imageName",
+            "bookImage",
             25,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement30 = new Achievement(
             AchievementTitle.READER_LEVEL_1,
             "Interact with 25 books in total",
-            "imageName",
+            "bookImage",
             25,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement31 = new Achievement(
             AchievementTitle.READER_LEVEL_2,
             "Interact with 50 books in total",
-            "imageName",
+            "bookImage",
             50,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement32 = new Achievement(
             AchievementTitle.READER_LEVEL_3,
             "Interact with all books in total",
-            "imageName",
+            "bookImage",
             100,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
@@ -260,210 +260,210 @@ public class AchievementService {
         final Achievement achievement33 = new Achievement(
             AchievementTitle.TELEPORTER_BEGINNER_WORLD_1,
             "Open 2 teleporters",
-            "imageName",
+            "teleporterImage",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement34 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_1,
             "Open 10 teleporters",
-            "imageName",
+            "teleporterImage",
             10,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement35 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER_WORLD_1,
             "Open all teleporters",
-            "imageName",
+            "teleporterImage",
             19,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement36 = new Achievement(
             AchievementTitle.TELEPORTER_BEGINNER_WORLD_2,
             "Open 2 teleporters",
-            "imageName",
+            "teleporterImage",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement37 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_2,
             "Open 12 teleporters",
-            "imageName",
+            "teleporterImage",
             12,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement38 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER_WORLD_2,
             "Open all teleporters",
-            "imageName",
+            "teleporterImage",
             24,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement39 = new Achievement(
             AchievementTitle.TELEPORTER_BEGINNER_WORLD_3,
             "Open 2 teleporters",
-            "imageName",
+            "teleporterImage",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement40 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_3,
             "Open 8 teleporters",
-            "imageName",
+            "teleporterImage",
             8,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement41 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER_WORLD_3,
             "Open all teleporters",
-            "imageName",
+            "teleporterImage",
             16,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement42 = new Achievement(
             AchievementTitle.TELEPORTER_BEGINNER_WORLD_4,
             "Open 2 teleporters",
-            "imageName",
+            "teleporterImage",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement43 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_4,
             "Open 8 teleporters",
-            "imageName",
+            "teleporterImage",
             8,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement44 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER_WORLD_4,
             "Open all teleporters",
-            "imageName",
+            "teleporterImage",
             16,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement45 = new Achievement(
             AchievementTitle.TELEPORTER_BEGINNER,
             "Open 20 teleporters in total",
-            "imageName",
+            "teleporterImage",
             20,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement46 = new Achievement(
             AchievementTitle.TELEPORTER_PROFESSIONAL,
             "Open 40 teleporters in total",
-            "imageName",
+            "teleporterImage",
             40,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement47 = new Achievement(
             AchievementTitle.TELEPORTER_MASTER,
             "Open all teleporters in total",
-            "imageName",
+            "teleporterImage",
             75,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
         final Achievement achievement48 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_1,
             "Talk to 5 NPCs",
-            "imageName",
+            "npcImage",
             5,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement49 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_1,
             "Talk to 25 NPCs",
-            "imageName",
+            "npcImage",
             25,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement50 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_1,
             "Talk to all NPCs",
-            "imageName",
+            "npcImage",
             50,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement51 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_2,
             "Talk to 5 NPCs",
-            "imageName",
+            "npcImage",
             5,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement52 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_2,
             "Talk to 25 NPCs",
-            "imageName",
+            "npcImage",
             25,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement53 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_2,
             "Talk to all NPCs",
-            "imageName",
+            "npcImage",
             50,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement54 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_3,
             "Talk to 5 NPCs",
-            "imageName",
+            "npcImage",
             5,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement55 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_3,
             "Talk to 25 NPCs",
-            "imageName",
+            "npcImage",
             25,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement56 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_3,
             "Talk to all NPCs",
-            "imageName",
+            "npcImage",
             50,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement57 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_4,
             "Talk to 5 NPCs",
-            "imageName",
+            "npcImage",
             5,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement58 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_4,
             "Talk to 25 NPCs",
-            "imageName",
+            "npcImage",
             25,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement59 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_4,
             "Talk to all NPCs",
-            "imageName",
+            "npcImage",
             50,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement60 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_1,
             "Talk to 50 NPCs in total",
-            "imageName",
+            "npcImage",
             50,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement61 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_2,
             "Talk to 100 NPCs in total",
-            "imageName",
+            "npcImage",
             100,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
         final Achievement achievement62 = new Achievement(
             AchievementTitle.COMMUNICATOR_LEVEL_3,
             "Talk to all NPCs in total",
-            "imageName",
+            "npcImage",
             200,
             Arrays.asList(AchievementCategory.EXPLORING)
         );
@@ -533,21 +533,21 @@ public class AchievementService {
         final Achievement achievement72 = new Achievement(
             AchievementTitle.LEVEL_UP,
             "Reach level 2",
-            "imageName",
+            "levelUpImage",
             2,
             Arrays.asList(AchievementCategory.ACHIEVING)
         );
         final Achievement achievement73 = new Achievement(
             AchievementTitle.GOAT,
             "Take first place in the leaderboard",
-            "imageName",
+            "medalImage",
             1,
             Arrays.asList(AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement74 = new Achievement(
             AchievementTitle.ONE_OF_THE_BEST_PLAYERS,
             "Enter top 3 in the leaderboard",
-            "imageName",
+            "medalImage",
             1,
             Arrays.asList(AchievementCategory.COMPETITIVE)
         );
