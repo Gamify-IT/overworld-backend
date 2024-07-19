@@ -540,14 +540,14 @@ public class AchievementService {
         final Achievement achievement73 = new Achievement(
             AchievementTitle.GOAT,
             "Take first place in the leaderboard",
-            "medalImage",
+            "medal1Image",
             1,
             Arrays.asList(AchievementCategory.COMPETITIVE)
         );
         final Achievement achievement74 = new Achievement(
             AchievementTitle.ONE_OF_THE_BEST_PLAYERS,
             "Enter top 3 in the leaderboard",
-            "medalImage",
+            "medal3Image",
             1,
             Arrays.asList(AchievementCategory.COMPETITIVE)
         );
