@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MinigameSpotDTO extends ObjectSpotDTO{
+public class MinigameSpotDTO extends ObjectSpotDTO {
 
     int index;
 }
