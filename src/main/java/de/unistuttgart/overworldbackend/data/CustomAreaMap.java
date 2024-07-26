@@ -1,12 +1,13 @@
 package de.unistuttgart.overworldbackend.data;
 
 import de.unistuttgart.overworldbackend.data.enums.AreaStyle;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import javax.persistence.*;
+import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a generated area.

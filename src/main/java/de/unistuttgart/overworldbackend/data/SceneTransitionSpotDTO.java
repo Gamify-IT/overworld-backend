@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SceneTransitionSpotDTO extends ObjectSpotDTO {
+public class SceneTransitionSpotDTO extends ObjectSpotDTO{
 
     PositionDTO size;
     AreaLocationDTO areaToLoad;

@@ -1,11 +1,12 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.util.UUID;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import java.util.UUID;
 
 /**
  * Represents the location of an object spot

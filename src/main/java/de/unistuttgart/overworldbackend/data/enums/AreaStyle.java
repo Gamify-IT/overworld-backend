@@ -4,5 +4,5 @@ public enum AreaStyle {
     SAVANNA,
     CAVE,
     BEACH,
-    FOREST,
+    FOREST
 }

@@ -7,7 +7,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AreaConfig {
-
     int amountMinigames;
     int amountNPCs;
     int amountBooks;

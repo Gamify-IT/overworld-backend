@@ -1,9 +1,10 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.util.UUID;
-import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * A Layout represents the size and structure of an area map
@@ -14,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Layout {
-
+public class Layout
+{
     @Id
     @GeneratedValue(generator = "uuid")
     UUID id;

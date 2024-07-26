@@ -73,24 +73,14 @@ public class AchievementService {
                 "Play for 30 minutes",
                 "clockImage",
                 30,
-                Arrays.asList(
-                    AchievementCategory.ACHIEVING,
-                    AchievementCategory.EXPLORING,
-                    AchievementCategory.SOCIALIZING,
-                    AchievementCategory.COMPETITIVE
-                )
+                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
             ),
             new Achievement(
                 AchievementTitle.EXPERIENCED_PLAYER,
                 "Play for 90 minutes",
                 "clockImage",
                 90,
-                Arrays.asList(
-                    AchievementCategory.ACHIEVING,
-                    AchievementCategory.EXPLORING,
-                    AchievementCategory.SOCIALIZING,
-                    AchievementCategory.COMPETITIVE
-                )
+                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
             ),
             new Achievement(
                 AchievementTitle.SPEEDRUNNER,
@@ -517,11 +507,7 @@ public class AchievementService {
                 "Successfully complete \"towercrush\"",
                 "towerImage",
                 1,
-                Arrays.asList(
-                    AchievementCategory.SOCIALIZING,
-                    AchievementCategory.ACHIEVING,
-                    AchievementCategory.COMPETITIVE
-                )
+                Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
             ),
             new Achievement(
                 AchievementTitle.TRAVELER,
@@ -582,9 +568,11 @@ public class AchievementService {
             )*/
         );
 
-        currentAchievementList.forEach(achievement -> {
-            achievementRepository.save(achievement);
-        });
+        currentAchievementList.forEach(
+            achievement -> {
+                achievementRepository.save(achievement);
+            }
+        );
 
         final List<Achievement> achievements = achievementRepository.findAll();
 

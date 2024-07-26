@@ -5,7 +5,7 @@ import de.unistuttgart.overworldbackend.data.AreaMapDTO;
 import java.util.Set;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = { AreaLocationMapper.class })
+@Mapper(componentModel =  "spring", uses = { AreaLocationMapper.class })
 public interface AreaMapMapper {
     AreaMapDTO areaMapToAreaMapDTO(final AreaMap areaMap);
 

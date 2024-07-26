@@ -6,6 +6,7 @@ import de.unistuttgart.overworldbackend.data.config.AreaConfig;
 import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.DungeonMapper;
 import de.unistuttgart.overworldbackend.repositories.DungeonRepository;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class DungeonService {
     @Autowired
     private AreaMapMapper areaMapMapper;
 
-    public DungeonService() {
+    public DungeonService(){
         areaConfig = new AreaConfig();
         final ObjectMapper mapper = new ObjectMapper();
 
@@ -127,30 +128,32 @@ public class DungeonService {
      * @param dungeonIndex the index of the dungeon
      * @param areaMapDTO the update parameters
      */
-    public void updateDungeonContent(
-        final int courseId,
-        final int worldIndex,
-        final int dungeonIndex,
-        final AreaMapDTO areaMapDTO
-    ) {
+    public void updateDungeonContent(final int courseId, final int worldIndex, final int dungeonIndex, final AreaMapDTO areaMapDTO){
         final Dungeon dungeon = getDungeonByIndexFromCourse(courseId, worldIndex, dungeonIndex);
 
         AreaMap newAreaMap = areaMapMapper.areaMapDTOToAreaMap(areaMapDTO);
         dungeon.getAreaMap().setGeneratedArea(newAreaMap.isGeneratedArea());
-        if (newAreaMap.isGeneratedArea()) {
+        if(newAreaMap.isGeneratedArea())
+        {
             dungeon.getAreaMap().setCustomAreaMap(newAreaMap.getCustomAreaMap());
-        } else {
+        }
+        else
+        {
             dungeon.getAreaMap().setCustomAreaMap(null);
         }
 
-        if (areaMapDTO.isGeneratedArea()) {
-            if (areaMapDTO.getCustomAreaMap() == null) {
+        if(areaMapDTO.isGeneratedArea())
+        {
+            if(areaMapDTO.getCustomAreaMap() == null)
+            {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No custom area map provided");
             }
             updateMinigames(dungeon, areaMapDTO.getCustomAreaMap().getMinigameSpots().size());
             updateNPCs(dungeon, areaMapDTO.getCustomAreaMap().getNpcSpots().size());
             updateBooks(dungeon, areaMapDTO.getCustomAreaMap().getBookSpots().size());
-        } else {
+        }
+        else
+        {
             updateMinigames(dungeon, areaConfig.getAmountMinigames());
             updateNPCs(dungeon, areaConfig.getAmountNPCs());
             updateBooks(dungeon, areaConfig.getAmountBooks());
@@ -164,8 +167,8 @@ public class DungeonService {
      * @param dungeon the dungeon to edit
      * @param numberOfMinigames the amount of minigames the dungeon should contain
      */
-    private void updateMinigames(Dungeon dungeon, int numberOfMinigames) {
-        if (dungeon.getMinigameTasks().size() > numberOfMinigames) {
+    private void updateMinigames(Dungeon dungeon, int numberOfMinigames){
+        if(dungeon.getMinigameTasks().size() > numberOfMinigames) {
             Set<MinigameTask> remainingMinigames = new HashSet<>();
             List<MinigameTask> minigamesList = dungeon.getMinigameTasks().stream().toList();
             for (int index = 0; index < numberOfMinigames; index++) {
@@ -173,12 +176,9 @@ public class DungeonService {
             }
             dungeon.setMinigameTasks(remainingMinigames);
         }
-        if (dungeon.getMinigameTasks().size() < numberOfMinigames) {
-            for (
-                int minigameIndex = dungeon.getMinigameTasks().size() + 1;
-                minigameIndex <= numberOfMinigames;
-                minigameIndex++
-            ) {
+        if(dungeon.getMinigameTasks().size() < numberOfMinigames){
+            for(int minigameIndex = dungeon.getMinigameTasks().size()+1; minigameIndex<=numberOfMinigames; minigameIndex++)
+            {
                 final MinigameTask minigame = new MinigameTask(null, null, minigameIndex);
                 dungeon.getMinigameTasks().add(minigame);
             }
@@ -190,8 +190,8 @@ public class DungeonService {
      * @param dungeon the dungeon to edit
      * @param numberOfNPCs the amount of npcs the dungeon should contain
      */
-    private void updateNPCs(Dungeon dungeon, int numberOfNPCs) {
-        if (dungeon.getNpcs().size() > numberOfNPCs) {
+    private void updateNPCs(Dungeon dungeon, int numberOfNPCs){
+        if(dungeon.getNpcs().size() > numberOfNPCs) {
             Set<NPC> remainingNPCs = new HashSet<>();
             List<NPC> npcList = dungeon.getNpcs().stream().toList();
             for (int index = 0; index < numberOfNPCs; index++) {
@@ -199,8 +199,9 @@ public class DungeonService {
             }
             dungeon.setNpcs(remainingNPCs);
         }
-        if (dungeon.getNpcs().size() < numberOfNPCs) {
-            for (int npcIndex = dungeon.getNpcs().size() + 1; npcIndex <= numberOfNPCs; npcIndex++) {
+        if(dungeon.getNpcs().size() < numberOfNPCs){
+            for(int npcIndex = dungeon.getNpcs().size()+1; npcIndex<=numberOfNPCs; npcIndex++)
+            {
                 final NPC npc = new NPC(new ArrayList<>(), npcIndex);
                 dungeon.getNpcs().add(npc);
             }
@@ -212,8 +213,8 @@ public class DungeonService {
      * @param dungeon the dungeon to edit
      * @param numberOfBooks the amount of books the dungeon should contain
      */
-    private void updateBooks(Dungeon dungeon, int numberOfBooks) {
-        if (dungeon.getBooks().size() > numberOfBooks) {
+    private void updateBooks(Dungeon dungeon, int numberOfBooks){
+        if(dungeon.getBooks().size() > numberOfBooks) {
             Set<Book> remainingBooks = new HashSet<>();
             List<Book> bookList = dungeon.getBooks().stream().toList();
             for (int index = 0; index < numberOfBooks; index++) {
@@ -221,8 +222,9 @@ public class DungeonService {
             }
             dungeon.setBooks(remainingBooks);
         }
-        if (dungeon.getBooks().size() < numberOfBooks) {
-            for (int bookIndex = dungeon.getBooks().size() + 1; bookIndex <= numberOfBooks; bookIndex++) {
+        if(dungeon.getBooks().size() < numberOfBooks){
+            for(int bookIndex = dungeon.getBooks().size()+1; bookIndex<=numberOfBooks; bookIndex++)
+            {
                 final Book book = new Book("", bookIndex);
                 dungeon.getBooks().add(book);
             }

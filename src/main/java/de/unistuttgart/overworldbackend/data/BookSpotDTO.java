@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookSpotDTO extends ObjectSpotDTO {
+public class BookSpotDTO extends ObjectSpotDTO{
 
     int index;
     String name;
