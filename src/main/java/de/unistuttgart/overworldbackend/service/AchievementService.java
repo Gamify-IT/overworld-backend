@@ -516,6 +516,7 @@ public class AchievementService {
             3,
             Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
         );
+        /*not implemented achievements because of other bugs
         final Achievement achievement70 = new Achievement(
             AchievementTitle.GAMER,
             "Login for 2 days",
@@ -564,7 +565,7 @@ public class AchievementService {
             "imageName",
             0,
             Arrays.asList(AchievementCategory.ACHIEVING)
-        );
+        );*/
 
         achievementRepository.save(achievement1);
         achievementRepository.save(achievement2);
@@ -635,13 +636,13 @@ public class AchievementService {
         achievementRepository.save(achievement67);
         achievementRepository.save(achievement68);
         achievementRepository.save(achievement69);
-        achievementRepository.save(achievement70);
+        /*achievementRepository.save(achievement70);
         achievementRepository.save(achievement71);
         achievementRepository.save(achievement72);
         achievementRepository.save(achievement73);
         achievementRepository.save(achievement74);
         achievementRepository.save(achievement75);
-        achievementRepository.save(achievement76);
+        achievementRepository.save(achievement76);*/
         
 
         final List<Achievement> achievements = achievementRepository.findAll();
