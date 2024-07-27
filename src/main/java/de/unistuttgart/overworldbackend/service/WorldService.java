@@ -3,6 +3,7 @@ package de.unistuttgart.overworldbackend.service;
 import aj.org.objectweb.asm.TypeReference;
 import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.config.AreaConfig;
+import de.unistuttgart.overworldbackend.data.config.WorldConfig;
 import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.WorldMapper;
 import de.unistuttgart.overworldbackend.repositories.WorldRepository;
@@ -10,6 +11,7 @@ import de.unistuttgart.overworldbackend.repositories.WorldRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.ClientHttpResponseStatusCodeException;
@@ -151,6 +153,11 @@ public class WorldService {
 
         worldRepository.save(world);
     }
+
+    /*public void createWorld(final int courseID, final int worldIndex, final AreaMapDTO area){
+        final AtomicInteger worldID = new AtomicInteger(1);
+        configureWorld(worldID)
+    }*/
 
     /**
      * Adds or removes minigames until number of minigames specified is reached

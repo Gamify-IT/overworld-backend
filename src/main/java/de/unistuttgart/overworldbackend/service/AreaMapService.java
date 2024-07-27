@@ -108,4 +108,10 @@ public class AreaMapService {
         final AreaMap updatedAreaMap = getAreaMapFromDungeon(courseId, worldIndex, dungeonIndex);
         return areaMapMapper.areaMapToAreaMapDTO(updatedAreaMap);
     }
+
+    /*
+    public AreaMapDTO createAreaMapForWorld(final int courseID, final int worldIndex, final AreaMapDTO areaMapDTO){
+        worldService.createWorld(courseID, worldIndex, areaMapDTO);
+    }
+    */
 }
