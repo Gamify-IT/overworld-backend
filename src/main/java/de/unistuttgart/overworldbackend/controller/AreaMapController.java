@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import java.util.Set;
 
 import static de.unistuttgart.overworldbackend.data.Roles.LECTURER_ROLE;
@@ -29,6 +31,7 @@ public class AreaMapController {
     @Autowired
     private AreaMapService areaMapService;
 
+    private static final Logger logger = LoggerFactory.getLogger(AreaMapController.class);
     @Operation(summary = "Get all area maps from a course by its id")
     @GetMapping("")
     public Set<AreaMapDTO> getAreaMaps(
@@ -88,6 +91,7 @@ public class AreaMapController {
             @RequestBody final AreaMapDTO areaMapDTO,
             @CookieValue("access_token") final String accessToken
     ){
+        logger.debug("test");
         jwtValidatorService.validateTokenOrThrow(accessToken);
         jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
         log.debug("update area map from dungeon {} from world {} of course {} with {}", dungeonIndex, worldIndex, courseId, areaMapDTO);
