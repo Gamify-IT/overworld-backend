@@ -111,6 +111,11 @@ public class PlayerStatisticService {
         playerstatistic.setUserId(playerRegistrationDTO.getUserId());
         playerstatistic.setUsername(playerRegistrationDTO.getUsername());
         playerstatistic.setCurrentArea(firstWorld);
+        playerstatistic.setLogoutPositionX(21.5f);
+        playerstatistic.setLogoutPositionY(2.5f);
+        playerstatistic.setLogoutScene("World 1");
+        playerstatistic.setLogoutWorldIndex(1);
+        playerstatistic.setLogoutDungeonIndex(0);
         playerstatistic.setKnowledge(0);
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(
