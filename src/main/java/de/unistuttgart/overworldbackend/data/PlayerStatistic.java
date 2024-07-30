@@ -50,8 +50,11 @@ public class PlayerStatistic {
     String username;
 
     LocalDateTime created;
-
     LocalDateTime lastActive;
+
+    float logoutPositionX = 21.5f;
+    float logoutPositionY = 2.5f;
+    String logoutScene = "World 1";
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();

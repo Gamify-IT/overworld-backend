@@ -197,6 +197,11 @@ public class PlayerStatisticService {
         } catch (final ResponseStatusException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Specified area does not exist");
         }
+
+        playerstatistic.setLogoutPositionX(playerstatisticDTO.getLogoutPositionX());
+        playerstatistic.setLogoutPositionY(playerstatistic.getLogoutPositionY());
+        playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
+
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
         );

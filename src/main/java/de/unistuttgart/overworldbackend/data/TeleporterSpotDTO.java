@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TeleporterSpotDTO extends ObjectSpotDTO{
+public class TeleporterSpotDTO extends ObjectSpotDTO {
 
     int index;
     String name;
