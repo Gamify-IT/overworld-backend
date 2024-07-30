@@ -52,10 +52,10 @@ public class PlayerStatistic {
     LocalDateTime created;
     LocalDateTime lastActive;
 
+    // player position data
     float logoutPositionX = 21.5f;
     float logoutPositionY = 2.5f;
     String logoutScene = "World 1";
-
     int logoutWorldIndex = 1;
     int logoutDungeonIndex = 0;
 
