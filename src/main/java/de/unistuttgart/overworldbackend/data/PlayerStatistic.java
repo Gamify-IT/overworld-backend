@@ -73,7 +73,6 @@ public class PlayerStatistic {
 
     String pseudonym;
 
-    float credit;
 
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
@@ -100,4 +99,6 @@ public class PlayerStatistic {
     public void addRewards(final int gainedRewards) {
         rewards += gainedRewards;
     }
+
+
 }

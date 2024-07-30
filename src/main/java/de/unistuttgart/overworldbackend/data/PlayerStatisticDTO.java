@@ -48,5 +48,4 @@ public class PlayerStatisticDTO {
 
     String pseudonym;
 
-    float credit;
 }

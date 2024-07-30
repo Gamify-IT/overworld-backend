@@ -160,7 +160,6 @@ class PlayerStatisticControllerTest {
         unlockedAreas.add(initialWorld);
         playerstatistic.setUnlockedAreas(unlockedAreas);
         playerstatistic.setCompletedDungeons(new ArrayList<>());
-        playerstatistic.setCredit(100);
         initialPlayerStatistic = playerstatisticRepository.save(playerstatistic);
         initialPlayerStatisticDTO = playerstatisticMapper.playerStatisticToPlayerstatisticDTO(initialPlayerStatistic);
 
