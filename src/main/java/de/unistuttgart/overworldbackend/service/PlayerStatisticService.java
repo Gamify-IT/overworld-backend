@@ -202,6 +202,9 @@ public class PlayerStatisticService {
         playerstatistic.setLogoutPositionY(playerstatistic.getLogoutPositionY());
         playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
 
+        playerstatistic.setLogoutWorldIndex(playerstatisticDTO.getLogoutWorldIndex());
+        playerstatistic.setLogoutDungeonIndex(playerstatistic.getLogoutDungeonIndex());
+
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
         );

@@ -56,6 +56,9 @@ public class PlayerStatistic {
     float logoutPositionY = 2.5f;
     String logoutScene = "World 1";
 
+    int logoutWorldIndex = 1;
+    int logoutDungeonIndex = 0;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();
 

@@ -42,5 +42,8 @@ public class PlayerStatisticDTO {
     float logoutPositionY;
     String logoutScene;
 
+    int logoutWorldIndex;
+    int logoutDungeonIndex;
+
     long knowledge;
 }
