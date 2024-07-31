@@ -159,6 +159,9 @@ class PlayerTaskStatisticControllerTest {
         playerstatistic.setCourse(initialCourse);
         playerstatistic.setCurrentArea(initialCourse.getWorlds().stream().findFirst().get());
         playerstatistic.setKnowledge(new Random(10).nextLong());
+        playerstatistic.setRewards(new Random(10).nextInt());
+        playerstatistic.setShowRewards(false);
+        playerstatistic.setPseudonym("Traveller");
         playerstatistic.setUnlockedAreas(new ArrayList<>());
         playerstatistic.setCompletedDungeons(new ArrayList<>());
         initialPlayerStatistic = playerStatisticRepository.save(playerstatistic);
@@ -190,7 +193,9 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                8,
+                8
             )
         );
 
@@ -212,7 +217,9 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                8,
+                8
             )
         );
 
@@ -234,7 +241,9 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                8,
+                8
             )
         );
 
@@ -260,7 +269,9 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getGame(),
                 initialMinigameTask.getConfigurationId(),
                 80,
-                initialPlayerStatisticDTO.getUserId()
+                initialPlayerStatisticDTO.getUserId(),
+                8,
+                8
             )
         );
 

@@ -6,8 +6,8 @@ import de.unistuttgart.overworldbackend.repositories.MinigameTaskRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskActionLogRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -43,6 +43,11 @@ public class PlayerTaskStatisticService {
     @Autowired
     PlayerTaskActionLogRepository playerTaskActionLogRepository;
 
+    @Autowired
+    PlayerService playerService;
+
+    private List<PlayerDTO> allPlayerStatistics;
+
     /**
      * Gets a list of all playerTaskStatistics of a player of the given course
      *
@@ -61,8 +66,9 @@ public class PlayerTaskStatisticService {
 
     /**
      * Gets the playerStatistic of the course of the player of the statisticId
-     * @param courseId course which the statistic belongs to
-     * @param playerId player which the statistic belongs to
+     *
+     * @param courseId    course which the statistic belongs to
+     * @param playerId    player which the statistic belongs to
      * @param statisticId id of the statistic, which is returned
      * @return playerTaskStatistic with the given statisticId
      */
@@ -97,6 +103,7 @@ public class PlayerTaskStatisticService {
      * This method gets a data object with a Player, a Game, a Configuration and a score.
      * The given data gets logged as a PlayerTaskActionLog.
      * It calculates the progress of the player with the given score and updates the value in the correct PlayerStatistic object.
+     *
      * @param data Data of a game run
      * @return updated playerTaskStatistic
      */
@@ -124,6 +131,7 @@ public class PlayerTaskStatisticService {
                 newPlayerTaskStatistic.setPlayerStatistic(playerStatistic);
                 newPlayerTaskStatistic.setMinigameTask(minigameTask);
                 newPlayerTaskStatistic.setCourse(course);
+
                 playerStatistic.addPlayerTaskStatistic(newPlayerTaskStatistic);
                 return playerTaskStatisticRepository
                     .findByMinigameTaskIdAndCourseIdAndPlayerStatisticId(
@@ -148,6 +156,8 @@ public class PlayerTaskStatisticService {
 
         playerTaskStatistic.setHighscore(Math.max(playerTaskStatistic.getHighscore(), data.getScore()));
         playerTaskStatistic.setCompleted(playerTaskStatistic.isCompleted() || checkCompleted(data.getScore()));
+        playerTaskStatistic.setRewards(data.getRewards());
+        playerTaskStatistic.setTotalRewards(playerTaskStatistic.getRewards() + data.getRewards());
 
         logData(data, course, playerTaskStatistic, gainedKnowledge);
 
@@ -158,6 +168,7 @@ public class PlayerTaskStatisticService {
 
         playerStatisticService.checkForUnlockedAreas(minigameTask.getArea(), playerStatistic);
 
+        playerStatistic.addRewards(data.getRewards()); // für playerStatistic
         playerStatistic.addKnowledge(gainedKnowledge);
         playerstatisticRepository.save(playerStatistic);
 
@@ -204,10 +215,11 @@ public class PlayerTaskStatisticService {
 
     /**
      * This method calculates the knowledge out of the score and the highscore.
-     *
+     * <p>
      * You get all the points you gained above the high score.
      * The points below the high score get multiplied by the RETRY_KNOWLEDGE constant.
-     * @param score score achieved in the game
+     *
+     * @param score     score achieved in the game
      * @param highscore high score achieved in the game
      * @return knowledge to be added
      */

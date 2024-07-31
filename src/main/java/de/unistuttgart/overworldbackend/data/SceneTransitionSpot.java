@@ -1,12 +1,11 @@
 package de.unistuttgart.overworldbackend.data;
 
 import de.unistuttgart.overworldbackend.data.enums.FacingDirection;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 /**
  * A SceneTransitionSpot is an instance of an ObjectSpot
@@ -17,7 +16,7 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SceneTransitionSpot extends ObjectSpot{
+public class SceneTransitionSpot extends ObjectSpot {
 
     @ManyToOne(cascade = CascadeType.ALL)
     Position size;
@@ -28,11 +27,11 @@ public class SceneTransitionSpot extends ObjectSpot{
     FacingDirection facingDirection;
 
     public SceneTransitionSpot(
-            final AreaLocation area,
-            final Position position,
-            final Position size,
-            final Area areaToLoad,
-            final FacingDirection facingDirection
+        final AreaLocation area,
+        final Position position,
+        final Position size,
+        final Area areaToLoad,
+        final FacingDirection facingDirection
     ) {
         super(area, position);
         this.size = size;

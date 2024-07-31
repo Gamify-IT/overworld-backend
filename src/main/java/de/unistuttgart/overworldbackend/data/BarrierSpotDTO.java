@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BarrierSpotDTO extends ObjectSpotDTO{
+public class BarrierSpotDTO extends ObjectSpotDTO {
 
     BarrierType type;
     int destinationAreaIndex;
