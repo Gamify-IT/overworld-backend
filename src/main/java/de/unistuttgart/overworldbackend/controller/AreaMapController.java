@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "AreaMap", description = "Get and update area maps from a course")
 @RestController
 @Slf4j
-@RequestMapping("/courses/{courseId}/areaMaps")
+@RequestMapping("/courses/{courseId}/area")
 public class AreaMapController {
 
     @Autowired

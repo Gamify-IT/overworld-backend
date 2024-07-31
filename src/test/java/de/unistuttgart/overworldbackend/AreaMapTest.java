@@ -119,7 +119,7 @@ public class AreaMapTest {
         assertNotNull(initialWorld.getId());
         assertNotNull(initialWorldDTO.getId());
 
-        fullURL = String.format("/courses/%d/areaMaps", initialCourse.getId());
+        fullURL = String.format("/courses/%d/area", initialCourse.getId());
 
         objectMapper = new ObjectMapper();
 
