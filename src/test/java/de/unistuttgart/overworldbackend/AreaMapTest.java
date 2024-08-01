@@ -1,5 +1,12 @@
 package de.unistuttgart.overworldbackend;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import de.unistuttgart.overworldbackend.data.*;
@@ -10,6 +17,8 @@ import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.WorldMapper;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.WorldRepository;
+import java.util.*;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +35,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.servlet.http.Cookie;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @AutoConfigureMockMvc
 @Transactional
 @SpringBootTest
@@ -44,9 +43,9 @@ public class AreaMapTest {
 
     @Container
     public static PostgreSQLContainer postgresDB = new PostgreSQLContainer("postgres:14-alpine")
-            .withDatabaseName("postgres")
-            .withUsername("postgres")
-            .withPassword("postgres");
+        .withDatabaseName("postgres")
+        .withUsername("postgres")
+        .withPassword("postgres");
 
     @DynamicPropertySource
     public static void properties(final DynamicPropertyRegistry registry) {
@@ -88,7 +87,7 @@ public class AreaMapTest {
     private String fullURL;
 
     @BeforeEach
-    public void createBasicData(){
+    public void createBasicData() {
         courseRepository.deleteAll();
 
         final World world = new World();
@@ -104,11 +103,11 @@ public class AreaMapTest {
         world.setAreaMap(areaMap);
 
         final Course course = new Course(
-                "Gamify",
-                "SS-23",
-                "Basic lecture of computer science students",
-                true,
-                List.of(world)
+            "Gamify",
+            "SS-23",
+            "Basic lecture of computer science students",
+            true,
+            List.of(world)
         );
 
         initialCourse = courseRepository.save(course);
@@ -135,18 +134,15 @@ public class AreaMapTest {
     @Test
     void getAreaMaps() throws Exception {
         final MvcResult result = mvc
-                .perform(get(fullURL).cookie(cookie).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(get(fullURL).cookie(cookie).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
 
         final List<AreaMapDTO> areaMapDTOs = List.of(
-                objectMapper.readValue(result.getResponse().getContentAsString(), AreaMapDTO[].class)
+            objectMapper.readValue(result.getResponse().getContentAsString(), AreaMapDTO[].class)
         );
 
-        final AreaMapDTO areaMapDTO = areaMapDTOs
-                .stream()
-                .findFirst()
-                .get();
+        final AreaMapDTO areaMapDTO = areaMapDTOs.stream().findFirst().get();
 
         assertSame(1, areaMapDTOs.size());
         assertEquals(initialAreaMapDTO.getId(), areaMapDTO.getId());
@@ -160,11 +156,16 @@ public class AreaMapTest {
     @Test
     void getAreaMap() throws Exception {
         final MvcResult result = mvc
-                .perform(get(fullURL + "/" + initialWorldDTO.getIndex()).cookie(cookie).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                get(fullURL + "/" + initialWorldDTO.getIndex()).cookie(cookie).contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
-        final AreaMapDTO areaMapDTO = objectMapper.readValue(result.getResponse().getContentAsString(), AreaMapDTO.class);
+        final AreaMapDTO areaMapDTO = objectMapper.readValue(
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
+        );
 
         assertEquals(initialAreaMapDTO.getId(), areaMapDTO.getId());
         assertEquals(initialAreaMapDTO, areaMapDTO);
@@ -177,9 +178,9 @@ public class AreaMapTest {
     @Test
     void getAreaMap_DoesNotExist_ThrowsNotFound() throws Exception {
         final MvcResult result = mvc
-                .perform(get(fullURL + "/" + Integer.MAX_VALUE).cookie(cookie).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
+            .perform(get(fullURL + "/" + Integer.MAX_VALUE).cookie(cookie).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andReturn();
     }
 
     /**
@@ -195,17 +196,18 @@ public class AreaMapTest {
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
         final MvcResult result = mvc
-                .perform(
-                        put(fullURL + "/" + initialWorldDTO.getIndex())
-                                .cookie(cookie)
-                                .content(bodyValue)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                put(fullURL + "/" + initialWorldDTO.getIndex())
+                    .cookie(cookie)
+                    .content(bodyValue)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
         final AreaMapDTO updatedAreaMapDTOResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), AreaMapDTO.class
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
         );
 
         assertTrue(updatedAreaMapDTOResult.isGeneratedArea());
@@ -242,17 +244,18 @@ public class AreaMapTest {
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
         final MvcResult result = mvc
-                .perform(
-                        put(fullURL + "/" + initialWorldDTO.getIndex())
-                                .cookie(cookie)
-                                .content(bodyValue)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                put(fullURL + "/" + initialWorldDTO.getIndex())
+                    .cookie(cookie)
+                    .content(bodyValue)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
         final AreaMapDTO updatedAreaMapDTOResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), AreaMapDTO.class
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
         );
 
         World world = worldRepository.findByIndexAndCourseId(initialWorld.getIndex(), initialCourse.getId()).get();
@@ -275,28 +278,31 @@ public class AreaMapTest {
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
         final MvcResult result = mvc
-                .perform(
-                        put(fullURL + "/" + initialWorldDTO.getIndex())
-                                .cookie(cookie)
-                                .content(bodyValue)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                put(fullURL + "/" + initialWorldDTO.getIndex())
+                    .cookie(cookie)
+                    .content(bodyValue)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
         final AreaMapDTO updatedAreaMapDTOResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), AreaMapDTO.class
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
         );
 
         World world = worldRepository.findByIndexAndCourseId(initialWorld.getIndex(), initialCourse.getId()).get();
 
         assertEquals(5, world.getDungeons().size());
 
-        world.getDungeons().forEach(dungeon -> {
-            assertEquals(12, dungeon.getMinigameTasks().size());
-            assertEquals(10, dungeon.getNpcs().size());
-            assertEquals(5, dungeon.getBooks().size());
-        });
+        world
+            .getDungeons()
+            .forEach(dungeon -> {
+                assertEquals(12, dungeon.getMinigameTasks().size());
+                assertEquals(10, dungeon.getNpcs().size());
+                assertEquals(5, dungeon.getBooks().size());
+            });
     }
 
     /**
@@ -312,17 +318,18 @@ public class AreaMapTest {
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
         final MvcResult result = mvc
-                .perform(
-                        put(fullURL + "/" + initialWorldDTO.getIndex())
-                                .cookie(cookie)
-                                .content(bodyValue)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                put(fullURL + "/" + initialWorldDTO.getIndex())
+                    .cookie(cookie)
+                    .content(bodyValue)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
         final AreaMapDTO updatedAreaMapDTOResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), AreaMapDTO.class
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
         );
 
         World world = worldRepository.findByIndexAndCourseId(initialWorld.getIndex(), initialCourse.getId()).get();
@@ -345,17 +352,18 @@ public class AreaMapTest {
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
         final MvcResult result = mvc
-                .perform(
-                        put(fullURL + "/" + initialWorldDTO.getIndex())
-                                .cookie(cookie)
-                                .content(bodyValue)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                put(fullURL + "/" + initialWorldDTO.getIndex())
+                    .cookie(cookie)
+                    .content(bodyValue)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
         final AreaMapDTO updatedAreaMapDTOResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), AreaMapDTO.class
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
         );
 
         World world = worldRepository.findByIndexAndCourseId(initialWorld.getIndex(), initialCourse.getId()).get();
@@ -381,17 +389,18 @@ public class AreaMapTest {
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
         final MvcResult result = mvc
-                .perform(
-                        put(fullURL + "/" + initialWorldDTO.getIndex())
-                                .cookie(cookie)
-                                .content(bodyValue)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                put(fullURL + "/" + initialWorldDTO.getIndex())
+                    .cookie(cookie)
+                    .content(bodyValue)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
         final AreaMapDTO updatedAreaMapDTOResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), AreaMapDTO.class
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
         );
 
         assertFalse(updatedAreaMapDTOResult.isGeneratedArea());
@@ -403,24 +412,25 @@ public class AreaMapTest {
      * @throws Exception
      */
     @Test
-    void updateAreaMap_ResetToDefaultObjects() throws  Exception {
+    void updateAreaMap_ResetToDefaultObjects() throws Exception {
         final AreaMapDTO updatedAreaMapDTO = areaMapMapper.areaMapToAreaMapDTO(initialAreaMap);
         updatedAreaMapDTO.setGeneratedArea(false);
 
         final String bodyValue = objectMapper.writeValueAsString(updatedAreaMapDTO);
 
         final MvcResult result = mvc
-                .perform(
-                        put(fullURL + "/" + initialWorldDTO.getIndex())
-                                .cookie(cookie)
-                                .content(bodyValue)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+            .perform(
+                put(fullURL + "/" + initialWorldDTO.getIndex())
+                    .cookie(cookie)
+                    .content(bodyValue)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
 
         final AreaMapDTO updatedAreaMapDTOResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), AreaMapDTO.class
+            result.getResponse().getContentAsString(),
+            AreaMapDTO.class
         );
 
         World world = worldRepository.findByIndexAndCourseId(initialWorld.getIndex(), initialCourse.getId()).get();
@@ -430,11 +440,13 @@ public class AreaMapTest {
 
         assertEquals(4, world.getDungeons().size());
 
-        world.getDungeons().forEach(dungeon -> {
-            assertEquals(12, dungeon.getMinigameTasks().size());
-            assertEquals(10, dungeon.getNpcs().size());
-            assertEquals(5, dungeon.getBooks().size());
-        });
+        world
+            .getDungeons()
+            .forEach(dungeon -> {
+                assertEquals(12, dungeon.getMinigameTasks().size());
+                assertEquals(10, dungeon.getNpcs().size());
+                assertEquals(5, dungeon.getBooks().size());
+            });
     }
 
     /**
@@ -548,8 +560,7 @@ public class AreaMapTest {
         minigameSpotDTO.setPosition(position);
         minigameSpotDTO.setIndex(1);
         List<MinigameSpotDTO> minigameSpots = new ArrayList<>();
-        for(int i=0; i<15; i++)
-        {
+        for (int i = 0; i < 15; i++) {
             minigameSpots.add(minigameSpotDTO);
         }
         customAreaMapDTO.setMinigameSpots(minigameSpots);
@@ -562,8 +573,7 @@ public class AreaMapTest {
         npcSpotDTO.setSpriteName("Sprite");
         npcSpotDTO.setIconName("Icon");
         List<NPCSpotDTO> npcSpots = new ArrayList<>();
-        for(int i=0; i<12; i++)
-        {
+        for (int i = 0; i < 12; i++) {
             npcSpots.add(npcSpotDTO);
         }
         customAreaMapDTO.setNpcSpots(npcSpots);
@@ -574,8 +584,7 @@ public class AreaMapTest {
         bookSpotDTO.setIndex(1);
         bookSpotDTO.setName("Book");
         List<BookSpotDTO> books = new ArrayList<>();
-        for(int i=0; i<10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             books.add(bookSpotDTO);
         }
         customAreaMapDTO.setBookSpots(books);
@@ -590,13 +599,11 @@ public class AreaMapTest {
         sceneTransitionSpotDTO.setAreaToLoad(areaLocationDTO);
         sceneTransitionSpotDTO.setFacingDirection(FacingDirection.SOUTH);
         List<SceneTransitionSpotDTO> dungeons = new ArrayList<>();
-        for(int i=0; i<5; i++)
-        {
+        for (int i = 0; i < 5; i++) {
             dungeons.add(sceneTransitionSpotDTO);
         }
         customAreaMapDTO.setSceneTransitionSpots(dungeons);
 
         return customAreaMapDTO;
     }
-
 }

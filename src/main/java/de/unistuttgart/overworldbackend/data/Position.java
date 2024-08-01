@@ -1,10 +1,9 @@
 package de.unistuttgart.overworldbackend.data;
 
+import java.util.UUID;
+import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Getter

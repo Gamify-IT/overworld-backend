@@ -72,6 +72,20 @@ public class PlayerStatisticService {
         return playerstatisticRepository.findByCourseId(courseId);
     }
 
+    public List<PlayerStatisticDTO> getAllPlayerStatisticsFromCourse(final int courseId) {
+        Set<PlayerStatistic> playerStatistics = getPlayerStatisticsFromCourse(courseId);
+        List<PlayerStatisticDTO> playerStatisticDTOList = new ArrayList<>();
+
+        for (PlayerStatistic playerStatistic : playerStatistics) {
+            PlayerStatisticDTO playerStatisticDTO = playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
+                playerStatistic
+            );
+            playerStatisticDTOList.add(playerStatisticDTO);
+        }
+
+        return playerStatisticDTOList;
+    }
+
     /**
      * Create a playerstatistic with initial data in a course.
      *
@@ -112,6 +126,9 @@ public class PlayerStatisticService {
         playerstatistic.setUsername(playerRegistrationDTO.getUsername());
         playerstatistic.setCurrentArea(firstWorld);
         playerstatistic.setKnowledge(0);
+        playerstatistic.setRewards(0);
+        playerstatistic.setShowRewards(true);
+        playerstatistic.setPseudonym("Traveller");
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(
             courseId,

@@ -2,15 +2,14 @@ package de.unistuttgart.overworldbackend.data;
 
 import de.unistuttgart.overworldbackend.data.enums.AreaStyle;
 import java.util.List;
+import java.util.UUID;
+import javax.persistence.ElementCollection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.lang.Nullable;
-
-import javax.persistence.ElementCollection;
-import java.util.UUID;
 
 /**
  * Data Transfer Object for CustomAreaMap.

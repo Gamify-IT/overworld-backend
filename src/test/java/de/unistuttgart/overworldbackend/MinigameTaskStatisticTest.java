@@ -142,12 +142,17 @@ public class MinigameTaskStatisticTest {
             final int tries = new Random().nextInt(1, 5);
             for (int j = 0; j < tries; j++) {
                 final int score = new Random().nextInt(0, 100);
+                final int rewards = new Random().nextInt(0, 50);
+                final int totalRewards = new Random().nextInt(0, 500);
+
                 playerTaskStatisticService.submitData(
                     new PlayerTaskStatisticData(
                         minigameTask1.getGame(),
                         minigameTask1.getConfigurationId(),
                         score,
-                        playerStatisticDTO.getUserId()
+                        playerStatisticDTO.getUserId(),
+                        rewards,
+                        totalRewards
                     )
                 );
             }
