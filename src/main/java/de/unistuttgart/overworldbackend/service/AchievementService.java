@@ -515,8 +515,7 @@ public class AchievementService {
                 "ufoImage",
                 3,
                 Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-            )
-            /*not implemented achievements because of other bugs
+            ),
             new Achievement(
                 AchievementTitle.GAMER,
                 "Login for 2 days",
@@ -530,13 +529,6 @@ public class AchievementService {
                 "calenderImage",
                 5,
                 Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
-            ),
-            new Achievement(
-                AchievementTitle.LEVEL_UP,
-                "Reach level 2",
-                "levelUpImage",
-                2,
-                Arrays.asList(AchievementCategory.ACHIEVING)
             ),
             new Achievement(
                 AchievementTitle.GOAT,
@@ -553,17 +545,25 @@ public class AchievementService {
                 Arrays.asList(AchievementCategory.COMPETITIVE)
             ),
             new Achievement(
-                AchievementTitle.OBTAIN_XP,
-                "?",
-                "imageName",
-                0,
+                AchievementTitle.GET_COINS,
+                "Get 50 coins",
+                "coinImage",
+                50,
                 Arrays.asList(AchievementCategory.ACHIEVING)
             ),
             new Achievement(
-                AchievementTitle.OBTAIN_MORE_XP,
-                "?",
-                "imageName",
-                0,
+                AchievementTitle.GET_MORE_COINS,
+                "Get 150 coins",
+                "coinImage",
+                150,
+                Arrays.asList(AchievementCategory.ACHIEVING)
+            )
+            /*not implemented achievements because of other bugs
+            new Achievement(
+                AchievementTitle.LEVEL_UP,
+                "Reach level 2",
+                "levelUpImage",
+                2,
                 Arrays.asList(AchievementCategory.ACHIEVING)
             )*/
         );
