@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import reactor.util.annotation.Nullable;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +21,4 @@ public class AchievementStatisticDTO {
 
     int progress;
     boolean completed;
-    
-    List<(int,int,int)> interactedObjects;
 }
