@@ -31,11 +31,4 @@ public class PlayerTaskStatisticData {
     @NotNull
     String userId;
 
-    @Min(0)
-    @Max(10)
-    int rewards;
-
-    @Min(0)
-    @Max(500)
-    int totalRewards;
 }

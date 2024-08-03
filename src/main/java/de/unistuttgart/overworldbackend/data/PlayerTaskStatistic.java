@@ -46,9 +46,7 @@ public class PlayerTaskStatistic {
 
     boolean completed = false;
 
-    int rewards;
 
-    int totalRewards;
 
     String userId;
 

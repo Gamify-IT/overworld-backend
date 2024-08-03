@@ -33,7 +33,5 @@ public class PlayerTaskStatisticDTO {
 
     MinigameTaskDTO minigameTask;
 
-    int rewards;
 
-    int totalRewards;
 }
