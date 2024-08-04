@@ -1,6 +1,9 @@
 package de.unistuttgart.overworldbackend.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 import lombok.*;
@@ -29,11 +32,15 @@ public class AchievementStatistic {
     int progress;
     boolean completed;
 
+    @ElementCollection
+    List<IntTupel> interactedObjects;
+
     public AchievementStatistic(Player player, Achievement achievement) {
         this.player = player;
         this.achievement = achievement;
         this.progress = 0;
         this.completed = false;
+        this.interactedObjects = new ArrayList<>();;
     }
 
     /**

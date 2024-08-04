@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class AchievementStatisticDTO {
 
     int progress;
     boolean completed;
+    List<IntTupel> interactedObjects;
 }
