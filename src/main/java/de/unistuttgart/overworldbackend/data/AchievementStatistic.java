@@ -40,7 +40,7 @@ public class AchievementStatistic {
         this.achievement = achievement;
         this.progress = 0;
         this.completed = false;
-        this.interactedObjects = new ArrayList<>();;
+        this.interactedObjects = new ArrayList<>();
     }
 
     /**
