@@ -114,8 +114,6 @@ public class PlayerStatisticService {
         playerstatistic.setLogoutPositionX(21.5f);
         playerstatistic.setLogoutPositionY(2.5f);
         playerstatistic.setLogoutScene("World 1");
-        playerstatistic.setLogoutWorldIndex(1);
-        playerstatistic.setLogoutDungeonIndex(0);
         playerstatistic.setKnowledge(0);
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(
@@ -204,11 +202,8 @@ public class PlayerStatisticService {
         }
 
         playerstatistic.setLogoutPositionX(playerstatisticDTO.getLogoutPositionX());
-        playerstatistic.setLogoutPositionY(playerstatistic.getLogoutPositionY());
+        playerstatistic.setLogoutPositionY(playerstatisticDTO.getLogoutPositionY());
         playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
-
-        playerstatistic.setLogoutWorldIndex(playerstatisticDTO.getLogoutWorldIndex());
-        playerstatistic.setLogoutDungeonIndex(playerstatistic.getLogoutDungeonIndex());
 
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
