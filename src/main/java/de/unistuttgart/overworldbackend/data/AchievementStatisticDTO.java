@@ -22,5 +22,5 @@ public class AchievementStatisticDTO {
 
     int progress;
     boolean completed;
-    List<IntTupel> interactedObjects;
+    List<IntTuple> interactedObjects;
 }

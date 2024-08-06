@@ -33,7 +33,7 @@ public class AchievementStatistic {
     boolean completed;
 
     @ElementCollection
-    List<IntTupel> interactedObjects;
+    List<IntTuple> interactedObjects;
 
     public AchievementStatistic(Player player, Achievement achievement) {
         this.player = player;
