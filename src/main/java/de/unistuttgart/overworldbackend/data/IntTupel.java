@@ -8,42 +8,42 @@ import java.io.Serializable;
 
 @Embeddable
 public class IntTupel implements Serializable {
-    private int First;
-    private int Second;
-    private int Third;
+    private int first;
+    private int second;
+    private int third;
 
     @JsonCreator
-    public IntTupel(@JsonProperty("First") int First,
-                    @JsonProperty("Second") int Second,
-                    @JsonProperty("Third") int Third) {
-        this.First = First;
-        this.Second = Second;
-        this.Third = Third;
+    public IntTupel(@JsonProperty("first") int first,
+                    @JsonProperty("second") int second,
+                    @JsonProperty("third") int third) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
     }
 
     public IntTupel() {}
 
     public int getFirst() {
-        return First;
+        return first;
     }
 
     public void setFirst(int first) {
-        this.First = first;
+        this.first = first;
     }
 
     public int getSecond() {
-        return Second;
+        return second;
     }
 
     public void setSecond(int second) {
-        this.Second = second;
+        this.second = second;
     }
 
     public int getThird() {
-        return Third;
+        return third;
     }
 
     public void setThird(int third) {
-        this.Third = third;
+        this.third = third;
     }
 }
