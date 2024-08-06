@@ -1,10 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import com.fasterxml.jackson.annotation.JsonInclude;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Embeddable;
@@ -12,37 +8,42 @@ import java.io.Serializable;
 
 @Embeddable
 public class IntTupel implements Serializable {
-    private int first;
-    private int second;
-    private int third;
+    private int First;
+    private int Second;
+    private int Third;
 
-    public IntTupel(int first, int second, int third) {
-        this.first = first;
-        this.second = second;
-        this.third = third;
+    @JsonCreator
+    public IntTupel(@JsonProperty("First") int First,
+                    @JsonProperty("Second") int Second,
+                    @JsonProperty("Third") int Third) {
+        this.First = First;
+        this.Second = Second;
+        this.Third = Third;
     }
 
+    public IntTupel() {}
+
     public int getFirst() {
-        return first;
+        return First;
     }
 
     public void setFirst(int first) {
-        this.first = first;
+        this.First = first;
     }
 
     public int getSecond() {
-        return second;
+        return Second;
     }
 
     public void setSecond(int second) {
-        this.second = second;
+        this.Second = second;
     }
 
     public int getThird() {
-        return third;
+        return Third;
     }
 
     public void setThird(int third) {
-        this.third = third;
+        this.Third = third;
     }
 }
