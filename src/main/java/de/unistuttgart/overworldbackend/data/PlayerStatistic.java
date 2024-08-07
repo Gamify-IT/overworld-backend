@@ -1,20 +1,18 @@
 package de.unistuttgart.overworldbackend.data;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 /**
  * The statistic of a player in a course.
  *
- * It contains informations about unlocked areas, completed dungeons, current area,
- * statistics of minigames and statistics of npcs.
+ * It contains information about unlocked areas, completed dungeons, current area,
+ * statistics of minigames, owned shop items and statistics of NPCs.
  */
 @Entity
 @Getter
@@ -59,6 +57,9 @@ public class PlayerStatistic {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerNPCStatistic> playerNPCStatistics = new HashSet<>();
 
+    @OneToMany
+    List<ShopItem> ownedShopItems = new ArrayList<>();
+
     @PrePersist
     void onCreate() {
         lastActive = LocalDateTime.now();
@@ -101,4 +102,16 @@ public class PlayerStatistic {
     }
 
 
+    public List<ShopItem> getAllItemsFromInventory() {
+        return ownedShopItems;
+    }
+
+    public ShopItem getItemFromInventory(ShopItemID itemID) {
+        return ownedShopItems.stream().filter(item -> item.getShopItemID().equals(itemID)).toList().get(0);
+    }
+
+    public ShopItem addItemToInventory(ShopItem item) {
+        this.ownedShopItems.add(item);
+        return item;
+    }
 }

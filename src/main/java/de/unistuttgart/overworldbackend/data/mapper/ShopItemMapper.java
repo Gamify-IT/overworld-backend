@@ -1,11 +1,8 @@
 package de.unistuttgart.overworldbackend.data.mapper;
 
-import de.unistuttgart.overworldbackend.data.AchievementStatistic;
-import de.unistuttgart.overworldbackend.data.AchievementStatisticDTO;
 import de.unistuttgart.overworldbackend.data.ShopItem;
 import de.unistuttgart.overworldbackend.data.ShopItemDTO;
 import org.mapstruct.Mapper;
-
 import java.util.List;
 
 
