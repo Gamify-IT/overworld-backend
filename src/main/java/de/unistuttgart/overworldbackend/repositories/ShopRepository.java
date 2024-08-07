@@ -1,10 +1,13 @@
 package de.unistuttgart.overworldbackend.repositories;
 
+import de.unistuttgart.overworldbackend.data.ShopItem;
+import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 /**
- * Author: Fabian
- * Version:
- * Date: 07.08.2024
- * Time: 18:32
+ * Repository for the shop items
  */
-public interface ShopRepository {
+@Repository
+public interface ShopRepository extends JpaRepository<ShopItem, ShopItemID> {
 }
