@@ -39,6 +39,8 @@ public class PlayerStatisticDTO {
     LocalDateTime created;
 
     LocalDateTime lastActive;
+    
+    int volumeLevel;
 
     long knowledge;
 

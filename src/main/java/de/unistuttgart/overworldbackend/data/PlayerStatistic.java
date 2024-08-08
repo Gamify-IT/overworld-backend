@@ -53,6 +53,8 @@ public class PlayerStatistic {
 
     LocalDateTime lastActive;
 
+    int volumeLevel;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();
 

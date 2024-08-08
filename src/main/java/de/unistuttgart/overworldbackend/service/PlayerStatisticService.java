@@ -125,6 +125,7 @@ public class PlayerStatisticService {
         playerstatistic.setUserId(playerRegistrationDTO.getUserId());
         playerstatistic.setUsername(playerRegistrationDTO.getUsername());
         playerstatistic.setCurrentArea(firstWorld);
+        playerstatistic.setVolumeLevel(1);
         playerstatistic.setKnowledge(0);
         playerstatistic.setRewards(0);
         playerstatistic.setShowRewards(true);
@@ -214,6 +215,9 @@ public class PlayerStatisticService {
         } catch (final ResponseStatusException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Specified area does not exist");
         }
+
+        playerstatistic.setVolumeLevel(playerstatisticDTO.getVolumeLevel());
+
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
         );
