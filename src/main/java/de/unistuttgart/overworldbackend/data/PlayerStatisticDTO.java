@@ -40,6 +40,12 @@ public class PlayerStatisticDTO {
 
     LocalDateTime lastActive;
 
+    float logoutPositionX;
+
+    float logoutPositionY;
+
+    String logoutScene;
+
     long knowledge;
 
     int rewards;

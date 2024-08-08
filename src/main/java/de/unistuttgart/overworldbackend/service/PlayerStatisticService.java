@@ -125,6 +125,9 @@ public class PlayerStatisticService {
         playerstatistic.setUserId(playerRegistrationDTO.getUserId());
         playerstatistic.setUsername(playerRegistrationDTO.getUsername());
         playerstatistic.setCurrentArea(firstWorld);
+        playerstatistic.setLogoutPositionX(21.5f);
+        playerstatistic.setLogoutPositionY(2.5f);
+        playerstatistic.setLogoutScene("World 1");
         playerstatistic.setKnowledge(0);
         playerstatistic.setRewards(0);
         playerstatistic.setShowRewards(true);
@@ -214,6 +217,11 @@ public class PlayerStatisticService {
         } catch (final ResponseStatusException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Specified area does not exist");
         }
+
+        playerstatistic.setLogoutPositionX(playerstatisticDTO.getLogoutPositionX());
+        playerstatistic.setLogoutPositionY(playerstatisticDTO.getLogoutPositionY());
+        playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
+
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
         );
