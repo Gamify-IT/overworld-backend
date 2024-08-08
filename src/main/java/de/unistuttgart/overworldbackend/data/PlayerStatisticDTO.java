@@ -42,6 +42,12 @@ public class PlayerStatisticDTO {
     
     int volumeLevel;
 
+    float logoutPositionX;
+
+    float logoutPositionY;
+
+    String logoutScene;
+
     long knowledge;
 
     int rewards;
