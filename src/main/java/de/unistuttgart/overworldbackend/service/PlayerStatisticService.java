@@ -128,6 +128,7 @@ public class PlayerStatisticService {
         playerstatistic.setLogoutPositionX(21.5f);
         playerstatistic.setLogoutPositionY(2.5f);
         playerstatistic.setLogoutScene("World 1");
+        playerstatistic.setCurrentCharacterIndex(0);
         playerstatistic.setVolumeLevel(1);
         playerstatistic.setKnowledge(0);
         playerstatistic.setRewards(0);
@@ -222,6 +223,7 @@ public class PlayerStatisticService {
         playerstatistic.setLogoutPositionX(playerstatisticDTO.getLogoutPositionX());
         playerstatistic.setLogoutPositionY(playerstatisticDTO.getLogoutPositionY());
         playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
+        playerstatistic.setCurrentCharacterIndex(playerstatisticDTO.getCurrentCharacterIndex());
         playerstatistic.setVolumeLevel(playerstatisticDTO.getVolumeLevel());
 
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
