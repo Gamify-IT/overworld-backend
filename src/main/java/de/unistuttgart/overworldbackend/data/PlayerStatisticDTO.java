@@ -46,6 +46,8 @@ public class PlayerStatisticDTO {
 
     boolean showRewards;
 
+    int credit;
+
     String pseudonym;
 
 }

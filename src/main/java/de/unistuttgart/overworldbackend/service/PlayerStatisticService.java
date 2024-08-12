@@ -128,6 +128,7 @@ public class PlayerStatisticService {
         playerstatistic.setKnowledge(0);
         playerstatistic.setRewards(0);
         playerstatistic.setShowRewards(true);
+        playerstatistic.setCredit(0);
         playerstatistic.setPseudonym("Traveller");
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -72,6 +74,8 @@ public class PlayerStatistic {
 
     boolean showRewards = false;
 
+    int credit;
+
     String pseudonym;
 
 
@@ -114,4 +118,8 @@ public class PlayerStatistic {
         this.ownedShopItems.add(item);
         return item;
     }
+
+    @JsonManagedReference(value = "player-shopItem")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItemStatus.class)
+    List<ShopItemStatus> shopItemStatuses = new ArrayList<>();
 }

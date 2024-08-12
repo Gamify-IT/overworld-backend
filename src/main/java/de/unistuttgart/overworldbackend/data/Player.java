@@ -24,6 +24,10 @@ public class Player {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AchievementStatistic.class)
     List<AchievementStatistic> achievementStatistics = new ArrayList<>();
 
+    @JsonManagedReference(value = "playerStatistic-shopItem")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItemStatus.class)
+    List<ShopItemStatus> shopItemStatuses = new ArrayList<>();
+
     @JsonManagedReference(value = "player-keybindings")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Keybinding.class)
     List<Keybinding> keybindings = new ArrayList<>();
@@ -32,4 +36,6 @@ public class Player {
         this.userId = userId;
         this.username = username;
     }
+
+
 }

@@ -20,6 +20,7 @@ import javax.persistence.UniqueConstraint;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopItem {
+
     @Id
     ShopItemID shopItemID;
 
@@ -27,4 +28,6 @@ public class ShopItem {
      * The cost of the item
      */
     int cost;
+
+    String imageName;
 }
