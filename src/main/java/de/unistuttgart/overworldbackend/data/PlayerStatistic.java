@@ -122,4 +122,8 @@ public class PlayerStatistic {
     @JsonManagedReference(value = "player-shopItem")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItemStatus.class)
     List<ShopItemStatus> shopItemStatuses = new ArrayList<>();
+
+    public void addCredit(int rewards) {
+        credit += rewards;
+    }
 }
