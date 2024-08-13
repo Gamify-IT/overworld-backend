@@ -36,9 +36,9 @@ public class PlayerStatisticDTO {
     String userId;
     String username;
 
-    LocalDateTime created;
+    String created;
 
-    LocalDateTime lastActive;
+    String lastActive;
     
     int volumeLevel;
 
