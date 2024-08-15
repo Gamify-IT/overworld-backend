@@ -1,6 +1,7 @@
 package de.unistuttgart.overworldbackend.service;
 
 import de.unistuttgart.overworldbackend.data.*;
+import de.unistuttgart.overworldbackend.data.enums.ShopItemCategory;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.ShopRepository;
@@ -37,7 +38,9 @@ public class ShopService {
         List<ShopItem> shopItems = Arrays.asList(
                 new ShopItem(
                         ShopItemID.SKIN_1,
-                        15
+                        15,
+                        "IMAGE1",
+                        ShopItemCategory.ACCESSORIES
                 )
         );
 

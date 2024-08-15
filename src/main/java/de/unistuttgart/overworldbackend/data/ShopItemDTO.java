@@ -23,4 +23,6 @@ public class ShopItemDTO {
     int cost;
 
     String imageName;
+
+    String category;
 }

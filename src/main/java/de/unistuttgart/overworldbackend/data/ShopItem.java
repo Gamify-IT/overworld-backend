@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
+import de.unistuttgart.overworldbackend.data.enums.ShopItemCategory;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,4 +31,8 @@ public class ShopItem {
     int cost;
 
     String imageName;
+
+    ShopItemCategory category;
+
+
 }
