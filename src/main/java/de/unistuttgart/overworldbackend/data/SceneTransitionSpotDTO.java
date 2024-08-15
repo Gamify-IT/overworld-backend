@@ -21,4 +21,5 @@ public class SceneTransitionSpotDTO extends ObjectSpotDTO{
     PositionDTO size;
     AreaLocationDTO areaToLoad;
     FacingDirection facingDirection;
+    String style;
 }

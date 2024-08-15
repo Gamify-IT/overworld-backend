@@ -20,4 +20,5 @@ public class BarrierSpotDTO extends ObjectSpotDTO{
 
     BarrierType type;
     int destinationAreaIndex;
+    String barrierStyle;
 }

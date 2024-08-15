@@ -19,15 +19,18 @@ public class BarrierSpot extends ObjectSpot{
 
     BarrierType type;
     int destinationAreaIndex;
+    String barrierStyle;
 
     public BarrierSpot(
             final AreaLocation area,
             final Position position,
             final BarrierType type,
-            final int destinationAreaIndex
+            final int destinationAreaIndex,
+            final String barrierStyle
     ) {
         super(area, position);
         this.type = type;
         this.destinationAreaIndex = destinationAreaIndex;
+        this.barrierStyle = barrierStyle;
     }
 }
