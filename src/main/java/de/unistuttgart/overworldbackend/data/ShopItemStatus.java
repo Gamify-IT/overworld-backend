@@ -18,17 +18,14 @@ public class ShopItemStatus {
     @GeneratedValue(generator = "uuid")
     UUID id;
 
-    @JsonBackReference(value = "shopItem-player")
-    @ManyToOne
-    PlayerStatistic player;
+
 
     @OneToOne
     ShopItem item;
 
     boolean bought;
 
-    public ShopItemStatus(PlayerStatistic player, ShopItem item) {
-        this.player = player;
+    public ShopItemStatus(ShopItem item) {
         this.item = item;
         this.bought = false;
 

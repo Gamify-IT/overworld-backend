@@ -27,7 +27,7 @@ import java.util.List;
 @Tag(name = "Shop", description = "Modify shop items")
 @RestController
 @Slf4j
-@RequestMapping("/players/{playerId}/{courseId}/shop")
+@RequestMapping("/players/{playerId}/shop")
 public class ShopController {
     @Autowired
     JWTValidatorService jwtValidatorService;
@@ -53,7 +53,7 @@ public class ShopController {
 
     @Operation(summary = "Get item by its ID")
     @GetMapping("/{itemID}")
-    public ShopItemStatusDTO getShopItemStatus(@PathVariable final String playerId, @PathVariable final int courseId,
+    public ShopItemStatusDTO getShopItemStatus(@PathVariable final String playerId,
             @PathVariable final ShopItemID itemID, @CookieValue("access_token") final String accessToken) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("Get item {} of player {}", itemID, playerId);

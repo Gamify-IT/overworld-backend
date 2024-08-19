@@ -37,10 +37,34 @@ public class ShopService {
     public void updatePlayerShopItemStatus() {
         List<ShopItem> shopItems = Arrays.asList(
                 new ShopItem(
-                        ShopItemID.SKIN_1,
+                        ShopItemID.FLAME_HAT,
                         15,
-                        "IMAGE1",
+                        "flames",
                         ShopItemCategory.ACCESSORIES
+                ),
+                new ShopItem(
+                        ShopItemID.HEART_GLASSES,
+                        15,
+                        "herzi",
+                        ShopItemCategory.ACCESSORIES
+                ),
+                new ShopItem(
+                        ShopItemID.GLOBE_HAT,
+                        15,
+                        "globuseinzeln",
+                        ShopItemCategory.ACCESSORIES
+                ),
+                new ShopItem(
+                        ShopItemID.SUIT,
+                        15,
+                        "anzug",
+                        ShopItemCategory.OUTFIT
+                ),
+                new ShopItem(
+                        ShopItemID.SANTA_COSTUME,
+                        15,
+                        "santa",
+                        ShopItemCategory.OUTFIT
                 )
         );
 
@@ -66,7 +90,7 @@ public class ShopService {
                                                 .equals(item.getShopItemID())
                                 )
                 ) {
-                    player.getShopItemStatuses().add(new ShopItemStatus(player, item));
+                    player.getShopItemStatuses().add(new ShopItemStatus(item));
                 }
             }
 
