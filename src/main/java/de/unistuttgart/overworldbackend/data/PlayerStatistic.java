@@ -59,8 +59,7 @@ public class PlayerStatistic {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerNPCStatistic> playerNPCStatistics = new HashSet<>();
 
-    @OneToMany
-    List<ShopItem> ownedShopItems = new ArrayList<>();
+
 
     @PrePersist
     void onCreate() {
@@ -106,18 +105,7 @@ public class PlayerStatistic {
     }
 
 
-    public List<ShopItem> getAllItemsFromInventory() {
-        return ownedShopItems;
-    }
 
-    public ShopItem getItemFromInventory(ShopItemID itemID) {
-        return ownedShopItems.stream().filter(item -> item.getShopItemID().equals(itemID)).toList().get(0);
-    }
-
-    public ShopItem addItemToInventory(ShopItem item) {
-        this.ownedShopItems.add(item);
-        return item;
-    }
 
     @JsonManagedReference(value = "player-shopItem")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItemStatus.class)
