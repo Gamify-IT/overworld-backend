@@ -82,8 +82,8 @@ public class ShopService {
                         player
                                 .getShopItemStatuses()
                                 .stream()
-                                .noneMatch(achievementStatistic ->
-                                        achievementStatistic
+                                .noneMatch(shopItemStatus ->
+                                        shopItemStatus
                                                 .getItem()
                                                 .getShopItemID()
                                                 .equals(item.getShopItemID())
