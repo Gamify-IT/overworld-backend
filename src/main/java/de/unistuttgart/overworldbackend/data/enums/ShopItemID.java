@@ -5,11 +5,10 @@ package de.unistuttgart.overworldbackend.data.enums;
  */
 public enum ShopItemID {
    FLAME_HAT,
-    GLOBE_HAT,
-    SANTA_COSTUME,
-    HEART_GLASSES,
-    SUIT,
-    BLUE_SHIRT
-
+   GLOBE_HAT,
+   SANTA_COSTUME,
+   HEART_GLASSES,
+   SUIT,
+   BLUE_SHIRT
 
 }
