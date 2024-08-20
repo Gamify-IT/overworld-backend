@@ -34,7 +34,7 @@ public class KeybindingService {
         for (final Player player : playerRepository.findAll()) {
             for (final Binding binding : bindings) {
                 if (player.getKeybindings().stream().noneMatch(keybinding -> keybinding.getBinding().equals(binding))) {
-                    player.getKeybindings().add(new Keybinding(player, binding, ""));
+                    player.getKeybindings().add(new Keybinding(player, binding, "", 1));
                 }
             }
             playerRepository.save(player);
