@@ -53,6 +53,16 @@ public class PlayerStatistic {
 
     LocalDateTime lastActive;
 
+    float logoutPositionX = 21.5f;
+
+    float logoutPositionY = 2.5f;
+
+    String logoutScene = "World 1";
+
+    int currentCharacterIndex = 0;
+  
+    int volumeLevel;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();
 

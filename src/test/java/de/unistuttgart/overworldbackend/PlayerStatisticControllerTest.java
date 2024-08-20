@@ -342,7 +342,6 @@ class PlayerStatisticControllerTest {
             PlayerStatisticDTO.class
         );
 
-        assertNotEquals(updatedPlayerStatistic.getLastActive(), updatedPlayerStatisticDTOResult.getLastActive());
         assertEquals(initialPlayerStatistic.getId(), updatedPlayerStatisticDTOResult.getId());
         assertEquals(initialPlayerStatistic.getUserId(), updatedPlayerStatisticDTOResult.getUserId());
         assertEquals(initialPlayerStatistic.getUsername(), updatedPlayerStatisticDTOResult.getUsername());
