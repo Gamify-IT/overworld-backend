@@ -77,7 +77,6 @@ public class ShopService {
         final List<ShopItem> items = shopRepository.findAll();
 
         for (final PlayerStatistic player : playerStatisticRepository.findAll()) {
-            // add statistic for achievement if not exists
             for (final ShopItem item : items) {
                 if (
                         player
@@ -90,7 +89,7 @@ public class ShopService {
                                                 .equals(item.getShopItemID())
                                 )
                 ) {
-                    player.getShopItemStatuses().add(new ShopItemStatus(item));
+                    player.getShopItemStatuses().add(new ShopItemStatus(player, item));
                 }
             }
 

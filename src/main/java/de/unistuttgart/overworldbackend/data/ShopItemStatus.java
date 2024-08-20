@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "player_user_id", "achievement_achievement_title" }) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "player_id", "item_id" }) })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,15 +18,20 @@ public class ShopItemStatus {
     @GeneratedValue(generator = "uuid")
     UUID id;
 
-
+    @ManyToOne
+    @JoinColumn(name = "player_id")
+    PlayerStatistic player;
 
     @OneToOne
-    ShopItem item;
+    @JoinColumn(name = "item_id")
+    ShopItem shopItem;;
+
 
     boolean bought;
 
-    public ShopItemStatus(ShopItem item) {
-        this.item = item;
+    public ShopItemStatus(PlayerStatistic player,ShopItem shopItem) {
+        this.player = player;
+        this.shopItem = shopItem;
         this.bought = false;
 
     }
@@ -42,6 +47,10 @@ public class ShopItemStatus {
         }
        bought = newStatus;
 
+    }
+
+    public ShopItem getItem() {
+        return shopItem;
     }
 
 }
