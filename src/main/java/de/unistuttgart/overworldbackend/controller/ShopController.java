@@ -33,7 +33,7 @@ public class ShopController {
 
     @Operation(summary = "Get all shop items")
     @GetMapping("")
-    public List<ShopItemDTO> getShopItemStatuses(@PathVariable final String playerId, @PathVariable final int courseId,
+    public List<ShopItemDTO> getShopItems(@PathVariable final String playerId, @PathVariable final int courseId,
                                                  @CookieValue("access_token") final String accessToken) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         List<ShopItem> items = shopService.getShopItemsFromPlayer(playerId, courseId);
@@ -43,19 +43,19 @@ public class ShopController {
 
     @Operation(summary = "Get item by its ID")
     @GetMapping("/{itemID}")
-    public ShopItemDTO getShopItemStatus(@PathVariable final String playerId, @PathVariable int courseId, @PathVariable final ShopItemID itemID,
+    public ShopItemDTO getShopItem(@PathVariable final String playerId, @PathVariable int courseId, @PathVariable final ShopItemID itemID,
                                          @CookieValue("access_token") final String accessToken) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         ShopItem item = shopService.getShopItemFromPlayer(playerId, courseId, itemID);
         return shopItemMapper.shopItemToShopItemDTO(item);
     }
 
-    @Operation(summary = "Update the status of an shop item")
+    @Operation(summary = "Update the bought status of an shop item")
     @PutMapping("/{itemID}")
-    public ShopItemDTO updateShopItemStatus(@PathVariable final String playerId, @PathVariable int courseId, @PathVariable final ShopItemID itemID,
+    public ShopItemDTO updateShopItem(@PathVariable final String playerId, @PathVariable int courseId, @PathVariable final ShopItemID itemID,
                                             @Valid @RequestBody final ShopItemDTO shopItemDTO, @CookieValue("access_token") final String accessToken) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
-        ShopItem updatedItem = shopService.updateShopItemStatus(playerId, courseId, itemID, shopItemDTO);
+        ShopItem updatedItem = shopService.updateShopItem(playerId, courseId, itemID, shopItemDTO);
         return shopItemMapper.shopItemToShopItemDTO(updatedItem);
     }
 }

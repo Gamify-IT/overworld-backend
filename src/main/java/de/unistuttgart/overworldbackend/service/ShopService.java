@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * Service for the shop, manages the retrieval and addition of items from/to a player.
@@ -36,7 +35,7 @@ public class ShopService {
      * Sets up all the shop items per player statistic. Aka per player per course.
      */
     @EventListener(ApplicationStartedEvent.class)
-    public void updatePlayerShopItemStatus() {
+    public void setupShopItems() {
         List<ShopItem> shopItems = Arrays.asList(
                 new ShopItem(
                         ShopItemID.FLAME_HAT,
@@ -128,8 +127,8 @@ public class ShopService {
      * @throws ResponseStatusException (404) if the player or the item does not exist
      * @return the updated item
      */
-    public ShopItem updateShopItemStatus(final String playerId, final int courseID, final ShopItemID shopItemID,
-                                         final ShopItemDTO shopItemDTO) {
+    public ShopItem updateShopItem(final String playerId, final int courseID, final ShopItemID shopItemID,
+                                   final ShopItemDTO shopItemDTO) {
         PlayerStatistic playerStatistic = playerStatisticRepository.findByCourseIdAndUserId(courseID, playerId)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist"));
