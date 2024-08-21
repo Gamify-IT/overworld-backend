@@ -27,4 +27,6 @@ public class ShopItemDTO {
     String imageName;
 
     String category;
+
+    boolean bought;
 }

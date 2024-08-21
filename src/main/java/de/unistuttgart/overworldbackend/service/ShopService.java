@@ -13,8 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Service for the shop, manages the retrieval and addition of items from/to a player.
@@ -39,42 +42,44 @@ public class ShopService {
                         ShopItemID.FLAME_HAT,
                         15,
                         "flames",
-                        ShopItemCategory.ACCESSORIES
+                        ShopItemCategory.ACCESSORIES,
+                        false
                 ),
                 new ShopItem(
                         ShopItemID.HEART_GLASSES,
                         15,
                         "herzi",
-                        ShopItemCategory.ACCESSORIES
+                        ShopItemCategory.ACCESSORIES,
+                        false
                 ),
                 new ShopItem(
                         ShopItemID.GLOBE_HAT,
                         15,
                         "globuseinzeln",
-                        ShopItemCategory.ACCESSORIES
+                        ShopItemCategory.ACCESSORIES,
+                        false
                 ),
                 new ShopItem(
                         ShopItemID.SUIT,
                         15,
                         "anzug",
-                        ShopItemCategory.OUTFIT
+                        ShopItemCategory.OUTFIT,
+                        false
                 ),
                 new ShopItem(
                         ShopItemID.SANTA_COSTUME,
                         15,
                         "santa",
-                        ShopItemCategory.OUTFIT
+                        ShopItemCategory.OUTFIT,
+                        false
                 )
         );
 
         shopRepository.saveAll(shopItems);
 
-        final List<ShopItem> items = shopRepository.findAll();
-
-        //TODO redo item creation
         for (final PlayerStatistic player : playerStatisticRepository.findAll()) {
-            for (final ShopItem item : items) {
-                player.getShopItemStatuses().add(new ShopItemStatus(player, item));
+            for (final ShopItem item : shopItems) {
+                player.addItem(item);
             }
         }
     }
@@ -85,66 +90,53 @@ public class ShopService {
      * @throws ResponseStatusException (404) if the player does not exist
      * @return a list of shop items for the given player
      */
-    public List<ShopItem> getShopItemStatusesFromPlayer(final String playerId, final int courseID) {
-        System.out.println("playerstat= "+playerStatisticRepository.findByCourseIdAndUserId(courseID, playerId));
+    public List<ShopItem> getShopItemsFromPlayer(final String playerId, final int courseID) {
         return playerStatisticRepository
                 .findByCourseIdAndUserId(courseID, playerId)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
                 )
-                .getShopItem();
-        // TODO redo getAll
+                .getItems();
     }
 
     /**
      * Returns the shop item for a given player and item.
      * @param playerId the id of the player
      * @param shopItemID the id of the item
-     * @throws ResponseStatusException (404) if the player or the item does not exist
+     * @throws ResponseStatusException (404) if the player does not exist
      * @return the item
      */
-    public ShopItem getShopItemStatusFromPlayer(final String playerId, final ShopItemID shopItemID, final int courseID) {
-        return getShopItemStatusesFromPlayer(playerId, courseID)
-                .stream()
-                .filter(shopItemStatus ->
-                        shopItemStatus.getItem().getShopItemID().equals(shopItemID)
-                )
-                .findFirst()
+    public ShopItem getShopItemFromPlayer(final String playerId, final int courseID, final ShopItemID shopItemID) {
+        return playerStatisticRepository
+                .findByCourseIdAndUserId(courseID, playerId)
                 .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                String.format("There is no status for the shop item %s", shopItemID)
-                        )
-                );
-        // TODO redo get
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
+                )
+                .getItems()
+                .stream()
+                .filter(item -> item.getShopItemID().equals(shopItemID))
+                .toList()
+                .get(0);
     }
 
     /**
-     * Updates the given shop item
+     * Updates the given shop item.
      * @param playerId the id of the player
+     * @param courseID the course id
      * @param shopItemID the id of the item
      * @param shopItemDTO the updated parameters
      * @throws ResponseStatusException (404) if the player or the item does not exist
      * @return the updated item
      */
-    public ShopItem updateShopItemStatus(
-            final String playerId,
-            final ShopItemID shopItemID,
-            final ShopItemDTO shopItemDTO,
-            final int courseID
-    ) {
-        final ShopItem shopItemStatus = getShopItemStatusFromPlayer(playerId, shopItemID, courseID);
+    public ShopItem updateShopItemStatus(final String playerId, final int courseID, final ShopItemID shopItemID,
+                                         final ShopItemDTO shopItemDTO) {
+        PlayerStatistic playerStatistic = playerStatisticRepository.findByCourseIdAndUserId(courseID, playerId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist"));
         try {
-            shopItemStatus.setProgress(shopItemStatusDTO.getProgress());
-        } catch (final IllegalArgumentException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "The new progress cannot be smaller than the current one"
-            );
+            return playerStatistic.updateItem(shopItemID, shopItemDTO.isBought());
+        } catch(final EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item with id " + shopItemID + " not found.");
         }
-        return shopRepository.save(shopItemStatus);
-        // TODO redo put
     }
-
-
 }

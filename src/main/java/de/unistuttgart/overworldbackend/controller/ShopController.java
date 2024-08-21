@@ -1,6 +1,7 @@
 package de.unistuttgart.overworldbackend.controller;
 
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
+import de.unistuttgart.overworldbackend.data.ShopItem;
 import de.unistuttgart.overworldbackend.data.ShopItemDTO;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import de.unistuttgart.overworldbackend.data.mapper.ShopItemMapper;
@@ -19,7 +20,7 @@ import java.util.List;
 @Tag(name = "Shop", description = "Modify shop items")
 @RestController
 @Slf4j
-@RequestMapping("/players/{playerId}/shop")
+@RequestMapping("/players/{playerId}/course/{courseId}/shop")
 public class ShopController {
     @Autowired
     JWTValidatorService jwtValidatorService;
@@ -32,40 +33,29 @@ public class ShopController {
 
     @Operation(summary = "Get all shop items")
     @GetMapping("")
-    public List<ShopItemDTO> getShopItemStatuses(
-            @PathVariable final String playerId,
-            @CookieValue("access_token") final String accessToken
-    ) {
+    public List<ShopItemDTO> getShopItemStatuses(@PathVariable final String playerId, @PathVariable final int courseId,
+                                                 @CookieValue("access_token") final String accessToken) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
-        // TODO
-        var x =  shopItemMapper.shopItemToShopItemDTO(shopService.getShopItemStatusesFromPlayer(playerId, 1));
-        System.out.println(x);
-        return x;
+        List<ShopItem> items = shopService.getShopItemsFromPlayer(playerId, courseId);
+        return shopItemMapper.shopItemsToShopItemDTOs(items);
     }
 
 
     @Operation(summary = "Get item by its ID")
     @GetMapping("/{itemID}")
-    public ShopItemDTO getShopItemStatus(@PathVariable final String playerId,
-            @PathVariable final ShopItemID itemID, @CookieValue("access_token") final String accessToken) {
+    public ShopItemDTO getShopItemStatus(@PathVariable final String playerId, @PathVariable int courseId, @PathVariable final ShopItemID itemID,
+                                         @CookieValue("access_token") final String accessToken) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
-        log.debug("Get item {} of player {}", itemID, playerId); //TODO
-        return shopItemMapper.shopItemToShopItemDTO(shopService.getShopItemStatusFromPlayer(playerId, itemID, 1));
+        ShopItem item = shopService.getShopItemFromPlayer(playerId, courseId, itemID);
+        return shopItemMapper.shopItemToShopItemDTO(item);
     }
 
     @Operation(summary = "Update the status of an shop item")
     @PutMapping("/{itemID}")
-    public ShopItemDTO updateShopItemStatus(
-            @PathVariable final String playerId,
-            @PathVariable final ShopItemID itemID,
-            @Valid @RequestBody final ShopItemDTO shopItemDTO,
-            @CookieValue("access_token") final String accessToken
-    ) {
-        jwtValidatorService.validateTokenOrThrow(accessToken);//TODO
-        log.debug("update shopitemstatus {} to {}", itemID, shopItemDTO.getProgress());
-        return shopItemMapper.shopItemToShopItemDTO(
-               shopService.updateShopItemStatus(playerId, itemID, shopItemDTO, 1)
-        );
+    public ShopItemDTO updateShopItemStatus(@PathVariable final String playerId, @PathVariable int courseId, @PathVariable final ShopItemID itemID,
+                                            @Valid @RequestBody final ShopItemDTO shopItemDTO, @CookieValue("access_token") final String accessToken) {
+        jwtValidatorService.validateTokenOrThrow(accessToken);
+        ShopItem updatedItem = shopService.updateShopItemStatus(playerId, courseId, itemID, shopItemDTO);
+        return shopItemMapper.shopItemToShopItemDTO(updatedItem);
     }
-
 }

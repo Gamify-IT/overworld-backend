@@ -87,6 +87,10 @@ public class PlayerStatistic {
 
     String pseudonym;
 
+    @JsonManagedReference(value = "player-shopItem")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItem.class)
+    List<ShopItem> items = new ArrayList<>();
+
 
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
@@ -114,14 +118,21 @@ public class PlayerStatistic {
         rewards += gainedRewards;
     }
 
-
-
-
-    @JsonManagedReference(value = "player-shopItem")
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItemStatus.class)
-    List<ShopItemStatus> shopItemStatuses = new ArrayList<>();
-
     public void addCredit(int rewards) {
         credit += rewards;
+    }
+
+    public void addItem(ShopItem item) {
+        this.items.add(item);
+    }
+
+    public ShopItem updateItem(ShopItemID shopItemID, boolean bought) {
+        for(ShopItem item : items) {
+            if(item.getShopItemID() == shopItemID) {
+                item.setBought(bought);
+                return item;
+            }
+        }
+        throw new EntityNotFoundException("No item with this ID found");
     }
 }

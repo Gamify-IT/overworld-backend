@@ -6,10 +6,8 @@ import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 /**
@@ -19,6 +17,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopItem {
 
@@ -34,5 +34,10 @@ public class ShopItem {
 
     ShopItemCategory category;
 
+    boolean bought;
+
+    public void setBought(boolean bought) {
+        this.bought = bought;
+    }
 
 }
