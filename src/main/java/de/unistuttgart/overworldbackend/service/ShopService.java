@@ -75,12 +75,7 @@ public class ShopService {
         );
 
         shopRepository.saveAll(shopItems);
-
-        for (final PlayerStatistic player : playerStatisticRepository.findAll()) {
-            for (final ShopItem item : shopItems) {
-                player.addItem(item);
-            }
-        }
+        System.out.println(Arrays.toString(shopItems.toArray()));
     }
 
     /**

@@ -9,6 +9,8 @@ import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticReposito
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import de.unistuttgart.overworldbackend.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class PlayerStatisticService {
 
     @Autowired
     private PlayerTaskStatisticRepository playerTaskStatisticRepository;
+
+    @Autowired
+    private ShopRepository shopRepository;
 
     @Autowired
     private PlayerStatisticMapper playerstatisticMapper;
@@ -137,6 +142,12 @@ public class PlayerStatisticService {
         playerstatistic.setShowRewards(true);
         playerstatistic.setCredit(0);
         playerstatistic.setPseudonym("Traveller");
+
+        List<ShopItem> items = shopRepository.findAll();
+        for(ShopItem item : items) {
+            playerstatistic.addItem(item);
+        }
+
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(
             courseId,
