@@ -20,7 +20,7 @@ import java.util.List;
 @Tag(name = "Shop", description = "Modify shop items")
 @RestController
 @Slf4j
-@RequestMapping("/players/{playerId}/course/{courseId}/shop")
+@RequestMapping("/players/{playerId}/courses/{courseId}/shop")
 public class ShopController {
     @Autowired
     JWTValidatorService jwtValidatorService;
