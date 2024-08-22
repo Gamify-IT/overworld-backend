@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
+import de.unistuttgart.overworldbackend.data.enums.ShopItemCategory;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class ShopItemDTO {
 
     String imageName;
 
-    String category;
+    ShopItemCategory category;
 
     boolean bought;
 }

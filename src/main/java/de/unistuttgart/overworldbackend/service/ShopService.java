@@ -39,21 +39,21 @@ public class ShopService {
         List<ShopItem> shopItems = Arrays.asList(
                 new ShopItem(
                         ShopItemID.FLAME_HAT,
-                        15,
+                        10,
                         "flames",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.HEART_GLASSES,
-                        15,
+                        11,
                         "herzi",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.GLOBE_HAT,
-                        15,
+                        12,
                         "globuseinzeln",
                         ShopItemCategory.ACCESSORIES,
                         false
