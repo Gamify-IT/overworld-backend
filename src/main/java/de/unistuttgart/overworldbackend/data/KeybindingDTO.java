@@ -21,5 +21,4 @@ public class KeybindingDTO {
     Binding binding;
 
     String key;
-    int volumeLevel;
 }

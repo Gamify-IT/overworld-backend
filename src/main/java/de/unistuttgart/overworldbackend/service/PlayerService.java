@@ -75,7 +75,7 @@ public class PlayerService {
         }
         final Binding[] bindings = Binding.values();
         for (final Binding binding : bindings) {
-            newPlayer.getKeybindings().add(new Keybinding(newPlayer, binding, "", 1));
+            newPlayer.getKeybindings().add(new Keybinding(newPlayer, binding, ""));
         }
         final Player savedPlayer = playerRepository.save(newPlayer);
         return playerMapper.playerToPlayerDTO(savedPlayer);

@@ -28,12 +28,10 @@ public class Keybinding {
     Binding binding;
 
     String key;
-    int volumeLevel;
 
-    public Keybinding(Player player, Binding binding, String key, int volumeLevel) {
+    public Keybinding(Player player, Binding binding, String key) {
         this.player = player;
         this.binding = binding;
         this.key = key;
-        this.volumeLevel = volumeLevel;
     }
 }
