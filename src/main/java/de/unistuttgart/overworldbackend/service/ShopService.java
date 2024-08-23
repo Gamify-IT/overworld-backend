@@ -47,14 +47,14 @@ public class ShopService {
                 new ShopItem(
                         ShopItemID.HEART_GLASSES,
                         11,
-                        "herzi",
+                        "herzbrille",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.GLOBE_HAT,
                         12,
-                        "globuseinzeln",
+                        "globus",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
@@ -71,7 +71,36 @@ public class ShopService {
                         "santa",
                         ShopItemCategory.OUTFIT,
                         false
+                ),
+                new ShopItem(
+                        ShopItemID.COOL_GLASSES,
+                        12,
+                        "coole_brille",
+                        ShopItemCategory.ACCESSORIES,
+                        false
+                ),
+                new ShopItem(
+                        ShopItemID.RETRO_GLASSES,
+                        14,
+                        "retro_brille",
+                        ShopItemCategory.ACCESSORIES,
+                        false
+                ),
+                new ShopItem(
+                        ShopItemID.SAFETY_HELMET,
+                        13,
+                        "schutzhelm",
+                        ShopItemCategory.ACCESSORIES,
+                        false
+                ),
+                new ShopItem(
+                        ShopItemID.CINEMA_GLASSES,
+                        13,
+                        "3D_brille",
+                        ShopItemCategory.ACCESSORIES,
+                        false
                 )
+
         );
 
         shopRepository.saveAll(shopItems);
