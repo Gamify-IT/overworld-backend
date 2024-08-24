@@ -240,6 +240,7 @@ public class PlayerStatisticService {
         playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
         playerstatistic.setCurrentCharacterIndex(playerstatisticDTO.getCurrentCharacterIndex());
         playerstatistic.setVolumeLevel(playerstatisticDTO.getVolumeLevel());
+        playerstatistic.setCredit(playerstatisticDTO.getCredit());
 
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
