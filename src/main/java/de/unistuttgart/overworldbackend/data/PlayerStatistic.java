@@ -85,7 +85,7 @@ public class PlayerStatistic {
 
     int credit;
 
-    String pseudonym;
+    String pseudonym = "Traveller";
 
     @JsonManagedReference(value = "player-shopItem")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItem.class)

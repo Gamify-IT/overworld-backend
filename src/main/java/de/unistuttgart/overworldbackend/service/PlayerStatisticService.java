@@ -241,6 +241,8 @@ public class PlayerStatisticService {
         playerstatistic.setCurrentCharacterIndex(playerstatisticDTO.getCurrentCharacterIndex());
         playerstatistic.setVolumeLevel(playerstatisticDTO.getVolumeLevel());
         playerstatistic.setCredit(playerstatisticDTO.getCredit());
+        playerstatistic.setPseudonym(playerstatisticDTO.getPseudonym());
+        playerstatistic.setShowRewards(playerstatisticDTO.isShowRewards());
 
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
