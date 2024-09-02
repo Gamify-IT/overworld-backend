@@ -35,7 +35,5 @@ public class PlayerTaskStatisticData {
     @Max(10)
     int rewards;
 
-    @Min(0)
-    @Max(500)
-    int totalRewards;
+
 }

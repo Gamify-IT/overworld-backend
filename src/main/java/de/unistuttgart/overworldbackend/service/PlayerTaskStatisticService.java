@@ -157,7 +157,6 @@ public class PlayerTaskStatisticService {
         playerTaskStatistic.setHighscore(Math.max(playerTaskStatistic.getHighscore(), data.getScore()));
         playerTaskStatistic.setCompleted(playerTaskStatistic.isCompleted() || checkCompleted(data.getScore()));
         playerTaskStatistic.setRewards(data.getRewards());
-        playerTaskStatistic.setTotalRewards(playerTaskStatistic.getRewards() + data.getRewards());
 
         logData(data, course, playerTaskStatistic, gainedKnowledge);
 

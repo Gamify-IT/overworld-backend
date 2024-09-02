@@ -81,7 +81,7 @@ public class PlayerStatistic {
 
     int rewards = 0;
 
-    boolean showRewards = false;
+    boolean visibility = false;
 
     int credit;
 

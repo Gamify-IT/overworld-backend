@@ -35,5 +35,4 @@ public class PlayerTaskStatisticDTO {
 
     int rewards;
 
-    int totalRewards;
 }

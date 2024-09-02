@@ -54,7 +54,7 @@ public class PlayerStatisticDTO {
 
     int rewards;
 
-    boolean showRewards;
+    boolean visibility;
 
     int credit;
 

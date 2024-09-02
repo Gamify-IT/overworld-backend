@@ -139,7 +139,7 @@ public class PlayerStatisticService {
         playerstatistic.setVolumeLevel(1);
         playerstatistic.setKnowledge(0);
         playerstatistic.setRewards(0);
-        playerstatistic.setShowRewards(true);
+        playerstatistic.setVisibility(false);
         playerstatistic.setCredit(0);
         playerstatistic.setPseudonym("Traveller");
 
@@ -242,7 +242,7 @@ public class PlayerStatisticService {
         playerstatistic.setVolumeLevel(playerstatisticDTO.getVolumeLevel());
         playerstatistic.setCredit(playerstatisticDTO.getCredit());
         playerstatistic.setPseudonym(playerstatisticDTO.getPseudonym());
-        playerstatistic.setShowRewards(playerstatisticDTO.isShowRewards());
+        playerstatistic.setVisibility(playerstatisticDTO.isVisibility());
 
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))

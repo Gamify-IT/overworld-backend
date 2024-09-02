@@ -39,63 +39,63 @@ public class ShopService {
         List<ShopItem> shopItems = Arrays.asList(
                 new ShopItem(
                         ShopItemID.FLAME_HAT,
-                        10,
+                        1,
                         "flames",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.HEART_GLASSES,
-                        11,
+                        2,
                         "herzbrille",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.GLOBE_HAT,
-                        12,
+                        2,
                         "globus",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.SUIT,
-                        15,
+                        1,
                         "anzug",
                         ShopItemCategory.OUTFIT,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.SANTA_COSTUME,
-                        15,
+                        2,
                         "santa",
                         ShopItemCategory.OUTFIT,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.COOL_GLASSES,
-                        12,
+                        2,
                         "coole_brille",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.RETRO_GLASSES,
-                        14,
+                        1,
                         "retro_brille",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.SAFETY_HELMET,
-                        13,
+                        1,
                         "schutzhelm",
                         ShopItemCategory.ACCESSORIES,
                         false
                 ),
                 new ShopItem(
                         ShopItemID.CINEMA_GLASSES,
-                        13,
+                        1,
                         "3D_brille",
                         ShopItemCategory.ACCESSORIES,
                         false
