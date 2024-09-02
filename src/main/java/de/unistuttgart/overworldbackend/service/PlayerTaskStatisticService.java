@@ -169,6 +169,7 @@ public class PlayerTaskStatisticService {
 
         playerStatistic.addRewards(data.getRewards());
         playerStatistic.addCredit(data.getRewards());// für playerStatistic
+
         playerStatistic.addKnowledge(gainedKnowledge);
         playerstatisticRepository.save(playerStatistic);
 

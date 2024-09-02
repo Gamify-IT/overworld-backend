@@ -78,6 +78,12 @@ public class PlayerStatisticService {
         return playerstatisticRepository.findByCourseId(courseId);
     }
 
+    /**
+     * get statistics from all player of a certain course
+     *
+     * @param courseId the id of the course
+     * @return a list of all playerstatistics of the given course
+     */
     public List<PlayerStatisticDTO> getAllPlayerStatisticsFromCourse(final int courseId) {
         Set<PlayerStatistic> playerStatistics = getPlayerStatisticsFromCourse(courseId);
         List<PlayerStatisticDTO> playerStatisticDTOList = new ArrayList<>();

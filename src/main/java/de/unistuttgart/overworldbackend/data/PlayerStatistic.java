@@ -115,7 +115,7 @@ public class PlayerStatistic {
     }
 
     public void addRewards(final int gainedRewards) {
-        rewards += gainedRewards;
+        this.rewards += gainedRewards;
     }
 
     public void addCredit(int rewards) {

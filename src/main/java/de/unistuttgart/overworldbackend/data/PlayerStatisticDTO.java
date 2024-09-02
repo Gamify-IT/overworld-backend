@@ -58,6 +58,7 @@ public class PlayerStatisticDTO {
 
     int credit;
 
+
     String pseudonym;
 
 }
