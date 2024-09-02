@@ -83,7 +83,7 @@ public class PlayerStatistic {
 
     boolean visibility = false;
 
-    int credit = 0;
+    int credit;
 
     String pseudonym = "Traveller";
 
