@@ -557,15 +557,14 @@ public class AchievementService {
                 "coinImage",
                 150,
                 Arrays.asList(AchievementCategory.ACHIEVING)
-            )
-            /*not implemented achievement because of other bug
+            ),
             new Achievement(
                 AchievementTitle.LEVEL_UP,
                 "Reach level 2",
                 "levelUpImage",
                 2,
                 Arrays.asList(AchievementCategory.ACHIEVING)
-            )*/
+            )
         );
 
         currentAchievementList.forEach(
