@@ -539,7 +539,7 @@ public class AchievementService {
             ),
             new Achievement(
                 AchievementTitle.ONE_OF_THE_BEST_PLAYERS,
-                "Enter top 3 in the leaderboard",
+                "Enter 2d or 3d place in the leaderboard",
                 "medal3Image",
                 1,
                 Arrays.asList(AchievementCategory.COMPETITIVE)
