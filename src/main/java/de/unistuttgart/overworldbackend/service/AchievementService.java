@@ -539,7 +539,7 @@ public class AchievementService {
             ),
             new Achievement(
                 AchievementTitle.ONE_OF_THE_BEST_PLAYERS,
-                "Enter top 3 in the leaderboard",
+                "Enter 2d or 3d place in the leaderboard",
                 "medal3Image",
                 1,
                 Arrays.asList(AchievementCategory.COMPETITIVE)
@@ -557,15 +557,14 @@ public class AchievementService {
                 "coinImage",
                 150,
                 Arrays.asList(AchievementCategory.ACHIEVING)
-            )
-            /*not implemented achievement because of other bug
+            ),
             new Achievement(
                 AchievementTitle.LEVEL_UP,
                 "Reach level 2",
                 "levelUpImage",
                 2,
                 Arrays.asList(AchievementCategory.ACHIEVING)
-            )*/
+            )
         );
 
         currentAchievementList.forEach(

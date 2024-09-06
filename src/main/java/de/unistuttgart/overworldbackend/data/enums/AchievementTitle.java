@@ -76,5 +76,5 @@ public enum AchievementTitle {
     ONE_OF_THE_BEST_PLAYERS,
     GET_COINS,
     GET_MORE_COINS,
-    //LEVEL_UP,
+    LEVEL_UP,
 }
