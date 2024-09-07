@@ -109,9 +109,4 @@ public class AreaMapService {
         return areaMapMapper.areaMapToAreaMapDTO(updatedAreaMap);
     }
 
-    /*
-    public AreaMapDTO createAreaMapForWorld(final int courseID, final int worldIndex, final AreaMapDTO areaMapDTO){
-        worldService.createWorld(courseID, worldIndex, areaMapDTO);
-    }
-    */
 }

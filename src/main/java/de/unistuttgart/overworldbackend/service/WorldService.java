@@ -154,11 +154,6 @@ public class WorldService {
         worldRepository.save(world);
     }
 
-    /*public void createWorld(final int courseID, final int worldIndex, final AreaMapDTO area){
-        final AtomicInteger worldID = new AtomicInteger(1);
-        configureWorld(worldID)
-    }*/
-
     /**
      * Adds or removes minigames until number of minigames specified is reached
      * @param world the world to edit

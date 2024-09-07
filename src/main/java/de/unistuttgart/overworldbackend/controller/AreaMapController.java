@@ -92,20 +92,5 @@ public class AreaMapController {
         log.debug("update area map from dungeon {} from world {} of course {} with {}", dungeonIndex, worldIndex, courseId, areaMapDTO);
         return areaMapService.updateAreaMapOfDungeon(courseId, worldIndex, dungeonIndex, areaMapDTO);
     }
-    /*
-    @Operation(summary = "Create a new world area map for a course")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{worldIndex}")
-    public AreaMapDTO createAreaMapForWorld(
-            @PathVariable final int courseID,
-            @PathVariable final int worldIndex,
-            @RequestBody final AreaMapDTO area,
-            @CookieValue("access token") final String accessToken
-    ) {
-        jwtValidatorService.validateTokenOrThrow(accessToken);
-        jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
-        log.debug("create area map for world");
-        return
-    }*/
 
 }
