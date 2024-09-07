@@ -22,20 +22,24 @@ public class SceneTransitionSpot extends ObjectSpot {
     Position size;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    Area areaToLoad;
+    AreaLocation areaToLoad;
 
     FacingDirection facingDirection;
+
+    String style;
 
     public SceneTransitionSpot(
         final AreaLocation area,
         final Position position,
         final Position size,
-        final Area areaToLoad,
-        final FacingDirection facingDirection
+        final AreaLocation areaToLoad,
+        final FacingDirection facingDirection,
+        final String style
     ) {
         super(area, position);
         this.size = size;
         this.areaToLoad = areaToLoad;
         this.facingDirection = facingDirection;
+        this.style = style;
     }
 }

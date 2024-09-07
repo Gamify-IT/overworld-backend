@@ -11,7 +11,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import java.util.Set;
+import static de.unistuttgart.overworldbackend.data.Roles.LECTURER_ROLE;
+
 
 @Tag(name = "AreaMap", description = "Get and update area maps from a course")
 @RestController
@@ -100,4 +104,5 @@ public class AreaMapController {
         );
         return areaMapService.updateAreaMapOfDungeon(courseId, worldIndex, dungeonIndex, areaMapDTO);
     }
+
 }

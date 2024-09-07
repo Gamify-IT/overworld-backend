@@ -105,4 +105,5 @@ public class AreaMapService {
         final AreaMap updatedAreaMap = getAreaMapFromDungeon(courseId, worldIndex, dungeonIndex);
         return areaMapMapper.areaMapToAreaMapDTO(updatedAreaMap);
     }
+
 }
