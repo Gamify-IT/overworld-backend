@@ -85,6 +85,8 @@ public class AchievementStatisticService {
                 "The new progress cannot be smaller than the current one"
             );
         }
+        achievementStatistic.setInteractedObjects(achievementStatisticDTO.getInteractedObjects());
+
         return achievementStatisticRepository.save(achievementStatistic);
     }
 }

@@ -6,18 +6,17 @@ import de.unistuttgart.overworldbackend.data.config.AreaConfig;
 import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.CustomAreaMapMapper;
 import de.unistuttgart.overworldbackend.repositories.AreaMapRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
@@ -39,11 +38,8 @@ public class AreaMapService {
      * @param worldIndex the index of the world
      * @return the found AreaMap
      */
-    public AreaMap getAreaMapFromWorld(final int courseId, final int worldIndex)
-    {
-        return worldService
-                .getWorldByIndexFromCourse(courseId, worldIndex)
-                .getAreaMap();
+    public AreaMap getAreaMapFromWorld(final int courseId, final int worldIndex) {
+        return worldService.getWorldByIndexFromCourse(courseId, worldIndex).getAreaMap();
     }
 
     /**
@@ -54,11 +50,8 @@ public class AreaMapService {
      * @param dungeonIndex the index of the dungeon
      * @return the found AreaMap
      */
-    public AreaMap getAreaMapFromDungeon(final int courseId, final int worldIndex, final int dungeonIndex)
-    {
-        return dungeonService
-                .getDungeonByIndexFromCourse(courseId, worldIndex, dungeonIndex)
-                .getAreaMap();
+    public AreaMap getAreaMapFromDungeon(final int courseId, final int worldIndex, final int dungeonIndex) {
+        return dungeonService.getDungeonByIndexFromCourse(courseId, worldIndex, dungeonIndex).getAreaMap();
     }
 
     /**
@@ -66,14 +59,13 @@ public class AreaMapService {
      * @param courseId the id of the course
      * @return Set of AreaMaps of the course
      */
-    public Set<AreaMap> getAllAreaMapsFromCourse(final int courseId)
-    {
+    public Set<AreaMap> getAllAreaMapsFromCourse(final int courseId) {
         Set<AreaMap> areaMaps = new HashSet<>();
         Set<World> worlds = worldService.getAllWorldsFromCourse(courseId);
-        for (World world: worlds) {
+        for (World world : worlds) {
             areaMaps.add(world.getAreaMap());
             List<Dungeon> dungeons = world.getDungeons();
-            for (Dungeon dungeon: dungeons) {
+            for (Dungeon dungeon : dungeons) {
                 areaMaps.add(dungeon.getAreaMap());
             }
         }
@@ -88,7 +80,7 @@ public class AreaMapService {
      * @param areaMapDTO the updated area map
      * @return the updated area map as DTO
      */
-    public AreaMapDTO updateAreaMapOfWorld(final int courseId, final int worldIndex, final AreaMapDTO areaMapDTO){
+    public AreaMapDTO updateAreaMapOfWorld(final int courseId, final int worldIndex, final AreaMapDTO areaMapDTO) {
         worldService.updateWorldContent(courseId, worldIndex, areaMapDTO);
         final AreaMap updatedAreaMap = getAreaMapFromWorld(courseId, worldIndex);
         return areaMapMapper.areaMapToAreaMapDTO(updatedAreaMap);
@@ -103,7 +95,12 @@ public class AreaMapService {
      * @param areaMapDTO the updated area map
      * @return the updated area map as DTO
      */
-    public AreaMapDTO updateAreaMapOfDungeon(final int courseId, final int worldIndex, final int dungeonIndex, final AreaMapDTO areaMapDTO){
+    public AreaMapDTO updateAreaMapOfDungeon(
+        final int courseId,
+        final int worldIndex,
+        final int dungeonIndex,
+        final AreaMapDTO areaMapDTO
+    ) {
         dungeonService.updateDungeonContent(courseId, worldIndex, dungeonIndex, areaMapDTO);
         final AreaMap updatedAreaMap = getAreaMapFromDungeon(courseId, worldIndex, dungeonIndex);
         return areaMapMapper.areaMapToAreaMapDTO(updatedAreaMap);

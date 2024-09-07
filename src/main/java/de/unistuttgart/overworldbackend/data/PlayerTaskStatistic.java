@@ -1,8 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -48,7 +46,17 @@ public class PlayerTaskStatistic {
 
     boolean completed = false;
 
+    int rewards;
+
+    int totalRewards;
+
+    String userId;
+
     public void addActionLog(final PlayerTaskActionLog actionLog) {
         this.playerTaskActionLogs.add(actionLog);
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

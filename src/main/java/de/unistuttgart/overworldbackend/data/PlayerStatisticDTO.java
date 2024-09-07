@@ -2,6 +2,7 @@ package de.unistuttgart.overworldbackend.data;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -35,9 +36,26 @@ public class PlayerStatisticDTO {
     String userId;
     String username;
 
-    LocalDateTime created;
+    String created;
 
-    LocalDateTime lastActive;
+    String lastActive;
+    
+    int volumeLevel;
+
+    float logoutPositionX;
+
+    float logoutPositionY;
+
+    String logoutScene;
+
+    int currentCharacterIndex;
 
     long knowledge;
+
+    int rewards;
+
+    boolean showRewards;
+
+    String pseudonym;
+
 }

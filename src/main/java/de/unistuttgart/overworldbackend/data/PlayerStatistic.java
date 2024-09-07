@@ -53,6 +53,16 @@ public class PlayerStatistic {
 
     LocalDateTime lastActive;
 
+    float logoutPositionX = 21.5f;
+
+    float logoutPositionY = 2.5f;
+
+    String logoutScene = "World 1";
+
+    int currentCharacterIndex = 0;
+  
+    int volumeLevel;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerTaskStatistic> playerTaskStatistics = new HashSet<>();
 
@@ -66,6 +76,13 @@ public class PlayerStatistic {
     }
 
     long knowledge = 0;
+
+    int rewards = 0;
+
+    boolean showRewards = false;
+
+    String pseudonym;
+
 
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
@@ -88,4 +105,10 @@ public class PlayerStatistic {
     public void addUnlockedTeleporter(final Teleporter teleporter) {
         this.unlockedTeleporters.add(teleporter);
     }
+
+    public void addRewards(final int gainedRewards) {
+        rewards += gainedRewards;
+    }
+
+
 }

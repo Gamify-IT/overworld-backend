@@ -1,10 +1,9 @@
 package de.unistuttgart.overworldbackend.data;
 
+import java.util.UUID;
+import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import javax.persistence.*;
-import java.util.UUID;
 
 /**
  * Represents a spot of an object in a generated area
@@ -17,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ObjectSpot {
+
     @Id
     @GeneratedValue(generator = "uuid")
     UUID id;
@@ -27,10 +27,7 @@ public class ObjectSpot {
     @ManyToOne(cascade = CascadeType.ALL)
     Position position;
 
-    protected ObjectSpot(
-            final AreaLocation area,
-            final Position position
-    ) {
+    protected ObjectSpot(final AreaLocation area, final Position position) {
         this.area = area;
         this.position = position;
     }

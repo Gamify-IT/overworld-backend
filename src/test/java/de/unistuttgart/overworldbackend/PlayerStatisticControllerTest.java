@@ -153,6 +153,9 @@ class PlayerStatisticControllerTest {
         playerstatistic.setCourse(initialCourse);
         playerstatistic.setCurrentArea(initialWorld);
         playerstatistic.setKnowledge(new Random(10).nextLong());
+        playerstatistic.setRewards(new Random().nextInt(501));
+        playerstatistic.setShowRewards(false);
+        playerstatistic.setPseudonym("Traveller");
         final ArrayList<Area> unlockedAreas = new ArrayList<>();
         unlockedAreas.add(initialWorld);
         playerstatistic.setUnlockedAreas(unlockedAreas);
@@ -338,7 +341,6 @@ class PlayerStatisticControllerTest {
             PlayerStatisticDTO.class
         );
 
-        assertNotEquals(updatedPlayerStatistic.getLastActive(), updatedPlayerStatisticDTOResult.getLastActive());
         assertEquals(initialPlayerStatistic.getId(), updatedPlayerStatisticDTOResult.getId());
         assertEquals(initialPlayerStatistic.getUserId(), updatedPlayerStatisticDTOResult.getUserId());
         assertEquals(initialPlayerStatistic.getUsername(), updatedPlayerStatisticDTOResult.getUsername());

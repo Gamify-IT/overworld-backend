@@ -7,6 +7,7 @@ import de.unistuttgart.overworldbackend.data.mapper.PlayerStatisticMapper;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,20 @@ public class PlayerStatisticService {
         return playerstatisticRepository.findByCourseId(courseId);
     }
 
+    public List<PlayerStatisticDTO> getAllPlayerStatisticsFromCourse(final int courseId) {
+        Set<PlayerStatistic> playerStatistics = getPlayerStatisticsFromCourse(courseId);
+        List<PlayerStatisticDTO> playerStatisticDTOList = new ArrayList<>();
+
+        for (PlayerStatistic playerStatistic : playerStatistics) {
+            PlayerStatisticDTO playerStatisticDTO = playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
+                playerStatistic
+            );
+            playerStatisticDTOList.add(playerStatisticDTO);
+        }
+
+        return playerStatisticDTOList;
+    }
+
     /**
      * Create a playerstatistic with initial data in a course.
      *
@@ -111,7 +126,16 @@ public class PlayerStatisticService {
         playerstatistic.setUserId(playerRegistrationDTO.getUserId());
         playerstatistic.setUsername(playerRegistrationDTO.getUsername());
         playerstatistic.setCurrentArea(firstWorld);
+        playerstatistic.setLastActive(LocalDateTime.now());
+        playerstatistic.setLogoutPositionX(21.5f);
+        playerstatistic.setLogoutPositionY(2.5f);
+        playerstatistic.setLogoutScene("World 1");
+        playerstatistic.setCurrentCharacterIndex(0);
+        playerstatistic.setVolumeLevel(1);
         playerstatistic.setKnowledge(0);
+        playerstatistic.setRewards(0);
+        playerstatistic.setShowRewards(true);
+        playerstatistic.setPseudonym("Traveller");
         course.addPlayerStatistic(playerstatistic);
         final PlayerStatistic savedPlayerStatistic = getPlayerStatisticFromCourse(
             courseId,
@@ -197,6 +221,14 @@ public class PlayerStatisticService {
         } catch (final ResponseStatusException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Specified area does not exist");
         }
+
+        playerstatistic.setLastActive(convertStringToLocalDateTime(playerstatisticDTO.getLastActive()));
+        playerstatistic.setLogoutPositionX(playerstatisticDTO.getLogoutPositionX());
+        playerstatistic.setLogoutPositionY(playerstatisticDTO.getLogoutPositionY());
+        playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
+        playerstatistic.setCurrentCharacterIndex(playerstatisticDTO.getCurrentCharacterIndex());
+        playerstatistic.setVolumeLevel(playerstatisticDTO.getVolumeLevel());
+
         return playerstatisticMapper.playerStatisticToPlayerstatisticDTO(
             (playerstatisticRepository.save(playerstatistic))
         );
@@ -289,5 +321,10 @@ public class PlayerStatisticService {
 
     private World getFirstWorld(final int courseId) {
         return worldService.getWorldByIndexFromCourse(courseId, 1);
+    }
+
+    public LocalDateTime convertStringToLocalDateTime(String dateString){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(dateString, formatter);
     }
 }
