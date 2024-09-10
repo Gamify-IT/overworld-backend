@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Service for the shop, manages the retrieval and addition of items from/to a player.
@@ -37,75 +39,34 @@ public class ShopService {
     @EventListener(ApplicationStartedEvent.class)
     public void setupShopItems() {
         List<ShopItem> shopItems = Arrays.asList(
-                new ShopItem(
-                        ShopItemID.FLAME_HAT,
-                        1,
-                        "flames",
-                        ShopItemCategory.ACCESSORIES,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.HEART_GLASSES,
-                        2,
-                        "herzbrille",
-                        ShopItemCategory.ACCESSORIES,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.GLOBE_HAT,
-                        2,
-                        "globus",
-                        ShopItemCategory.ACCESSORIES,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.SUIT,
-                        1,
-                        "anzug",
-                        ShopItemCategory.OUTFIT,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.SANTA_COSTUME,
-                        2,
-                        "santa",
-                        ShopItemCategory.OUTFIT,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.COOL_GLASSES,
-                        2,
-                        "coole_brille",
-                        ShopItemCategory.ACCESSORIES,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.RETRO_GLASSES,
-                        1,
-                        "retro_brille",
-                        ShopItemCategory.ACCESSORIES,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.SAFETY_HELMET,
-                        1,
-                        "schutzhelm",
-                        ShopItemCategory.ACCESSORIES,
-                        false
-                ),
-                new ShopItem(
-                        ShopItemID.CINEMA_GLASSES,
-                        1,
-                        "3D_brille",
-                        ShopItemCategory.ACCESSORIES,
-                        false
-                )
-
+                new ShopItem(ShopItemID.FLAME_HAT, 10, "flames", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.HEART_GLASSES, 2, "herzbrille", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.GLOBE_HAT, 2, "globus", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.SUIT, 1, "anzug", ShopItemCategory.OUTFIT, false),
+                new ShopItem(ShopItemID.SANTA_COSTUME, 2, "santa", ShopItemCategory.OUTFIT, false),
+                new ShopItem(ShopItemID.COOL_GLASSES, 2, "coole_brille", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.RETRO_GLASSES, 1, "retro_brille", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.SAFETY_HELMET, 1, "schutzhelm", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.CINEMA_GLASSES, 1, "3D_brille", ShopItemCategory.ACCESSORIES, false)
         );
 
-        shopRepository.saveAll(shopItems);
-        System.out.println(Arrays.toString(shopItems.toArray()));
+        Set<ShopItemID> existingShopItemIDs = new HashSet<>();
+        for (ShopItem item : shopRepository.findAll()) {
+            existingShopItemIDs.add(item.getShopItemID());
+        }
+
+        for (ShopItem item : shopItems) {
+            if (!existingShopItemIDs.contains(item.getShopItemID())) {
+                shopRepository.save(item);
+
+            } else {
+                log.warn("Shop item with ID {} already exists and will not be added again.", item.getShopItemID());
+            }
+        }
+
+        log.info("Shop items have been set up: {}", shopItems);
     }
+
 
     /**
      * Returns all shop items for a given player.

@@ -123,8 +123,12 @@ public class PlayerStatistic {
     }
 
     public void addItem(ShopItem item) {
+        if (this.items.stream().anyMatch(existingItem -> existingItem.getShopItemID() == item.getShopItemID())) {
+            return;
+        }
         this.items.add(item);
     }
+
 
     public ShopItem updateItem(ShopItemID shopItemID, boolean bought) {
         for(ShopItem item : items) {
