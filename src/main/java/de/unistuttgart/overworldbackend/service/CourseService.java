@@ -59,6 +59,9 @@ public class CourseService {
     RegexgameClient regexgameClient;
 
     @Autowired
+    TowerDefenseClient towerDefenseClient;
+
+    @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
@@ -379,6 +382,9 @@ public class CourseService {
                         break;
                     case REGEXGAME:
                         cloneId = regexgameClient.postClone(accessToken, minigameTask.getConfigurationId());
+                        break;
+                    case TOWERDEFENSE:
+                        cloneId = towerDefenseClient.postClone(accessToken, minigameTask.getConfigurationId());
                         break;
                     default:
                         minigameTask.setGame(Minigame.NONE);
