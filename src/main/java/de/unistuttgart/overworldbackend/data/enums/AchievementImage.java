@@ -1,5 +1,9 @@
 package de.unistuttgart.overworldbackend.data.enums;
 
+/**
+ * AchievementImage class contains all categories of images that are displayed in the achievement table.
+ * Each element of AchievementImage contains a name and the corresponding image name stored in the frontend.
+ */
 public enum AchievementImage {
     FOOT_IMAGE("footImage"),
     NPC_IMAGE("npcImage"),
@@ -24,6 +28,9 @@ public enum AchievementImage {
     COIN_IMAGE("coinImage"),
     LEVEL_UP_IMAGE("levelUpImage");
 
+    /**
+     * Name of the image that will be shown in the achievement table
+     */
     private String imageName;
     AchievementImage(String imageName) {
         this.imageName = imageName;

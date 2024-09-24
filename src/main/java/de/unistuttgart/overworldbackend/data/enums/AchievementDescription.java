@@ -1,5 +1,10 @@
 package de.unistuttgart.overworldbackend.data.enums;
 
+/**
+ * This class contains descriptions of achievements.
+ * Some achievements have the same description but different amounts required to complete them.
+ * The placeholder "%d" will be replaced by the specified required amount.
+ */
 public enum AchievementDescription {
     WALK_TILES("Walk %d tiles"),
     CHANGE_SKIN("Change skin of your character"),
@@ -33,12 +38,23 @@ public enum AchievementDescription {
 
     ;
 
+    /**
+     * Description of achievement.
+     */
     private String description;
 
     AchievementDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Generates a formatted description by replacing the placeholder "%d" in the achievement
+     * description with the specified required amount.
+     *
+     * @param requiredAmount the number to be inserted into the achievement description
+     *                       where the placeholder is located.
+     * @return a formatted achievement description with the required amount included.
+     */
     public String getDescriptionWithRequiredAmount(int requiredAmount) {
         return String.format(description, requiredAmount);
     }
