@@ -141,7 +141,8 @@ public class PlayerStatisticService {
         playerstatistic.setLogoutPositionX(21.5f);
         playerstatistic.setLogoutPositionY(2.5f);
         playerstatistic.setLogoutScene("World 1");
-        playerstatistic.setCurrentCharacterIndex(0);
+        playerstatistic.setCurrentCharacter("character_default");
+        playerstatistic.setCurrentAccessory("none");
         playerstatistic.setVolumeLevel(1);
         playerstatistic.setKnowledge(0);
         playerstatistic.setRewards(0);
@@ -244,7 +245,8 @@ public class PlayerStatisticService {
         playerstatistic.setLogoutPositionX(playerstatisticDTO.getLogoutPositionX());
         playerstatistic.setLogoutPositionY(playerstatisticDTO.getLogoutPositionY());
         playerstatistic.setLogoutScene(playerstatisticDTO.getLogoutScene());
-        playerstatistic.setCurrentCharacterIndex(playerstatisticDTO.getCurrentCharacterIndex());
+        playerstatistic.setCurrentCharacter(playerstatisticDTO.getCurrentCharacter());
+        playerstatistic.setCurrentAccessory(playerstatisticDTO.getCurrentAccessory());
         playerstatistic.setVolumeLevel(playerstatisticDTO.getVolumeLevel());
         playerstatistic.setCredit(playerstatisticDTO.getCredit());
         playerstatistic.setPseudonym(playerstatisticDTO.getPseudonym());

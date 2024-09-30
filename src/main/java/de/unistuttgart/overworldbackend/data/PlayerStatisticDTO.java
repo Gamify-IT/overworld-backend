@@ -48,7 +48,9 @@ public class PlayerStatisticDTO {
 
     String logoutScene;
 
-    int currentCharacterIndex;
+    String currentCharacter;
+
+    String currentAccessory;
 
     long knowledge;
 

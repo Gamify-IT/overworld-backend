@@ -59,7 +59,9 @@ public class PlayerStatistic {
 
     String logoutScene = "World 1";
 
-    int currentCharacterIndex = 0;
+    String currentCharacter = "";
+
+    String currentAccessory = "";
   
     int volumeLevel;
 
