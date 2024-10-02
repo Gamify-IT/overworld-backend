@@ -58,10 +58,6 @@ public class PlayerStatistic {
     float logoutPositionY = 2.5f;
 
     String logoutScene = "World 1";
-
-    String currentCharacter = "";
-
-    String currentAccessory = "";
   
     int volumeLevel;
 
@@ -88,6 +84,10 @@ public class PlayerStatistic {
     int credit;
 
     String pseudonym = "Traveller";
+
+    String currentCharacter = "character_default";
+
+    String currentAccessory = "none";
 
     @JsonManagedReference(value = "player-shopItem")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItem.class)

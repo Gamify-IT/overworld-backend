@@ -48,10 +48,6 @@ public class PlayerStatisticDTO {
 
     String logoutScene;
 
-    String currentCharacter;
-
-    String currentAccessory;
-
     long knowledge;
 
     int rewards;
@@ -60,7 +56,10 @@ public class PlayerStatisticDTO {
 
     int credit;
 
-
     String pseudonym;
+
+    String currentCharacter;
+
+    String currentAccessory;
 
 }
