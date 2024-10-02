@@ -40,19 +40,19 @@ public class ShopService {
     public void setupShopItems() {
         List<ShopItem> shopItems = Arrays.asList(
                 new ShopItem(ShopItemID.FLAME_HAT, 10, "hat0", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.HEART_GLASSES, 2, "glasses2", ShopItemCategory.ACCESSORIES, false),
                 new ShopItem(ShopItemID.GLOBE_HAT, 2, "hat1", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.SUIT, 1, "character4", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.SANTA_COSTUME, 2, "character9", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.COOL_GLASSES, 2, "glasses1", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.RETRO_GLASSES, 1, "glasses3", ShopItemCategory.ACCESSORIES, false),
                 new ShopItem(ShopItemID.SAFETY_HELMET, 1, "hat2", ShopItemCategory.ACCESSORIES, false),
                 new ShopItem(ShopItemID.CINEMA_GLASSES, 1, "glasses0", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.TITANIUM_KNIGHT, 1, "character6", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.SPORTS, 1, "character8", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.LONGHAIR, 1, "character7", ShopItemCategory.OUTFIT, false),
+                new ShopItem(ShopItemID.COOL_GLASSES, 2, "glasses1", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.HEART_GLASSES, 2, "glasses2", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.RETRO_GLASSES, 1, "glasses3", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.SPORTS, 1, "character3", ShopItemCategory.OUTFIT, false),
+                new ShopItem(ShopItemID.SUIT, 1, "character4", ShopItemCategory.OUTFIT, false),
                 new ShopItem(ShopItemID.BLUE_SHIRT, 1, "character5", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.BLONDE, 1, "character3", ShopItemCategory.OUTFIT, false)
+                new ShopItem(ShopItemID.LONGHAIR, 1, "character6", ShopItemCategory.OUTFIT, false),
+                new ShopItem(ShopItemID.TITANIUM_KNIGHT, 1, "character7", ShopItemCategory.ACCESSORIES, false),
+                new ShopItem(ShopItemID.SANTA_COSTUME, 2, "character8", ShopItemCategory.OUTFIT, false)
+
 
 
 
