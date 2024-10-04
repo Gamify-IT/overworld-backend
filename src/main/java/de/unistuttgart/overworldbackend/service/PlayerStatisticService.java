@@ -6,11 +6,10 @@ import de.unistuttgart.overworldbackend.data.mapper.AreaLocationMapper;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerStatisticMapper;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
+import de.unistuttgart.overworldbackend.repositories.ShopRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import de.unistuttgart.overworldbackend.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -151,8 +150,8 @@ public class PlayerStatisticService {
         playerstatistic.setPseudonym("Traveller");
 
         List<ShopItem> items = shopRepository.findAll();
-        for(ShopItem item : items) {
-            playerstatistic.addItem(item);
+        for (ShopItem item : items) {
+            playerstatistic.addItem(new ShopItem(item.getShopItemID(),item.getCost(),item.getImageName(),item.getCategory(),item.isBought()));
         }
 
         course.addPlayerStatistic(playerstatistic);
@@ -346,7 +345,7 @@ public class PlayerStatisticService {
         return worldService.getWorldByIndexFromCourse(courseId, 1);
     }
 
-    public LocalDateTime convertStringToLocalDateTime(String dateString){
+    public LocalDateTime convertStringToLocalDateTime(String dateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(dateString, formatter);
     }

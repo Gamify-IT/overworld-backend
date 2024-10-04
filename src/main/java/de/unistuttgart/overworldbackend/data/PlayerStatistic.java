@@ -1,12 +1,11 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import java.time.LocalDateTime;
 import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -58,7 +57,7 @@ public class PlayerStatistic {
     float logoutPositionY = 2.5f;
 
     String logoutScene = "World 1";
-  
+
     int volumeLevel;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -66,8 +65,6 @@ public class PlayerStatistic {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerNPCStatistic> playerNPCStatistics = new HashSet<>();
-
-
 
     @PrePersist
     void onCreate() {
@@ -92,7 +89,6 @@ public class PlayerStatistic {
     @JsonManagedReference(value = "player-shopItem")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItem.class)
     List<ShopItem> items = new ArrayList<>();
-
 
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
@@ -131,10 +127,9 @@ public class PlayerStatistic {
         this.items.add(item);
     }
 
-
     public ShopItem updateItem(ShopItemID shopItemID, boolean bought) {
-        for(ShopItem item : items) {
-            if(item.getShopItemID() == shopItemID) {
+        for (ShopItem item : items) {
+            if (item.getShopItemID() == shopItemID) {
                 item.setBought(bought);
                 return item;
             }

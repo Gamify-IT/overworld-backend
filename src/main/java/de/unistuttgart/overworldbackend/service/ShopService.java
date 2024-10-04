@@ -5,20 +5,19 @@ import de.unistuttgart.overworldbackend.data.enums.ShopItemCategory;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.ShopRepository;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Set;
 
 /**
  * Service for the shop, manages the retrieval and addition of items from/to a player.
@@ -27,6 +26,7 @@ import java.util.Set;
 @Transactional
 @Slf4j
 public class ShopService {
+
     @Autowired
     private ShopRepository shopRepository;
 
@@ -36,28 +36,22 @@ public class ShopService {
     /**
      * Sets up all the shop items per player statistic. Aka per player per course.
      */
-    @EventListener(ApplicationStartedEvent.class)
+    @EventListener(ApplicationReadyEvent.class)
     public void setupShopItems() {
         List<ShopItem> shopItems = Arrays.asList(
-                new ShopItem(ShopItemID.FLAME_HAT, 10, "hat0", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.GLOBE_HAT, 2, "hat1", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.SAFETY_HELMET, 1, "hat2", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.CINEMA_GLASSES, 1, "glasses0", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.COOL_GLASSES, 2, "glasses1", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.HEART_GLASSES, 2, "glasses2", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.RETRO_GLASSES, 1, "glasses3", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.SPORTS, 1, "character3", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.SUIT, 1, "character4", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.BLUE_SHIRT, 1, "character5", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.LONGHAIR, 1, "character6", ShopItemCategory.OUTFIT, false),
-                new ShopItem(ShopItemID.TITANIUM_KNIGHT, 1, "character7", ShopItemCategory.ACCESSORIES, false),
-                new ShopItem(ShopItemID.SANTA_COSTUME, 2, "character8", ShopItemCategory.OUTFIT, false)
-
-
-
-
-
-
+            new ShopItem(ShopItemID.FLAME_HAT, 10, "hat0", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.GLOBE_HAT, 2, "hat1", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.SAFETY_HELMET, 1, "hat2", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.CINEMA_GLASSES, 1, "glasses0", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.COOL_GLASSES, 2, "glasses1", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.HEART_GLASSES, 2, "glasses2", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.RETRO_GLASSES, 1, "glasses3", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.SPORTS, 1, "character3", ShopItemCategory.OUTFIT, false),
+            new ShopItem(ShopItemID.SUIT, 1, "character4", ShopItemCategory.OUTFIT, false),
+            new ShopItem(ShopItemID.BLUE_SHIRT, 1, "character5", ShopItemCategory.OUTFIT, false),
+            new ShopItem(ShopItemID.LONGHAIR, 1, "character6", ShopItemCategory.OUTFIT, false),
+            new ShopItem(ShopItemID.TITANIUM_KNIGHT, 1, "character7", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.SANTA_COSTUME, 2, "character8", ShopItemCategory.OUTFIT, false)
         );
 
         Set<ShopItemID> existingShopItemIDs = new HashSet<>();
@@ -68,7 +62,6 @@ public class ShopService {
         for (ShopItem item : shopItems) {
             if (!existingShopItemIDs.contains(item.getShopItemID())) {
                 shopRepository.save(item);
-
             } else {
                 log.warn("Shop item with ID {} already exists and will not be added again.", item.getShopItemID());
             }
@@ -76,7 +69,6 @@ public class ShopService {
 
         log.info("Shop items have been set up: {}", shopItems);
     }
-
 
     /**
      * Returns all shop items for a given player.
@@ -86,11 +78,11 @@ public class ShopService {
      */
     public List<ShopItem> getShopItemsFromPlayer(final String playerId, final int courseID) {
         return playerStatisticRepository
-                .findByCourseIdAndUserId(courseID, playerId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
-                )
-                .getItems();
+            .findByCourseIdAndUserId(courseID, playerId)
+            .orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
+            )
+            .getItems();
     }
 
     /**
@@ -102,15 +94,15 @@ public class ShopService {
      */
     public ShopItem getShopItemFromPlayer(final String playerId, final int courseID, final ShopItemID shopItemID) {
         return playerStatisticRepository
-                .findByCourseIdAndUserId(courseID, playerId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
-                )
-                .getItems()
-                .stream()
-                .filter(item -> item.getShopItemID().equals(shopItemID))
-                .toList()
-                .get(0);
+            .findByCourseIdAndUserId(courseID, playerId)
+            .orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
+            )
+            .getItems()
+            .stream()
+            .filter(item -> item.getShopItemID().equals(shopItemID))
+            .toList()
+            .get(0);
     }
 
     /**
@@ -122,14 +114,20 @@ public class ShopService {
      * @throws ResponseStatusException (404) if the player or the item does not exist
      * @return the updated item
      */
-    public ShopItem updateShopItem(final String playerId, final int courseID, final ShopItemID shopItemID,
-                                   final ShopItemDTO shopItemDTO) {
-        PlayerStatistic playerStatistic = playerStatisticRepository.findByCourseIdAndUserId(courseID, playerId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist"));
+    public ShopItem updateShopItem(
+        final String playerId,
+        final int courseID,
+        final ShopItemID shopItemID,
+        final ShopItemDTO shopItemDTO
+    ) {
+        PlayerStatistic playerStatistic = playerStatisticRepository
+            .findByCourseIdAndUserId(courseID, playerId)
+            .orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
+            );
         try {
             return playerStatistic.updateItem(shopItemID, shopItemDTO.isBought());
-        } catch(final EntityNotFoundException e) {
+        } catch (final EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item with id " + shopItemID + " not found.");
         }
     }

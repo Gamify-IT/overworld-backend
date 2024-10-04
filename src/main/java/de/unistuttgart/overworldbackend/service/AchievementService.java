@@ -73,14 +73,24 @@ public class AchievementService {
                 "Play for 30 minutes",
                 "clockImage",
                 30,
-                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                Arrays.asList(
+                    AchievementCategory.ACHIEVING,
+                    AchievementCategory.EXPLORING,
+                    AchievementCategory.SOCIALIZING,
+                    AchievementCategory.COMPETITIVE
+                )
             ),
             new Achievement(
                 AchievementTitle.EXPERIENCED_PLAYER,
                 "Play for 90 minutes",
                 "clockImage",
                 90,
-                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                Arrays.asList(
+                    AchievementCategory.ACHIEVING,
+                    AchievementCategory.EXPLORING,
+                    AchievementCategory.SOCIALIZING,
+                    AchievementCategory.COMPETITIVE
+                )
             ),
             new Achievement(
                 AchievementTitle.SPEEDRUNNER,
@@ -507,7 +517,11 @@ public class AchievementService {
                 "Successfully complete \"towercrush\"",
                 "towerImage",
                 1,
-                Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
+                Arrays.asList(
+                    AchievementCategory.SOCIALIZING,
+                    AchievementCategory.ACHIEVING,
+                    AchievementCategory.COMPETITIVE
+                )
             ),
             new Achievement(
                 AchievementTitle.TRAVELER,
@@ -521,14 +535,24 @@ public class AchievementService {
                 "Login for 2 days",
                 "calenderImage",
                 2,
-                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                Arrays.asList(
+                    AchievementCategory.ACHIEVING,
+                    AchievementCategory.EXPLORING,
+                    AchievementCategory.SOCIALIZING,
+                    AchievementCategory.COMPETITIVE
+                )
             ),
             new Achievement(
                 AchievementTitle.PROFESSIONAL_GAMER,
                 "Login for 5 days",
                 "calenderImage",
                 5,
-                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                Arrays.asList(
+                    AchievementCategory.ACHIEVING,
+                    AchievementCategory.EXPLORING,
+                    AchievementCategory.SOCIALIZING,
+                    AchievementCategory.COMPETITIVE
+                )
             ),
             new Achievement(
                 AchievementTitle.GOAT,
@@ -568,43 +592,30 @@ public class AchievementService {
             )*/
         );
 
-        currentAchievementList.forEach(
-            achievement -> {
-                achievementRepository.save(achievement);
-            }
-        );
+        currentAchievementList.forEach(achievement -> {
+            achievementRepository.save(achievement);
+        });
 
         final List<Achievement> achievements = achievementRepository.findAll();
 
         for (final Player player : playerRepository.findAll()) {
             // add statistic for achievement if not exists
             for (final Achievement achievement : achievements) {
-                if (
-                    player
-                        .getAchievementStatistics()
+                if (player.getAchievementStatistics()
                         .stream()
                         .noneMatch(achievementStatistic ->
                             achievementStatistic
                                 .getAchievement()
                                 .getAchievementTitle()
-                                .equals(achievement.getAchievementTitle())
-                        )
-                ) {
+                                .equals(achievement.getAchievementTitle()))) {
                     player.getAchievementStatistics().add(new AchievementStatistic(player, achievement));
                 }
             }
             // remove statistic for achievement if not exists
-            player
-                .getAchievementStatistics()
-                .removeIf(achievementStatistic ->
-                    achievements
-                        .stream()
-                        .noneMatch(achievement ->
-                            achievement
-                                .getAchievementTitle()
-                                .equals(achievementStatistic.getAchievement().getAchievementTitle())
-                        )
-                );
+            player.getAchievementStatistics()
+                .removeIf(achievementStatistic -> achievements.stream()
+                        .noneMatch(achievement -> achievement.getAchievementTitle()
+                                .equals(achievementStatistic.getAchievement().getAchievementTitle())));
             playerRepository.save(player);
         }
     }

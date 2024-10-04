@@ -32,6 +32,4 @@ public class Player {
         this.userId = userId;
         this.username = username;
     }
-
-
 }

@@ -3,9 +3,8 @@ package de.unistuttgart.overworldbackend.data;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemCategory;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import java.util.List;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import java.util.UUID;
+import javax.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,8 +20,10 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopItem {
-
     @Id
+    @GeneratedValue(generator = "uuid")
+    UUID id;
+
     ShopItemID shopItemID;
 
     /**
@@ -36,8 +37,15 @@ public class ShopItem {
 
     boolean bought;
 
-    public void setBought(boolean bought) {
+    public ShopItem(ShopItemID shopItemID, int cost, String imageName, ShopItemCategory category, boolean bought) {
+        this.shopItemID = shopItemID;
+        this.cost = cost;
+        this.imageName = imageName;
+        this.category = category;
         this.bought = bought;
     }
 
+    public void setBought(boolean bought) {
+        this.bought = bought;
+    }
 }

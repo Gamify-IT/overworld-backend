@@ -2,20 +2,22 @@ package de.unistuttgart.overworldbackend.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.Embeddable;
 import java.io.Serializable;
+import javax.persistence.Embeddable;
 
 @Embeddable
 public class IntTuple implements Serializable {
+
     private int worldId;
     private int dungeonId;
     private int numberId;
 
     @JsonCreator
-    public IntTuple(@JsonProperty("worldId") int worldId,
-                    @JsonProperty("dungeonId") int dungeonId,
-                    @JsonProperty("numberId") int numberId) {
+    public IntTuple(
+        @JsonProperty("worldId") int worldId,
+        @JsonProperty("dungeonId") int dungeonId,
+        @JsonProperty("numberId") int numberId
+    ) {
         this.worldId = worldId;
         this.dungeonId = dungeonId;
         this.numberId = numberId;

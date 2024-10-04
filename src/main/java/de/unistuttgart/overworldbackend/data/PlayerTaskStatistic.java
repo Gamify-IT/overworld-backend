@@ -50,7 +50,6 @@ public class PlayerTaskStatistic {
     @Max(10)
     int rewards;
 
-
     String userId;
 
     public void addActionLog(final PlayerTaskActionLog actionLog) {

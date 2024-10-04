@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
  * Repository for the shop items
  */
 @Repository
-public interface ShopRepository extends JpaRepository<ShopItem, ShopItemID> {
-}
+public interface ShopRepository extends JpaRepository<ShopItem, ShopItemID> {}

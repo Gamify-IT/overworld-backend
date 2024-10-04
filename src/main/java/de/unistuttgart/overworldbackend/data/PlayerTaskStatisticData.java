@@ -34,6 +34,4 @@ public class PlayerTaskStatisticData {
     @Min(0)
     @Max(10)
     int rewards;
-
-
 }
