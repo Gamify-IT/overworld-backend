@@ -34,7 +34,8 @@ public class ShopService {
     private PlayerStatisticRepository playerStatisticRepository;
 
     /**
-     * Sets up all the shop items per player statistic. Aka per player per course.
+     * Creates the shop items and saves them in the database. The items are then used to set up the shop for each
+     * player statistic (in the PlayerStatisticService.java) meaning per player per course.
      */
     @EventListener(ApplicationReadyEvent.class)
     public void setupShopItems() {
@@ -73,6 +74,7 @@ public class ShopService {
     /**
      * Returns all shop items for a given player.
      * @param playerId the id of the player
+     * @param courseID the course id
      * @throws ResponseStatusException (404) if the player does not exist
      * @return a list of shop items for the given player
      */
@@ -88,6 +90,7 @@ public class ShopService {
     /**
      * Returns the shop item for a given player and item.
      * @param playerId the id of the player
+     * @param courseID the course id
      * @param shopItemID the id of the item
      * @throws ResponseStatusException (404) if the player does not exist
      * @return the item
@@ -106,7 +109,7 @@ public class ShopService {
     }
 
     /**
-     * Updates the given shop item.
+     * Updates the given shop item based on the DTO provided.
      * @param playerId the id of the player
      * @param courseID the course id
      * @param shopItemID the id of the item
@@ -114,17 +117,12 @@ public class ShopService {
      * @throws ResponseStatusException (404) if the player or the item does not exist
      * @return the updated item
      */
-    public ShopItem updateShopItem(
-        final String playerId,
-        final int courseID,
-        final ShopItemID shopItemID,
-        final ShopItemDTO shopItemDTO
-    ) {
+    public ShopItem updateShopItem(final String playerId, final int courseID, final ShopItemID shopItemID, final ShopItemDTO shopItemDTO) {
         PlayerStatistic playerStatistic = playerStatisticRepository
             .findByCourseIdAndUserId(courseID, playerId)
             .orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
-            );
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist"));
+
         try {
             return playerStatistic.updateItem(shopItemID, shopItemDTO.isBought());
         } catch (final EntityNotFoundException e) {
