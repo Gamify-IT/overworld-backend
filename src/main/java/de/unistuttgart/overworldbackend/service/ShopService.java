@@ -42,7 +42,7 @@ public class ShopService {
         List<ShopItem> shopItems = Arrays.asList(
             new ShopItem(ShopItemID.FLAME_HAT, 10, "hat0", ShopItemCategory.ACCESSORIES, false),
             new ShopItem(ShopItemID.GLOBE_HAT, 2, "hat1", ShopItemCategory.ACCESSORIES, false),
-            new ShopItem(ShopItemID.SAFETY_HELMET, 1, "hat2", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.SAFETY_HELMET, 1, "hat2", ShopItemCategory.ACCESSORIES, false), new ShopItem(ShopItemID.BLONDE, 1, "hat3", ShopItemCategory.ACCESSORIES, false),
             new ShopItem(ShopItemID.CINEMA_GLASSES, 1, "glasses0", ShopItemCategory.ACCESSORIES, false),
             new ShopItem(ShopItemID.COOL_GLASSES, 2, "glasses1", ShopItemCategory.ACCESSORIES, false),
             new ShopItem(ShopItemID.HEART_GLASSES, 2, "glasses2", ShopItemCategory.ACCESSORIES, false),
@@ -53,6 +53,7 @@ public class ShopService {
             new ShopItem(ShopItemID.LONGHAIR, 1, "character6", ShopItemCategory.OUTFIT, false),
             new ShopItem(ShopItemID.TITANIUM_KNIGHT, 1, "character7", ShopItemCategory.ACCESSORIES, false),
             new ShopItem(ShopItemID.SANTA_COSTUME, 2, "character8", ShopItemCategory.OUTFIT, false)
+
         );
 
         Set<ShopItemID> existingShopItemIDs = new HashSet<>();
