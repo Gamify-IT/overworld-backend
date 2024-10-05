@@ -51,7 +51,7 @@ public class ShopService {
             new ShopItem(ShopItemID.SUIT, 1, "character4", ShopItemCategory.OUTFIT, false),
             new ShopItem(ShopItemID.BLUE_SHIRT, 1, "character5", ShopItemCategory.OUTFIT, false),
             new ShopItem(ShopItemID.LONGHAIR, 1, "character6", ShopItemCategory.OUTFIT, false),
-            new ShopItem(ShopItemID.TITANIUM_KNIGHT, 1, "character7", ShopItemCategory.ACCESSORIES, false),
+            new ShopItem(ShopItemID.TITANIUM_KNIGHT, 1, "character7", ShopItemCategory.OUTFIT, false),
             new ShopItem(ShopItemID.SANTA_COSTUME, 2, "character8", ShopItemCategory.OUTFIT, false)
 
         );
