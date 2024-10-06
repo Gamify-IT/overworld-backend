@@ -29,6 +29,7 @@ public enum AchievementDescription {
     CROSSWORDPUZZLE("Successfully complete \"crosswordpuzzle\""),
     BUGFINDER("Successfully complete \"bugfinder\""),
     TOWERCRUSH("Successfully complete \"towercrush\""),
+    TOWERDEFENSE("Successfully complete \"towerdefense\""),
     USE_UFO("Use UFO %d times"),
     LOGIN("Login for %d days"),
     LEADEROARD_1("Take first place in the leaderboard"),

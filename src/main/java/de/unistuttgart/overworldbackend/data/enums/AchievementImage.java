@@ -21,6 +21,7 @@ public enum AchievementImage {
     CROSSWORDPUZZLE_IMAGE("puzzleImage"),
     BUGFINDER_IMAGE("bugImage"),
     TOWERCRUSH_IMAGE("towerImage"),
+    TOWERDEFENSE_IMAGE("towerdefenseImage"),
     UFO_IMAGE("ufoImage"),
     CALENDER_IMAGE("calenderImage"),
     MEDAL_1_IMAGE("medal1Image"),

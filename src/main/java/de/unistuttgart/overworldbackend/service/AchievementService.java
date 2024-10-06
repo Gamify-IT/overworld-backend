@@ -514,6 +514,13 @@ public class AchievementService {
                         Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
                 ),
                 new Achievement(
+                        AchievementTitle.TOWERDEFENSE_MASTER,
+                        AchievementDescription.TOWERDEFENSE.getDescription(),
+                        AchievementImage.TOWERDEFENSE_IMAGE.getImageName(),
+                        1,
+                        Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
+                ),
+                new Achievement(
                         AchievementTitle.TRAVELER,
                         AchievementDescription.USE_UFO.getDescriptionWithRequiredAmount(3),
                         AchievementImage.UFO_IMAGE.getImageName(),
