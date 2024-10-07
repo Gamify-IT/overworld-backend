@@ -160,7 +160,7 @@ class PlayerTaskStatisticControllerTest {
         playerstatistic.setCurrentArea(initialCourse.getWorlds().stream().findFirst().get());
         playerstatistic.setKnowledge(new Random(10).nextLong());
         playerstatistic.setRewards(new Random(10).nextInt());
-        playerstatistic.setShowRewards(false);
+        playerstatistic.setVisibility(false);
         playerstatistic.setPseudonym("Traveller");
         playerstatistic.setUnlockedAreas(new ArrayList<>());
         playerstatistic.setCompletedDungeons(new ArrayList<>());
@@ -194,8 +194,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getConfigurationId(),
                 80,
                 initialPlayerStatisticDTO.getUserId(),
-                8,
                 8
+
             )
         );
 
@@ -218,8 +218,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getConfigurationId(),
                 80,
                 initialPlayerStatisticDTO.getUserId(),
-                8,
                 8
+
             )
         );
 
@@ -242,8 +242,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getConfigurationId(),
                 80,
                 initialPlayerStatisticDTO.getUserId(),
-                8,
                 8
+
             )
         );
 
@@ -270,8 +270,8 @@ class PlayerTaskStatisticControllerTest {
                 initialMinigameTask.getConfigurationId(),
                 80,
                 initialPlayerStatisticDTO.getUserId(),
-                8,
                 8
+
             )
         );
 

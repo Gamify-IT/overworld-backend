@@ -220,14 +220,6 @@ services:
     expose:
       - "80"
 
-  git-card-game:
-    container_name: git-card-game
-    image: ghcr.io/gamify-it/git-card-game:main
-    pull_policy: always
-    restart: always
-    expose:
-      - "80"
-
   chickenshock:
     container_name: chickenshock
     image: ghcr.io/gamify-it/chickenshock:main
@@ -244,9 +236,9 @@ services:
     expose:
       - "80"
 
-  regex-game:
-    container_name: regex-game
-    image: ghcr.io/gamify-it/regex-game:main
+  regexgame:
+    container_name: regexgame
+    image: ghcr.io/gamify-it/regexgame:main
     pull_policy: always
     restart: always
     expose:

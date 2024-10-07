@@ -1,10 +1,9 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
@@ -13,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 /**
  * The statistic of a player in a course.
  *
- * It contains informations about unlocked areas, completed dungeons, current area,
- * statistics of minigames and statistics of npcs.
+ * It contains information about unlocked areas, completed dungeons, current area,
+ * statistics of minigames, owned shop items and statistics of NPCs.
  */
 @Entity
 @Getter
@@ -59,8 +58,6 @@ public class PlayerStatistic {
 
     String logoutScene = "World 1";
 
-    int currentCharacterIndex = 0;
-  
     int volumeLevel;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,10 +76,19 @@ public class PlayerStatistic {
 
     int rewards = 0;
 
-    boolean showRewards = false;
+    boolean visibility = false;
 
-    String pseudonym;
+    int credit;
 
+    String pseudonym = "Traveller";
+
+    String currentCharacter = "character_default";
+
+    String currentAccessory = "none";
+
+    @JsonManagedReference(value = "player-shopItem")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItem.class)
+    List<ShopItem> items = new ArrayList<>();
 
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
@@ -107,8 +113,27 @@ public class PlayerStatistic {
     }
 
     public void addRewards(final int gainedRewards) {
-        rewards += gainedRewards;
+        this.rewards += gainedRewards;
     }
 
+    public void addCredit(int rewards) {
+        credit += rewards;
+    }
 
+    public void addItem(ShopItem item) {
+        if (this.items.stream().anyMatch(existingItem -> existingItem.getShopItemID() == item.getShopItemID())) {
+            return;
+        }
+        this.items.add(item);
+    }
+
+    public ShopItem updateItem(ShopItemID shopItemID, boolean bought) {
+        for (ShopItem item : items) {
+            if (item.getShopItemID() == shopItemID) {
+                item.setBought(bought);
+                return item;
+            }
+        }
+        throw new EntityNotFoundException("No item with this ID found");
+    }
 }

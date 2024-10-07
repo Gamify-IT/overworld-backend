@@ -589,23 +589,16 @@ public class AchievementService {
         for (final Player player : playerRepository.findAll()) {
             // add statistic for achievement if not exists
             for (final Achievement achievement : achievements) {
-                if (
-                        player
-                                .getAchievementStatistics()
-                                .stream()
-                                .noneMatch(achievementStatistic ->
-                                        achievementStatistic
-                                                .getAchievement()
-                                                .getAchievementTitle()
-                                                .equals(achievement.getAchievementTitle())
-                                )
-                ) {
+                if (player.getAchievementStatistics()
+                           .stream()
+                           .noneMatch(achievementStatistic -> achievementStatistic.getAchievement()
+                                                                                  .getAchievementTitle()
+                                                                                  .equals(achievement.getAchievementTitle()))) {
                     player.getAchievementStatistics().add(new AchievementStatistic(player, achievement));
                 }
             }
             // remove statistic for achievement if not exists
-            player
-                    .getAchievementStatistics()
+            player.getAchievementStatistics()
                     .removeIf(achievementStatistic ->
                             achievements
                                     .stream()
