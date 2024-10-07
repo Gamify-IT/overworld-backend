@@ -157,7 +157,6 @@ public class PlayerTaskStatisticService {
         playerTaskStatistic.setHighscore(Math.max(playerTaskStatistic.getHighscore(), data.getScore()));
         playerTaskStatistic.setCompleted(playerTaskStatistic.isCompleted() || checkCompleted(data.getScore()));
         playerTaskStatistic.setRewards(data.getRewards());
-        playerTaskStatistic.setTotalRewards(playerTaskStatistic.getRewards() + data.getRewards());
 
         logData(data, course, playerTaskStatistic, gainedKnowledge);
 
@@ -168,8 +167,10 @@ public class PlayerTaskStatisticService {
 
         playerStatisticService.checkForUnlockedAreas(minigameTask.getArea(), playerStatistic);
 
-        playerStatistic.addRewards(data.getRewards()); // für playerStatistic
+        playerStatistic.addRewards(data.getRewards());
+        playerStatistic.addCredit(data.getRewards());
         playerStatistic.addKnowledge(gainedKnowledge);
+
         playerstatisticRepository.save(playerStatistic);
 
         return playerTaskStatisticMapper.playerTaskStatisticToPlayerTaskStatisticDTO(

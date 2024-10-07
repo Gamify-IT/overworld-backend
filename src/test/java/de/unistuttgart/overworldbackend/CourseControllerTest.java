@@ -276,7 +276,6 @@ class CourseControllerTest {
         playerTaskStatisticData.setConfigurationId(initialMinigameTask.getConfigurationId());
         playerTaskStatisticData.setScore(80);
         playerTaskStatisticData.setRewards(8);
-        playerTaskStatisticData.setTotalRewards(8);
 
         mvc
             .perform(

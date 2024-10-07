@@ -39,7 +39,7 @@ public class PlayerStatisticDTO {
     String created;
 
     String lastActive;
-    
+
     int volumeLevel;
 
     float logoutPositionX;
@@ -48,14 +48,17 @@ public class PlayerStatisticDTO {
 
     String logoutScene;
 
-    int currentCharacterIndex;
-
     long knowledge;
 
     int rewards;
 
-    boolean showRewards;
+    boolean visibility;
+
+    int credit;
 
     String pseudonym;
 
+    String currentCharacter;
+
+    String currentAccessory;
 }

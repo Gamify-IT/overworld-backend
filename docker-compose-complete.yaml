@@ -122,12 +122,10 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/postgres
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
-
       KC_HOSTNAME_STRICT: false
       KC_PROXY: edge
       KC_HTTP_RELATIVE_PATH: /keycloak
@@ -158,7 +156,7 @@ services:
 
 
   crosswordpuzzle-backend:
-    container_name:   crosswordpuzzle-backend
+    container_name: crosswordpuzzle-backend
     image: ghcr.io/gamify-it/crosswordpuzzle-backend:main
     restart: always
     expose:
@@ -174,7 +172,7 @@ services:
       - OVERWORLD_URL=http://overworld-backend/api/v1
 
   chickenshock-backend:
-    container_name:   chickenshock-backend
+    container_name: chickenshock-backend
     image: ghcr.io/gamify-it/chickenshock-backend:main
     restart: always
     expose:
@@ -256,13 +254,6 @@ services:
     expose:
       - "80"
 
-  git-card-game:
-    container_name: git-card-game
-    image: ghcr.io/gamify-it/git-card-game:main
-    restart: always
-    expose:
-      - "80"
-
   chickenshock:
     container_name: chickenshock
     image: ghcr.io/gamify-it/chickenshock:main
@@ -277,9 +268,9 @@ services:
     expose:
       - "80"
 
-  regex-game:
-    container_name: regex-game
-    image: ghcr.io/gamify-it/regex-game:main
+  regexgame:
+    container_name: regexgame
+    image: ghcr.io/gamify-it/regexgame:main
     restart: always
     expose:
       - "80"
