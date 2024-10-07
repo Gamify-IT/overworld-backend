@@ -151,8 +151,7 @@ public class MinigameTaskStatisticTest {
                         minigameTask1.getConfigurationId(),
                         score,
                         playerStatisticDTO.getUserId(),
-                        rewards,
-                        totalRewards
+                        rewards
                     )
                 );
             }
