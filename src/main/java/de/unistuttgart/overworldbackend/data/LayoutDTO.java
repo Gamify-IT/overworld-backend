@@ -1,7 +1,6 @@
 package de.unistuttgart.overworldbackend.data;
 
 import java.util.UUID;
-import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

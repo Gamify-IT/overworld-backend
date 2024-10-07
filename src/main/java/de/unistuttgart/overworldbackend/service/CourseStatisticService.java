@@ -139,10 +139,8 @@ public class CourseStatisticService {
                     );
             });
         completedMinigames.sort(Comparator.comparingInt(CompletedMinigames::getAmountOfCompletedMinigames));
-        if (!completedMinigames.isEmpty()) {
-            if (completedMinigames.get(0).getAmountOfCompletedMinigames() != 0) {
-                completedMinigames.add(0, new CompletedMinigames(0, 0));
-            }
+        if (!completedMinigames.isEmpty() && completedMinigames.get(0).getAmountOfCompletedMinigames() != 0) {
+            completedMinigames.add(0, new CompletedMinigames(0, 0));
         }
         return completedMinigames;
     }

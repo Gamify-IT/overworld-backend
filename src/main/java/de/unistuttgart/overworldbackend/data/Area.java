@@ -1,15 +1,13 @@
 package de.unistuttgart.overworldbackend.data;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents an area of the overworld map.

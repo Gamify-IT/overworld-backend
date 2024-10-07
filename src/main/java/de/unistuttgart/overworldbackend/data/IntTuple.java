@@ -1,12 +1,11 @@
 package de.unistuttgart.overworldbackend.data;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import javax.persistence.Embeddable;
 
 /**
  * IntTuple is a helper class for storing the unique identifier of objects in the game (e.g. book, NPC, etc.).

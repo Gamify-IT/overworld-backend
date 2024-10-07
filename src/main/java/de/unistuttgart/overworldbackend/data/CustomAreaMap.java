@@ -1,6 +1,5 @@
 package de.unistuttgart.overworldbackend.data;
 
-import de.unistuttgart.overworldbackend.data.enums.AreaStyle;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
