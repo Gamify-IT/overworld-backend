@@ -154,7 +154,7 @@ class PlayerStatisticControllerTest {
         playerstatistic.setCurrentArea(initialWorld);
         playerstatistic.setKnowledge(new Random(10).nextLong());
         playerstatistic.setRewards(new Random().nextInt(501));
-        playerstatistic.setShowRewards(false);
+        playerstatistic.setVisibility(false);
         playerstatistic.setCredit(0);
         playerstatistic.setPseudonym("Traveller");
         final ArrayList<Area> unlockedAreas = new ArrayList<>();
