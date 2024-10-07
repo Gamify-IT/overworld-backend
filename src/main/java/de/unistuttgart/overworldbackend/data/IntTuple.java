@@ -2,50 +2,38 @@ package de.unistuttgart.overworldbackend.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
 
+/**
+ * IntTuple is a helper class for storing the unique identifier of objects in the game (e.g. book, NPC, etc.).
+ *
+ * The unique identifier consists of 3 int values, namely:
+ * worldId - indicates the number of the world where the object is located,
+ * dungeonId - the number of the dungeon where the object is located,
+ * numberId - the serial number of the object.
+ */
 @Embeddable
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class IntTuple implements Serializable {
-
+    /**
+     * number of the world where the object is located
+     */
     private int worldId;
+
+    /**
+     * number of the dungeon where the object is located
+     */
     private int dungeonId;
+
+    /**
+     * serial number of the object
+     */
     private int numberId;
-
-    @JsonCreator
-    public IntTuple(
-        @JsonProperty("worldId") int worldId,
-        @JsonProperty("dungeonId") int dungeonId,
-        @JsonProperty("numberId") int numberId
-    ) {
-        this.worldId = worldId;
-        this.dungeonId = dungeonId;
-        this.numberId = numberId;
-    }
-
-    public IntTuple() {}
-
-    public int getWorldId() {
-        return worldId;
-    }
-
-    public void setWorldId(int worldId) {
-        this.worldId = worldId;
-    }
-
-    public int getDungeonId() {
-        return dungeonId;
-    }
-
-    public void setDungeonId(int dungeonId) {
-        this.dungeonId = dungeonId;
-    }
-
-    public int getNumberId() {
-        return numberId;
-    }
-
-    public void setNumberId(int numberId) {
-        this.numberId = numberId;
-    }
 }
