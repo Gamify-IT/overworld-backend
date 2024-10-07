@@ -1,6 +1,5 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.util.Map;
 import java.util.UUID;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
