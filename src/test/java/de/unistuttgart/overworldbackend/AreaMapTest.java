@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import de.unistuttgart.overworldbackend.data.*;
-import de.unistuttgart.overworldbackend.data.enums.AreaStyle;
 import de.unistuttgart.overworldbackend.data.enums.BarrierType;
 import de.unistuttgart.overworldbackend.data.enums.FacingDirection;
 import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
@@ -509,7 +508,7 @@ public class AreaMapTest {
         BarrierSpotDTO barrierSpotDTO = new BarrierSpotDTO();
         barrierSpotDTO.setArea(areaLocationDTO);
         barrierSpotDTO.setPosition(position);
-        barrierSpotDTO.setType(BarrierType.worldBarrier);
+        barrierSpotDTO.setType(BarrierType.WORLD_BARRIER);
         barrierSpotDTO.setDestinationAreaIndex(2);
         customAreaMapDTO.setBarrierSpots(List.of(barrierSpotDTO));
 
