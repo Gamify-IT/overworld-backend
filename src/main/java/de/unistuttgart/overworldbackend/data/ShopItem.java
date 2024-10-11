@@ -2,10 +2,8 @@ package de.unistuttgart.overworldbackend.data;
 
 import de.unistuttgart.overworldbackend.data.enums.ShopItemCategory;
 import de.unistuttgart.overworldbackend.data.enums.ShopItemID;
-import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
