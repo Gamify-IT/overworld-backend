@@ -86,7 +86,6 @@ public class PlayerStatistic {
 
     String currentAccessory = "none";
 
-    @JsonManagedReference(value = "player-shopItem")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItem.class)
     List<ShopItem> items = new ArrayList<>();
 
