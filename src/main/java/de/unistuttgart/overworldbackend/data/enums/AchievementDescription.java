@@ -11,7 +11,7 @@ public enum AchievementDescription {
     COMPLETE_MINIGAMES("Successfully complete %d minigames"),
     PLAY_MINUTES("Play for %d minutes"),
     USE_SPRINT("Use sprint for %d seconds"),
-    UNLOCK_DUNGEONS("Unlock all dungeons in World %d"),
+    UNLOCK_DUNGEONS("Unlock 1 dungeon in World %d"),
     UNLOCK_WORLD("Unlock World %d"),
     FIND_MINIGAME_SPOTS("Locate %d minigame spots"),
     INTERACT_WITH_BOOKS("Interact with %d books"),
