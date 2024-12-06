@@ -97,28 +97,28 @@ public class AchievementService {
                         AchievementTitle.MINER_WORLD_1,
                         AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(1),
                         AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        4,
+                        1,
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.MINER_WORLD_2,
                         AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(2),
                         AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        4,
+                        1,
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.MINER_WORLD_3,
                         AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(3),
                         AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        4,
+                        1,
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.MINER_WORLD_4,
                         AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(4),
                         AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        4,
+                        1,
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
