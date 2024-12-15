@@ -89,6 +89,10 @@ public class PlayerStatistic {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ShopItem.class)
     List<ShopItem> items = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AchievementStatistic.class)
+    @OrderColumn(name = "position")
+    List<AchievementStatistic> achievementStatistics = new ArrayList<>();
+
     public void addKnowledge(final long gainedKnowledge) {
         knowledge += gainedKnowledge;
     }
@@ -124,6 +128,14 @@ public class PlayerStatistic {
             return;
         }
         this.items.add(item);
+    }
+
+    public void addAchievementStatistic(AchievementStatistic achievementStatistic) {
+        if (this.achievementStatistics.stream().anyMatch(existingAchievementStatistic -> existingAchievementStatistic.getAchievement() == achievementStatistic.getAchievement())) {
+            return;
+        }
+
+        this.achievementStatistics.add(achievementStatistic);
     }
 
     public ShopItem updateItem(ShopItemID shopItemID, boolean bought) {

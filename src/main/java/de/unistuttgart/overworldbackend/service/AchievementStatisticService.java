@@ -1,11 +1,14 @@
 package de.unistuttgart.overworldbackend.service;
 
+import de.unistuttgart.overworldbackend.data.Achievement;
 import de.unistuttgart.overworldbackend.data.AchievementStatistic;
 import de.unistuttgart.overworldbackend.data.AchievementStatisticDTO;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import de.unistuttgart.overworldbackend.repositories.AchievementStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 import java.util.List;
+
+import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,19 +25,21 @@ public class AchievementStatisticService {
     @Autowired
     private AchievementStatisticRepository achievementStatisticRepository;
 
+    @Autowired
+    private PlayerStatisticRepository playerStatisticRepository;
+
     /**
      * Returns all achievement statistics for a given player.
      * @param playerId the id of the player
      * @throws ResponseStatusException (404) if the player does not exist
      * @return a list of achievement statistics for the given player
      */
-    public List<AchievementStatistic> getAchievementStatisticsFromPlayer(final String playerId) {
-        return playerRepository
-            .findById(playerId)
-            .orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
-            )
-            .getAchievementStatistics();
+    public List<AchievementStatistic> getAchievementStatisticsFromPlayer(final String playerId, final int courseId) {
+        return playerStatisticRepository
+                .findByCourseIdAndUserId(courseId, playerId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist for course " + courseId)
+                ).getAchievementStatistics();
     }
 
     /**
@@ -46,9 +51,10 @@ public class AchievementStatisticService {
      */
     public AchievementStatistic getAchievementStatisticFromPlayer(
         final String playerId,
+        final int courseId,
         final AchievementTitle achievementTitle
     ) {
-        return getAchievementStatisticsFromPlayer(playerId)
+        return getAchievementStatisticsFromPlayer(playerId, courseId)
             .stream()
             .filter(achievementStatistic ->
                 achievementStatistic.getAchievement().getAchievementTitle().equals(achievementTitle)
@@ -73,10 +79,11 @@ public class AchievementStatisticService {
      */
     public AchievementStatistic updateAchievementStatistic(
         final String playerId,
+        final int courseId,
         final AchievementTitle achievementTitle,
         final AchievementStatisticDTO achievementStatisticDTO
     ) {
-        final AchievementStatistic achievementStatistic = getAchievementStatisticFromPlayer(playerId, achievementTitle);
+        final AchievementStatistic achievementStatistic = getAchievementStatisticFromPlayer(playerId, courseId, achievementTitle);
         try {
             achievementStatistic.setProgress(achievementStatisticDTO.getProgress());
         } catch (final IllegalArgumentException e) {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "AchievementStatistic", description = "Modify achievement statistic")
 @RestController
 @Slf4j
-@RequestMapping("/players/{playerId}/achievements")
+@RequestMapping("/players/{playerId}/courses/{courseId}/achievements")
 public class AchievementStatisticController {
 
     @Autowired
@@ -32,12 +32,13 @@ public class AchievementStatisticController {
     @GetMapping("")
     public List<AchievementStatisticDTO> getAchievementStatistics(
         @PathVariable final String playerId,
+        @PathVariable final int courseId,
         @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get achievements");
         return achievementStatisticMapper.achievementStatisticsToAchievementStatisticDTOs(
-            achievementStatisticService.getAchievementStatisticsFromPlayer(playerId)
+            achievementStatisticService.getAchievementStatisticsFromPlayer(playerId, courseId)
         );
     }
 
@@ -45,13 +46,14 @@ public class AchievementStatisticController {
     @GetMapping("/{title}")
     public AchievementStatisticDTO getAchievementStatisitc(
         @PathVariable final String playerId,
+        @PathVariable final int courseId,
         @PathVariable final AchievementTitle title,
         @CookieValue("access_token") final String accessToken
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get achievements {} ", title);
         return achievementStatisticMapper.achievementStatisticToAchievementStatisticDTO(
-            achievementStatisticService.getAchievementStatisticFromPlayer(playerId, title)
+            achievementStatisticService.getAchievementStatisticFromPlayer(playerId, courseId, title)
         );
     }
 
@@ -59,6 +61,7 @@ public class AchievementStatisticController {
     @PutMapping("/{title}")
     public AchievementStatisticDTO updateAchievementStatistic(
         @PathVariable final String playerId,
+        @PathVariable final int courseId,
         @PathVariable final AchievementTitle title,
         @Valid @RequestBody final AchievementStatisticDTO achievementStatisticDTO,
         @CookieValue("access_token") final String accessToken
@@ -66,7 +69,7 @@ public class AchievementStatisticController {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("update achievements {} to {}", title, achievementStatisticDTO.getProgress());
         return achievementStatisticMapper.achievementStatisticToAchievementStatisticDTO(
-            achievementStatisticService.updateAchievementStatistic(playerId, title, achievementStatisticDTO)
+            achievementStatisticService.updateAchievementStatistic(playerId, courseId, title, achievementStatisticDTO)
         );
     }
 }

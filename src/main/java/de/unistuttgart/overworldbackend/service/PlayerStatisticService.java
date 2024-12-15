@@ -4,6 +4,7 @@ import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
 import de.unistuttgart.overworldbackend.data.mapper.AreaLocationMapper;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerStatisticMapper;
+import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerTaskStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.ShopRepository;
@@ -31,6 +32,9 @@ public class PlayerStatisticService {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private AchievementRepository achievementRepository;
 
     @Autowired
     private PlayerStatisticMapper playerstatisticMapper;
@@ -152,6 +156,13 @@ public class PlayerStatisticService {
         List<ShopItem> items = shopRepository.findAll();
         for (ShopItem item : items) {
             playerstatistic.addItem(new ShopItem(item.getShopItemID(),item.getCost(),item.getImageName(),item.getCategory(),item.isBought()));
+        }
+
+        List<Achievement> achievements = achievementRepository.findAll();
+        for (Achievement achievement : achievements) {
+            AchievementStatistic achievementStatistic = new AchievementStatistic();
+            achievementStatistic.setAchievement(achievement);
+            playerstatistic.addAchievementStatistic(achievementStatistic);
         }
 
         course.addPlayerStatistic(playerstatistic);
