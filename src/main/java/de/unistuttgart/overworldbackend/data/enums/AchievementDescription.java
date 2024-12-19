@@ -35,9 +35,7 @@ public enum AchievementDescription {
     LEADEROARD_1("Take first place in the leaderboard"),
     LEADEROARD_2_3("Enter 2d or 3d place in the leaderboard"),
     GET_COINS("Get %d coins"),
-    LEVEL_UP("Reach level %d"),
-
-    ;
+    LEVEL_UP("Reach level %d");
 
     /**
      * Description of achievement.

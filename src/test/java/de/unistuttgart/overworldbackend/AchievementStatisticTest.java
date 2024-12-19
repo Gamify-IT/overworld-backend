@@ -15,7 +15,9 @@ import de.unistuttgart.overworldbackend.data.mapper.AchievementMapper;
 import de.unistuttgart.overworldbackend.data.mapper.AchievementStatisticMapper;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerMapper;
 import de.unistuttgart.overworldbackend.repositories.AchievementStatisticRepository;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
+import de.unistuttgart.overworldbackend.service.CourseService;
 import de.unistuttgart.overworldbackend.service.PlayerService;
 import java.util.List;
 import javax.servlet.http.Cookie;
@@ -46,6 +48,12 @@ class AchievementStatisticTest {
         .withDatabaseName("postgres")
         .withUsername("postgres")
         .withPassword("postgres");
+
+    @Autowired
+    private CourseService courseService;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @DynamicPropertySource
     public static void properties(final DynamicPropertyRegistry registry) {
@@ -78,6 +86,7 @@ class AchievementStatisticTest {
     private PlayerService playerService;
 
     private Player initialPlayer;
+    private Course initialCourse;
     private PlayerMapper playerMapper;
     private ObjectMapper objectMapper;
 
@@ -91,7 +100,13 @@ class AchievementStatisticTest {
         final PlayerDTO initialPlayerDTO = playerService.createPlayer(playerRegistrationDTO);
         initialPlayer = playerRepository.findById(initialPlayerDTO.getUserId()).get();
 
-        fullURL = String.format("/players/%s", initialPlayer.getUserId());
+        final CourseInitialData courseInitialData = new CourseInitialData("testCourse", "SS-44", "test course");
+        final CourseDTO initialCourseDTO = courseService.createCourse(courseInitialData);
+        initialCourse = courseRepository.findById(initialCourseDTO.getId()).get();
+
+        fullURL =
+            String.format("/players/%s", initialPlayer.getUserId()) +
+            String.format("/courses/%s", initialCourse.getId());
 
         objectMapper = new ObjectMapper();
 
@@ -103,7 +118,7 @@ class AchievementStatisticTest {
     void getPlayerAchievements_DoesNotExist_ThrowsNotFound() throws Exception {
         mvc
             .perform(
-                get("/players/" + Integer.MAX_VALUE + "/achievements")
+                get("/players/" + Integer.MAX_VALUE + "/courses/" + Integer.MAX_VALUE + "/achievements")
                     .cookie(cookie)
                     .contentType(MediaType.APPLICATION_JSON)
             )

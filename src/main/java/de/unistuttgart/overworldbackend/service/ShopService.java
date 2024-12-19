@@ -118,11 +118,17 @@ public class ShopService {
      * @throws ResponseStatusException (404) if the player or the item does not exist
      * @return the updated item
      */
-    public ShopItem updateShopItem(final String playerId, final int courseID, final ShopItemID shopItemID, final ShopItemDTO shopItemDTO) {
+    public ShopItem updateShopItem(
+        final String playerId,
+        final int courseID,
+        final ShopItemID shopItemID,
+        final ShopItemDTO shopItemDTO
+    ) {
         PlayerStatistic playerStatistic = playerStatisticRepository
             .findByCourseIdAndUserId(courseID, playerId)
             .orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist"));
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
+            );
 
         try {
             return playerStatistic.updateItem(shopItemID, shopItemDTO.isBought());

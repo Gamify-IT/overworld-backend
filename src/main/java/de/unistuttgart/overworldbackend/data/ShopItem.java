@@ -18,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopItem {
+
     @Id
     @GeneratedValue(generator = "uuid")
     UUID id;
