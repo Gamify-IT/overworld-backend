@@ -195,7 +195,6 @@ class PlayerTaskStatisticControllerTest {
                 80,
                 initialPlayerStatisticDTO.getUserId(),
                 8
-
             )
         );
 
@@ -219,7 +218,6 @@ class PlayerTaskStatisticControllerTest {
                 80,
                 initialPlayerStatisticDTO.getUserId(),
                 8
-
             )
         );
 
@@ -243,7 +241,6 @@ class PlayerTaskStatisticControllerTest {
                 80,
                 initialPlayerStatisticDTO.getUserId(),
                 8
-
             )
         );
 
@@ -271,7 +268,6 @@ class PlayerTaskStatisticControllerTest {
                 80,
                 initialPlayerStatisticDTO.getUserId(),
                 8
-
             )
         );
 

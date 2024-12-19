@@ -42,7 +42,13 @@ public class Achievement {
     @ElementCollection
     List<AchievementCategory> categories;
 
-    public Achievement(AchievementTitle achievementTitle, String description, String imageName, int amountRequired, List<AchievementCategory> categories) {
+    public Achievement(
+        AchievementTitle achievementTitle,
+        String description,
+        String imageName,
+        int amountRequired,
+        List<AchievementCategory> categories
+    ) {
         this.achievementTitle = achievementTitle;
         this.description = description;
         this.imageName = imageName;

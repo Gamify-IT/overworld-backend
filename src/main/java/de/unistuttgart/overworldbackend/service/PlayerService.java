@@ -5,10 +5,8 @@ import de.unistuttgart.overworldbackend.data.enums.Binding;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerMapper;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
-
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -53,8 +51,8 @@ public class PlayerService {
             return playerMapper.playerToPlayerDTO(player.get());
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    String.format("There is no player with playerId %s", playerId)
+                HttpStatus.NOT_FOUND,
+                String.format("There is no player with playerId %s", playerId)
             );
         }
     }
@@ -70,8 +68,8 @@ public class PlayerService {
         final Optional<Player> existingPlayer = playerRepository.findById(playerRegistrationDTO.getUserId());
         if (existingPlayer.isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    String.format("There is already a playerstatistic for userId %s", playerRegistrationDTO.getUserId())
+                HttpStatus.BAD_REQUEST,
+                String.format("There is already a playerstatistic for userId %s", playerRegistrationDTO.getUserId())
             );
         }
         final Player newPlayer = new Player(playerRegistrationDTO.getUserId(), playerRegistrationDTO.getUsername());

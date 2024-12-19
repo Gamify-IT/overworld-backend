@@ -1,5 +1,7 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,9 +9,6 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,7 +50,12 @@ public class Course {
     Set<PlayerStatistic> playerStatistics = new HashSet<>();
 
     @JsonManagedReference(value = "achievement-course")
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AchievementStatistic.class)
+    @OneToMany(
+        mappedBy = "course",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL,
+        targetEntity = AchievementStatistic.class
+    )
     List<AchievementStatistic> achievementStatistics = new ArrayList<>();
 
     @ManyToMany(mappedBy = "courses")

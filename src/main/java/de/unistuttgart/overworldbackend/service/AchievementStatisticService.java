@@ -7,7 +7,6 @@ import de.unistuttgart.overworldbackend.repositories.AchievementStatisticReposit
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,14 +30,18 @@ public class AchievementStatisticService {
      * @throws ResponseStatusException (404) if the player does not exist
      * @return a list of achievement statistics for the given player of the given course
      */
-    public List<AchievementStatistic> getAchievementStatisticsFromPlayerOfCourse(final String playerId, final int courseId) {
+    public List<AchievementStatistic> getAchievementStatisticsFromPlayerOfCourse(
+        final String playerId,
+        final int courseId
+    ) {
         return playerRepository
             .findById(playerId)
             .orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with id " + playerId + " does not exist")
             )
             .getAchievementStatistics()
-            .stream().filter(achievementStatistic -> achievementStatistic.getCourse().getId() == courseId)
+            .stream()
+            .filter(achievementStatistic -> achievementStatistic.getCourse().getId() == courseId)
             .collect(Collectors.toList());
     }
 
@@ -63,7 +66,10 @@ public class AchievementStatisticService {
             .orElseThrow(() ->
                 new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    String.format("There is no achievement statistic for achievement %s in the course", achievementTitle)
+                    String.format(
+                        "There is no achievement statistic for achievement %s in the course",
+                        achievementTitle
+                    )
                 )
             );
     }
@@ -83,7 +89,11 @@ public class AchievementStatisticService {
         final AchievementTitle achievementTitle,
         final AchievementStatisticDTO achievementStatisticDTO
     ) {
-        final AchievementStatistic achievementStatistic = getAchievementStatisticFromPlayerOfCourse(playerId, courseId, achievementTitle);
+        final AchievementStatistic achievementStatistic = getAchievementStatisticFromPlayerOfCourse(
+            playerId,
+            courseId,
+            achievementTitle
+        );
         try {
             achievementStatistic.setProgress(achievementStatisticDTO.getProgress());
         } catch (final IllegalArgumentException e) {
