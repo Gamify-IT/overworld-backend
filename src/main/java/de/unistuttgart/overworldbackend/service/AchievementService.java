@@ -2,16 +2,17 @@ package de.unistuttgart.overworldbackend.service;
 
 import de.unistuttgart.overworldbackend.data.Achievement;
 import de.unistuttgart.overworldbackend.data.AchievementStatistic;
+import de.unistuttgart.overworldbackend.data.Course;
 import de.unistuttgart.overworldbackend.data.Player;
 import de.unistuttgart.overworldbackend.data.enums.AchievementCategory;
 import de.unistuttgart.overworldbackend.data.enums.AchievementDescription;
 import de.unistuttgart.overworldbackend.data.enums.AchievementImage;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class AchievementService {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     /**
      * Checks for all players the current achievements adds new created achievements to the player and removes none existing achievements.
@@ -56,7 +60,7 @@ public class AchievementService {
                         AchievementDescription.CHANGE_SKIN.getDescription(),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         1,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.MINIGAME_ACHIEVER,
@@ -147,14 +151,14 @@ public class AchievementService {
                         AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(2),
                         AchievementImage.MINIGAME_SPOT_IMAGE.getImageName(),
                         2,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.MINIGAME_SPOTS_MASTER,
                         AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(5),
                         AchievementImage.MINIGAME_SPOT_IMAGE.getImageName(),
                         5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.READER_LEVEL_1_WORLD_1,
@@ -371,105 +375,105 @@ public class AchievementService {
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_1,
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_1,
                         AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_2,
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_2,
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_2,
                         AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_3,
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_3,
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_3,
                         AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_4,
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_4,
                         AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_4,
                         AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_1,
                         AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(50),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_2,
                         AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(100),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         100,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.COMMUNICATOR_LEVEL_3,
                         AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         200,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        List.of(AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.CHICKENSHOCK_MASTER,
@@ -546,69 +550,114 @@ public class AchievementService {
                         AchievementDescription.LEADEROARD_1.getDescription(),
                         AchievementImage.MEDAL_1_IMAGE.getImageName(),
                         1,
-                        Arrays.asList(AchievementCategory.COMPETITIVE)
+                        List.of(AchievementCategory.COMPETITIVE)
                 ),
                 new Achievement(
                         AchievementTitle.ONE_OF_THE_BEST_PLAYERS,
                         AchievementDescription.LEADEROARD_2_3.getDescription(),
                         AchievementImage.MEDAL_3_IMAGE.getImageName(),
                         1,
-                        Arrays.asList(AchievementCategory.COMPETITIVE)
+                        List.of(AchievementCategory.COMPETITIVE)
                 ),
                 new Achievement(
                         AchievementTitle.GET_COINS,
                         AchievementDescription.GET_COINS.getDescriptionWithRequiredAmount(50),
                         AchievementImage.COIN_IMAGE.getImageName(),
                         50,
-                        Arrays.asList(AchievementCategory.ACHIEVING)
+                        List.of(AchievementCategory.ACHIEVING)
                 ),
                 new Achievement(
                         AchievementTitle.GET_MORE_COINS,
                         AchievementDescription.GET_COINS.getDescriptionWithRequiredAmount(150),
                         AchievementImage.COIN_IMAGE.getImageName(),
                         150,
-                        Arrays.asList(AchievementCategory.ACHIEVING)
+                        List.of(AchievementCategory.ACHIEVING)
                 ),
                 new Achievement(
                         AchievementTitle.LEVEL_UP,
                         AchievementDescription.LEVEL_UP.getDescriptionWithRequiredAmount(2),
                         AchievementImage.LEVEL_UP_IMAGE.getImageName(),
                         2,
-                        Arrays.asList(AchievementCategory.ACHIEVING)
+                        List.of(AchievementCategory.ACHIEVING)
                 )
         );
+        achievementRepository.saveAll(currentAchievementList);
+        initializeAchievements();
+    }
 
-        currentAchievementList.forEach(
-                achievement -> {
-                    achievementRepository.save(achievement);
-                }
-        );
-
-        final List<Achievement> achievements = achievementRepository.findAll();
-
+    /**
+     * Initializes for all players their achievements of their courses.
+     */
+    private void initializeAchievements() {
         for (final Player player : playerRepository.findAll()) {
-            // add statistic for achievement if not exists
-            for (final Achievement achievement : achievements) {
-                if (player.getAchievementStatistics()
-                           .stream()
-                           .noneMatch(achievementStatistic -> achievementStatistic.getAchievement()
-                                                                                  .getAchievementTitle()
-                                                                                  .equals(achievement.getAchievementTitle()))) {
-                    player.getAchievementStatistics().add(new AchievementStatistic(player, achievement));
-                }
-            }
-            // remove statistic for achievement if not exists
-            player.getAchievementStatistics()
-                    .removeIf(achievementStatistic ->
-                            achievements
-                                    .stream()
-                                    .noneMatch(achievement ->
-                                            achievement
-                                                    .getAchievementTitle()
-                                                    .equals(achievementStatistic.getAchievement().getAchievementTitle())
-                                    )
-                    );
+            initializeAchievementsOfPlayer(player);
+            removeNotExistentAchievements(player, achievementRepository.findAll());
             playerRepository.save(player);
         }
+    }
+
+    /**
+     * Initializes all achievement statistics for a player's courses if non-existent
+     *
+     * @param player player whose achievements are initialized
+     */
+    @Transactional
+    public void initializeAchievementsOfPlayer(Player player) {
+        for (final Course course : courseRepository.findAll()) {
+            createAchievementStatistics(course, player);
+        }
+    }
+
+    /**
+     * Initializes all achievement statistics for a course's players if non-existent
+     *
+     * @param course player whose achievements are initialized
+     */
+    @Transactional
+    public void initializeAchievementsOfCourse(Course course) {
+        for (final Player player : playerRepository.findAll()) {
+            createAchievementStatistics(course, player);
+        }
+    }
+
+    /**
+     * Creates all achievement statistics for a given course and given player if non-existent
+     *
+     * @param course course the achievements should be created for
+     * @param player player the achievements should be created for
+     */
+    private void createAchievementStatistics(Course course, Player player) {
+        final List<Achievement> achievements = achievementRepository.findAll();
+        player.getAchievementStatistics().removeIf(stat ->
+                achievements.stream().noneMatch(ach -> ach.getId().equals(stat.getAchievement().getId()))
+        );
+
+        for (final Achievement achievement : achievements) {
+            if (player.getAchievementStatistics().stream()
+                    .noneMatch(stat -> stat.getAchievement().getId().equals(achievement.getId())
+                            && stat.getCourse().equals(course))) {
+                final AchievementStatistic stat = new AchievementStatistic(player, course, achievement);
+                player.getAchievementStatistics().add(stat);
+                course.getAchievementStatistics().add(stat);
+            }
+        }
+    }
+
+    /**
+     * Removes all non-existent achievements of a player
+     *
+     * @param player to remove non-existent achievements from
+     */
+    private void removeNotExistentAchievements(Player player, List<Achievement> achievements) {
+        player.getAchievementStatistics()
+                .removeIf(achievementStatistic ->
+                        achievements
+                                .stream()
+                                .noneMatch(achievement ->
+                                        achievement
+                                                .getAchievementTitle()
+                                                .equals(achievementStatistic.getAchievement().getAchievementTitle())
+                                )
+                );
     }
 }
