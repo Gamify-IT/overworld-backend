@@ -67,6 +67,9 @@ public class CourseService {
     @Autowired
     private CourseMapper courseMapper;
 
+    @Autowired
+    private AchievementService achievementService;
+
     public CourseService() {
         configCourse = new CourseConfig();
         final ObjectMapper mapper = new ObjectMapper();
@@ -132,6 +135,7 @@ public class CourseService {
             DEFAULT_IS_ACTIVE,
             worlds
         );
+        achievementService.initializeAchievementsOfCourse(course);
         courseRepository.save(course);
         return courseMapper.courseToCourseDTO(course);
     }
