@@ -151,15 +151,7 @@ public class PlayerStatisticService {
 
         List<ShopItem> items = shopRepository.findAll();
         for (ShopItem item : items) {
-            playerstatistic.addItem(
-                new ShopItem(
-                    item.getShopItemID(),
-                    item.getCost(),
-                    item.getImageName(),
-                    item.getCategory(),
-                    item.isBought()
-                )
-            );
+            playerstatistic.addItem(new ShopItem(item.getShopItemID(),item.getCost(),item.getImageName(),item.getCategory(),item.isBought()));
         }
 
         course.addPlayerStatistic(playerstatistic);

@@ -3,10 +3,8 @@ package de.unistuttgart.overworldbackend.data;
 import de.unistuttgart.overworldbackend.data.enums.AchievementCategory;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import java.util.List;
-import java.util.UUID;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,9 +20,6 @@ import lombok.experimental.FieldDefaults;
 public class Achievement {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    UUID id;
-
     AchievementTitle achievementTitle;
 
     String description;
@@ -41,18 +36,4 @@ public class Achievement {
 
     @ElementCollection
     List<AchievementCategory> categories;
-
-    public Achievement(
-        AchievementTitle achievementTitle,
-        String description,
-        String imageName,
-        int amountRequired,
-        List<AchievementCategory> categories
-    ) {
-        this.achievementTitle = achievementTitle;
-        this.description = description;
-        this.imageName = imageName;
-        this.amountRequired = amountRequired;
-        this.categories = categories;
-    }
 }

@@ -26,9 +26,6 @@ public class PlayerService {
     @Autowired
     private AchievementRepository achievementRepository;
 
-    @Autowired
-    private AchievementService achievementService;
-
     /**
      * get all players
      *
@@ -73,7 +70,9 @@ public class PlayerService {
             );
         }
         final Player newPlayer = new Player(playerRegistrationDTO.getUserId(), playerRegistrationDTO.getUsername());
-        achievementService.initializeAchievementsOfPlayer(newPlayer);
+        for (final Achievement achievement : achievementRepository.findAll()) {
+            newPlayer.getAchievementStatistics().add(new AchievementStatistic(newPlayer, achievement));
+        }
         final Binding[] bindings = Binding.values();
         for (final Binding binding : bindings) {
             newPlayer.getKeybindings().add(new Keybinding(newPlayer, binding, ""));

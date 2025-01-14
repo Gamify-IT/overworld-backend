@@ -1,11 +1,11 @@
 package de.unistuttgart.overworldbackend.data;
 
-import java.io.Serializable;
-import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * IntTuple is a helper class for storing the unique identifier of objects in the game (e.g. book, NPC, etc.).
@@ -21,7 +21,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IntTuple implements Serializable {
-
     /**
      * number of the world where the object is located
      */

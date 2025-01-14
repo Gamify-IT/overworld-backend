@@ -74,7 +74,7 @@ public class CloneWithoutBackendsTest {
                 .forHttp("/keycloak/realms/Gamify-IT/.well-known/openid-configuration")
                 .forPort(80)
                 .forStatusCode(200)
-                .withStartupTimeout(Duration.ofSeconds(300))
+                .withStartupTimeout(Duration.ofSeconds(120))
         );
 
     @DynamicPropertySource

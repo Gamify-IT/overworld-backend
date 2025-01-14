@@ -9,7 +9,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "player_user_id", "achievement_id", "course_id" }) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "player_user_id", "achievement_achievement_title" }) })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,12 +22,8 @@ public class AchievementStatistic {
     UUID id;
 
     @JsonBackReference(value = "achievement-player")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     Player player;
-
-    @JsonBackReference(value = "achievement-course")
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    Course course;
 
     @OneToOne
     Achievement achievement;
@@ -39,9 +35,8 @@ public class AchievementStatistic {
     @ElementCollection
     List<IntTuple> interactedObjects;
 
-    public AchievementStatistic(Player player, Course course, Achievement achievement) {
+    public AchievementStatistic(Player player, Achievement achievement) {
         this.player = player;
-        this.course = course;
         this.achievement = achievement;
         this.progress = 0;
         this.completed = false;
