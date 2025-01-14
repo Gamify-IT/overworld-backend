@@ -20,7 +20,7 @@ public class Keybinding {
     @GeneratedValue(generator = "uuid")
     UUID id;
 
-    @JsonBackReference(value = "player-keybindings")
+    @JsonBackReference(value = "achievement-player")
     @ManyToOne
     Player player;
 

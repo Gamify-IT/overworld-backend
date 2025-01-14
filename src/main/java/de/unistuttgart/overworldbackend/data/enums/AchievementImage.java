@@ -33,7 +33,6 @@ public enum AchievementImage {
      * Name of the image that will be shown in the achievement table
      */
     private String imageName;
-
     AchievementImage(String imageName) {
         this.imageName = imageName;
     }
