@@ -22,6 +22,7 @@
 		<spring-cloud.version>2021.0.3</spring-cloud.version>
 		<testcontainer.version>1.17.6</testcontainer.version>
 		<de.uni-stuttgart.gamify-it.authentification-validator.version>v1.0.0</de.uni-stuttgart.gamify-it.authentification-validator.version>
+		<liquibase.version>4.19.0</liquibase.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -105,6 +106,11 @@
 			<groupId>com.github.Gamify-IT</groupId>
 			<artifactId>authentification-validator</artifactId>
 			<version>${de.uni-stuttgart.gamify-it.authentification-validator.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${liquibase.version}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
