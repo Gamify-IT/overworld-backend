@@ -3,6 +3,7 @@ package de.unistuttgart.overworldbackend.service;
 import de.unistuttgart.overworldbackend.data.Achievement;
 import de.unistuttgart.overworldbackend.data.AchievementStatistic;
 import de.unistuttgart.overworldbackend.data.Player;
+import de.unistuttgart.overworldbackend.data.World;
 import de.unistuttgart.overworldbackend.data.enums.AchievementCategory;
 import de.unistuttgart.overworldbackend.data.enums.AchievementDescription;
 import de.unistuttgart.overworldbackend.data.enums.AchievementImage;
@@ -10,19 +11,21 @@ import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 @Slf4j
+@EnableScheduling
 public class AchievementService {
 
     @Autowired
@@ -31,12 +34,343 @@ public class AchievementService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    private WorldService worldService;
+
+
     /**
      * Checks for all players the current achievements adds new created achievements to the player and removes none existing achievements.
      */
-    @EventListener(ApplicationReadyEvent.class)
-    public void updatePlayerStatisticAchievements() {
-        List<Achievement> currentAchievementList = Arrays.asList(
+    @Transactional
+    @Scheduled(fixedRate = 6000)
+    public synchronized void updatePlayerStatisticAchievements() {
+        List<Achievement> currentAchievementList = new ArrayList<>();
+
+        createBookAchievements(currentAchievementList);
+        createAchievementForEachMinigame(currentAchievementList);
+        createNpcAchievements(currentAchievementList);
+        createDungeonAchievements(currentAchievementList);
+        createMinigameAchievements(currentAchievementList);
+        createOpenerAndLevelUpAchievements(currentAchievementList);
+        createAllOtherAchievements(currentAchievementList);
+
+        //currentAchievementList.sort(Comparator.comparing(Achievement::getAchievementTitle));
+
+        currentAchievementList.forEach(achievementRepository::save);
+
+        List<Achievement> existingAchievements = achievementRepository.findAll(Sort.by("achievementTitle"));
+
+        existingAchievements.sort(Comparator.comparing(Achievement::getAchievementTitle));
+        List<Achievement> achievementsToDelete = existingAchievements.stream()
+                .filter(existingAchievement ->
+                        currentAchievementList.stream()
+                                .noneMatch(currentAchievement ->
+                                        currentAchievement.getAchievementTitle().equals(existingAchievement.getAchievementTitle())
+                                )
+                )
+                .toList();
+        achievementRepository.deleteAll(achievementsToDelete);
+
+        for (final Player player : playerRepository.findAll()) {
+            for (final Achievement achievement : currentAchievementList) {
+                if (player.getAchievementStatistics()
+                        .stream()
+                        .noneMatch(achievementStatistic ->
+                                achievementStatistic.getAchievement().getAchievementTitle().equals(achievement.getAchievementTitle()))) {
+                    player.getAchievementStatistics().add(new AchievementStatistic(player, achievement));
+                }
+            }
+
+            player.getAchievementStatistics().removeIf(achievementStatistic ->
+                    achievementsToDelete.stream()
+                            .anyMatch(achievement ->
+                                    achievement.getAchievementTitle().equals(achievementStatistic.getAchievement().getAchievementTitle())
+                            )
+            );
+            playerRepository.save(player);
+        }
+
+        /*List<Achievement> achievements = achievementRepository.findAll(Sort.by("achievementTitle"));
+
+
+        for (final Player player : playerRepository.findAll()) {
+            // add statistic for achievement if not exists
+            for (final Achievement achievement : achievements) {
+                if (player.getAchievementStatistics()
+                           .stream()
+                           .noneMatch(achievementStatistic -> achievementStatistic.getAchievement()
+                                                                                  .getAchievementTitle()
+                                                                                  .equals(achievement.getAchievementTitle()))) {
+                    player.getAchievementStatistics().add(new AchievementStatistic(player, achievement));
+                }
+            }
+
+            // remove statistic for achievement if not exists
+            player.getAchievementStatistics()
+                    .removeIf(achievementStatistic ->
+                            achievements
+                                    .stream()
+                                    .noneMatch(achievement ->
+                                            achievement
+                                                    .getAchievementTitle()
+                                                    .equals(achievementStatistic.getAchievement().getAchievementTitle())
+                                    )
+                    );
+            playerRepository.save(player);
+        }*/
+
+    }
+
+
+    /**
+     * Creates 5 achievements related to books.
+     * This function calculates the number of books, that have description and text and are available in each world and in total,
+     * and creates achievements based on the number of books and active worlds.
+     *
+     * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
+     *
+     */
+    private void createBookAchievements(List<Achievement> currentAchievementList) {
+
+        int[] bookCountWorld = new int[5];
+        int bookCountInTotal = 0;
+        String achievementTitle = "READER_WORLD_";
+
+        for (int i = 1; i <= 4; i++) {
+            bookCountWorld[i] = getBookCount(i);
+            bookCountInTotal += bookCountWorld[i];
+            if (bookCountWorld[i] !=0) {
+                if (i != 1) {
+                    if(isWorldActive(i)) {
+                        currentAchievementList.addAll(Arrays.asList(new Achievement(
+                                AchievementTitle.valueOf(achievementTitle + i),
+                                AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
+                                AchievementImage.BOOK_IMAGE.getImageName(),
+                                bookCountWorld[i],
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                        )));
+                    }
+                } else {
+                    currentAchievementList.addAll(Arrays.asList(new Achievement(
+                            AchievementTitle.valueOf(achievementTitle + i),
+                            AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
+                            AchievementImage.BOOK_IMAGE.getImageName(),
+                            bookCountWorld[i],
+                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                    )));
+                }
+            }
+            if (bookCountInTotal != 0) {
+                currentAchievementList.addAll(Arrays.asList(new Achievement(
+                        AchievementTitle.READER,
+                        AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
+                        AchievementImage.BOOK_IMAGE.getImageName(),
+                        bookCountInTotal,
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                )));
+            }
+        }
+    }
+
+    /**
+     * Creates 5 achievements related to NPCs.
+     * This function calculates the number of NPCs, that have description and text and are available in each world and in total,
+     * and creates achievements based on the number of NPCs and active worlds.
+     *
+     * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
+     *
+     */
+    private void createNpcAchievements(List<Achievement> currentAchievementList) {
+
+        int[] npcCountWorld = new int[5];
+        int npcCountInTotal = 0;
+        String achievementTitle = "COMMUNICATOR_WORLD_";
+
+        for (int i = 1; i <= 4; i++) {
+            npcCountWorld[i] = getNpcCount(i);
+            npcCountInTotal += npcCountWorld[i];
+            if (npcCountWorld[i] != 0) {
+                if (i != 1) {
+                    if(isWorldActive(i)) {
+                        currentAchievementList.addAll(Arrays.asList(
+                                new Achievement(
+                                        AchievementTitle.valueOf(achievementTitle + i),
+                                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(npcCountWorld[i]),
+                                        AchievementImage.NPC_IMAGE.getImageName(),
+                                        npcCountWorld[i],
+                                        Arrays.asList(AchievementCategory.EXPLORING)
+                                )
+                        ));
+                    }
+                } else {
+                    currentAchievementList.addAll(Arrays.asList(
+                            new Achievement(
+                                    AchievementTitle.valueOf(achievementTitle + i),
+                                    AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(npcCountWorld[i]),
+                                    AchievementImage.NPC_IMAGE.getImageName(),
+                                    npcCountWorld[i],
+                                    Arrays.asList(AchievementCategory.EXPLORING)
+                            )
+                    ));
+                }
+            }
+            if(npcCountInTotal != 0){
+                currentAchievementList.addAll(Arrays.asList(
+                        new Achievement(
+                                AchievementTitle.COMMUNICATOR,
+                                AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(npcCountInTotal),
+                                AchievementImage.NPC_IMAGE.getImageName(),
+                                npcCountInTotal,
+                                Arrays.asList(AchievementCategory.EXPLORING)
+                        )
+                ));
+            }
+        }
+    }
+
+    /**
+     * Creates 4 achievements related to dungeons.
+     * This function creates achievements for each active world if there is at least one dungeon active.
+     *
+     * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
+     *
+     */
+    private void createDungeonAchievements(List<Achievement> currentAchievementList) {
+        int[] countActiveDungeons =  new int[5];
+        String achievementTitle = "MINER_WORLD_";
+
+        for(int i = 1; i <= 4; i++){
+            countActiveDungeons[i] = getActiveDungeonCount(i);
+            if (countActiveDungeons[i] >= 1) {
+                currentAchievementList.addAll(Arrays.asList(new Achievement(
+                        AchievementTitle.valueOf(achievementTitle + i),
+                        AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(1),
+                        AchievementImage.DUNGEON_IMAGE.getImageName(),
+                        1,
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                )));
+            }
+        }
+    }
+
+    /**
+     * Creates 1 achievement related to successfully completed minigames and 1 achievement related to founded minigame spots.
+     * This function calculates the number of minigames, that are created in each world
+     * and creates achievements based on the number of minigames and active worlds.
+     *
+     * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
+     *
+     */
+    private void createMinigameAchievements(List<Achievement> currentAchievementList) {
+        int minigameCountInTotal = 0;
+        int requiredAmountForAchievement;
+        for (int i = 1; i <= 4; i++) {
+            minigameCountInTotal += getMinigameCount(i);
+        }
+
+        if(minigameCountInTotal != 0){
+            if(minigameCountInTotal == 1 || minigameCountInTotal == 2 || minigameCountInTotal == 3) {
+                requiredAmountForAchievement = minigameCountInTotal;
+            } else {
+                requiredAmountForAchievement = minigameCountInTotal - 2;
+            }
+            currentAchievementList.addAll(Arrays.asList(
+                    new Achievement(
+                            AchievementTitle.MINIGAME_ACHIEVER,
+                            AchievementDescription.COMPLETE_MINIGAMES.getDescriptionWithRequiredAmount(requiredAmountForAchievement),
+                            AchievementImage.STAR_IMAGE.getImageName(),
+                            requiredAmountForAchievement,
+                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
+                    ),
+                    new Achievement(
+                            AchievementTitle.MINIGAME_SPOTS_FINDER,
+                            AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(requiredAmountForAchievement),
+                            AchievementImage.MINIGAME_SPOT_IMAGE.getImageName(),
+                            requiredAmountForAchievement,
+                            Arrays.asList(AchievementCategory.EXPLORING)
+                    )
+            ));
+        } else {
+            List<Achievement> achievementsToDelete = achievementRepository.findAll(Sort.by("achievementTitle")).stream()
+                    .filter(achievement ->
+                            AchievementTitle.MINIGAME_ACHIEVER.toString().equals(achievement.getAchievementTitle()) ||
+                                    AchievementTitle.MINIGAME_SPOTS_FINDER.toString().equals(achievement.getAchievementTitle()))
+                    .collect(Collectors.toList());
+
+            achievementRepository.deleteAll(achievementsToDelete);
+        }
+    }
+
+    /**
+     * Creates 1 achievement for level up if the world 2 is active and 3 achievements for 3 worlds, if they are active.
+     * This function check if the necessary world is active and creates achievements based on it.
+     *
+     * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
+     *
+     */
+    private void createOpenerAndLevelUpAchievements(List<Achievement> currentAchievementList) {
+        String achievementTitle = "OPENER_WORLD_";
+        for (int i = 2; i <= 4; i++) {
+            if (isWorldActive(i)) {
+                currentAchievementList.addAll(Arrays.asList(
+                        new Achievement(
+                                AchievementTitle.valueOf(achievementTitle + i),
+                                AchievementDescription.UNLOCK_WORLD.getDescriptionWithRequiredAmount(i),
+                                AchievementImage.GLASS_IMAGE.getImageName(),
+                                1,
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                        )
+                ));
+
+                if (i == 2) {
+                    currentAchievementList.addAll(Arrays.asList(
+                            new Achievement(
+                                    AchievementTitle.LEVEL_UP,
+                                    AchievementDescription.LEVEL_UP.getDescriptionWithRequiredAmount(i),
+                                    AchievementImage.LEVEL_UP_IMAGE.getImageName(),
+                                    i,
+                                    Arrays.asList(AchievementCategory.ACHIEVING)
+                            )
+                    ));
+                }
+            }
+        }
+    }
+
+    /**
+     * Creates achievement for each type of minigames, that were created in course, based on their name and active
+     * worlds, in which these minigames were created.
+     *
+     * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
+     *
+     */
+    private void createAchievementForEachMinigame(List<Achievement> currentAchievementList) {
+        List<String> minigameNames = getMinigameNames();
+        // Створюємо досягнення для кожної мінігри
+        minigameNames.forEach(minigameName -> {
+            if (!minigameName.toUpperCase().equals("NONE") && !minigameName.toUpperCase().equals("REGEXGAME")) {
+                currentAchievementList.addAll(Arrays.asList(
+                        new Achievement(
+                                AchievementTitle.valueOf(minigameName.toUpperCase() + "_MASTER"),
+                                AchievementDescription.valueOf(minigameName.toUpperCase()).getDescription(),
+                                AchievementImage.valueOf(minigameName.toUpperCase() + "_IMAGE").getImageName(),
+                                1,
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
+                        )
+                ));
+            }
+        });
+    }
+
+    /**
+     * Creates all static achievements, that are independent of course settings and do not require conditions to be met
+     * for the achievement to be created
+     *
+     * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
+     *
+     */
+    private void createAllOtherAchievements(List<Achievement> currentAchievementList) {
+        currentAchievementList.addAll(Arrays.asList(
                 new Achievement(
                         AchievementTitle.GO_FOR_A_WALK,
                         AchievementDescription.WALK_TILES.getDescriptionWithRequiredAmount(10),
@@ -57,20 +391,6 @@ public class AchievementService {
                         AchievementImage.NPC_IMAGE.getImageName(),
                         1,
                         Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.MINIGAME_ACHIEVER,
-                        AchievementDescription.COMPLETE_MINIGAMES.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.STAR_IMAGE.getImageName(),
-                        2,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
-                ),
-                new Achievement(
-                        AchievementTitle.MINIGAME_PROFESSIONAL,
-                        AchievementDescription.COMPLETE_MINIGAMES.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.STAR_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
                 ),
                 new Achievement(
                         AchievementTitle.BEGINNER,
@@ -94,431 +414,18 @@ public class AchievementService {
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
                 ),
                 new Achievement(
-                        AchievementTitle.MINER_WORLD_1,
-                        AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(1),
-                        AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.MINER_WORLD_2,
-                        AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.MINER_WORLD_3,
-                        AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(3),
-                        AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.MINER_WORLD_4,
-                        AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(4),
-                        AchievementImage.DUNGEON_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.OPENER_WORLD_2,
-                        AchievementDescription.UNLOCK_WORLD.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.GLASS_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.OPENER_WORLD_3,
-                        AchievementDescription.UNLOCK_WORLD.getDescriptionWithRequiredAmount(3),
-                        AchievementImage.GLASS_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.OPENER_WORLD_4,
-                        AchievementDescription.UNLOCK_WORLD.getDescriptionWithRequiredAmount(4),
-                        AchievementImage.GLASS_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.MINIGAME_SPOTS_FINDER,
-                        AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.MINIGAME_SPOT_IMAGE.getImageName(),
-                        2,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.MINIGAME_SPOTS_MASTER,
-                        AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.MINIGAME_SPOT_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_1_WORLD_1,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_2_WORLD_1,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(10),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        10,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_3_WORLD_1,
-                        AchievementDescription.INTERACT_WITH_ALL_BOOKS.getDescription(),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_1_WORLD_2,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_2_WORLD_2,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(10),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        10,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_3_WORLD_2,
-                        AchievementDescription.INTERACT_WITH_ALL_BOOKS.getDescription(),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_1_WORLD_3,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_2_WORLD_3,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(10),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        10,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_3_WORLD_3,
-                        AchievementDescription.INTERACT_WITH_ALL_BOOKS.getDescription(),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_1_WORLD_4,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_2_WORLD_4,
-                        AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(10),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        10,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_3_WORLD_4,
-                        AchievementDescription.INTERACT_WITH_ALL_BOOKS.getDescription(),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_1,
-                        AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(25),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_2,
-                        AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(50),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        50,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.READER_LEVEL_3,
-                        AchievementDescription.INTERACT_WITH_ALL_BOOKS.getDescription(),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        100,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_BEGINNER_WORLD_1,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        2,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_1,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(10),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        10,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_MASTER_WORLD_1,
-                        AchievementDescription.OPEN_ALL_TELEPORTERS.getDescription(),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        19,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_BEGINNER_WORLD_2,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        2,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_2,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(12),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        12,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_MASTER_WORLD_2,
-                        AchievementDescription.OPEN_ALL_TELEPORTERS.getDescription(),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        24,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_BEGINNER_WORLD_3,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        2,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_3,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(8),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        8,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_MASTER_WORLD_3,
-                        AchievementDescription.OPEN_ALL_TELEPORTERS.getDescription(),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        16,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_BEGINNER_WORLD_4,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        2,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_PROFESSIONAL_WORLD_4,
-                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(8),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        8,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_MASTER_WORLD_4,
-                        AchievementDescription.OPEN_ALL_TELEPORTERS.getDescription(),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        16,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
                         AchievementTitle.TELEPORTER_BEGINNER,
-                        AchievementDescription.OPEN_TELEPORTERS_IN_TOTAL.getDescriptionWithRequiredAmount(20),
+                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(4),
                         AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        20,
+                        4,
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
                 ),
                 new Achievement(
                         AchievementTitle.TELEPORTER_PROFESSIONAL,
-                        AchievementDescription.OPEN_TELEPORTERS_IN_TOTAL.getDescriptionWithRequiredAmount(40),
+                        AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(10),
                         AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        40,
+                        10,
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.TELEPORTER_MASTER,
-                        AchievementDescription.OPEN_ALL_TELEPORTERS.getDescription(),
-                        AchievementImage.TELEPORTER_IMAGE.getImageName(),
-                        75,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_1,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_1,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_1,
-                        AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_2,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_2,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_2,
-                        AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_3,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_3,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_3,
-                        AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_1_WORLD_4,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(5),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        5,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_2_WORLD_4,
-                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(25),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        25,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_3_WORLD_4,
-                        AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_1,
-                        AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(50),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        50,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_2,
-                        AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(100),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        100,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.COMMUNICATOR_LEVEL_3,
-                        AchievementDescription.TALK_TO_ALL_NPC.getDescription(),
-                        AchievementImage.NPC_IMAGE.getImageName(),
-                        200,
-                        Arrays.asList(AchievementCategory.EXPLORING)
-                ),
-                new Achievement(
-                        AchievementTitle.CHICKENSHOCK_MASTER,
-                        AchievementDescription.CHICKENSHOCK.getDescription(),
-                        AchievementImage.CHICKEN_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
-                ),
-                new Achievement(
-                        AchievementTitle.MEMORY_MASTER,
-                        AchievementDescription.MEMORY.getDescription(),
-                        AchievementImage.MEMORY_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
-                ),
-                new Achievement(
-                        AchievementTitle.FINITEQUIZ_MASTER,
-                        AchievementDescription.FINITEQUIZ.getDescription(),
-                        AchievementImage.FINITEQUIZ_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
-                ),
-                new Achievement(
-                        AchievementTitle.CROSSWORDPUZZLE_MASTER,
-                        AchievementDescription.CROSSWORDPUZZLE.getDescription(),
-                        AchievementImage.CROSSWORDPUZZLE_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
-                ),
-                new Achievement(
-                        AchievementTitle.BUGFINDER_MASTER,
-                        AchievementDescription.BUGFINDER.getDescription(),
-                        AchievementImage.BUGFINDER_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
-                ),
-                new Achievement(
-                        AchievementTitle.TOWERCRUSH_MASTER,
-                        AchievementDescription.TOWERCRUSH.getDescription(),
-                        AchievementImage.TOWERCRUSH_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
-                ),
-                new Achievement(
-                        AchievementTitle.TOWERDEFENSE_MASTER,
-                        AchievementDescription.TOWERDEFENSE.getDescription(),
-                        AchievementImage.TOWERDEFENSE_IMAGE.getImageName(),
-                        1,
-                        Arrays.asList(AchievementCategory.SOCIALIZING, AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
                 ),
                 new Achievement(
                         AchievementTitle.TRAVELER,
@@ -568,47 +475,120 @@ public class AchievementService {
                         AchievementImage.COIN_IMAGE.getImageName(),
                         150,
                         Arrays.asList(AchievementCategory.ACHIEVING)
-                ),
-                new Achievement(
-                        AchievementTitle.LEVEL_UP,
-                        AchievementDescription.LEVEL_UP.getDescriptionWithRequiredAmount(2),
-                        AchievementImage.LEVEL_UP_IMAGE.getImageName(),
-                        2,
-                        Arrays.asList(AchievementCategory.ACHIEVING)
                 )
-        );
+        ));
+    }
 
-        currentAchievementList.forEach(
-                achievement -> {
-                    achievementRepository.save(achievement);
-                }
-        );
+    /**
+     * Gets amount of books from the specified course and world, checks if the world is active and filters books based
+     * on whether they have a description or text.
+     *
+     * @param worldId The ID of the world from which the book count is to be retrieved, based on whether the book has a
+     *                description or text.
+     * @return The total number of books in the specified world that have a description and text, or 0 if the world is
+     * not active.
+     *
+     */
+    private int getBookCount(int worldId){
+        World world = worldService.getWorldByIndexFromCourse(1, worldId);
 
-        final List<Achievement> achievements = achievementRepository.findAll();
-
-        for (final Player player : playerRepository.findAll()) {
-            // add statistic for achievement if not exists
-            for (final Achievement achievement : achievements) {
-                if (player.getAchievementStatistics()
-                           .stream()
-                           .noneMatch(achievementStatistic -> achievementStatistic.getAchievement()
-                                                                                  .getAchievementTitle()
-                                                                                  .equals(achievement.getAchievementTitle()))) {
-                    player.getAchievementStatistics().add(new AchievementStatistic(player, achievement));
-                }
-            }
-            // remove statistic for achievement if not exists
-            player.getAchievementStatistics()
-                    .removeIf(achievementStatistic ->
-                            achievements
-                                    .stream()
-                                    .noneMatch(achievement ->
-                                            achievement
-                                                    .getAchievementTitle()
-                                                    .equals(achievementStatistic.getAchievement().getAchievementTitle())
-                                    )
-                    );
-            playerRepository.save(player);
+        if(isWorldActive(worldId) || worldId == 1) {
+            long bookCountInWorld = world.getBooks().stream()
+                    .filter(book -> book.getDescription() != null || !book.getText().isEmpty())
+                    .count();
+            return (int) bookCountInWorld;
         }
+
+        return 0;
+    }
+
+
+    /**
+     * Gets amount of NPCs from the specified course and world, checks if the world is active and filters NPCs based
+     * on whether they have a description or text.
+     *
+     * @param worldId The ID of the world from which the NPC count is to be retrieved, based on whether the NPC has a
+     *                description or text.
+     * @return The total number of NPCs in the specified world that have a description and text, or 0 if the world is
+     * not active.
+     *
+     */
+    private int getNpcCount(int worldId){
+        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+
+        if(isWorldActive(worldId) || worldId == 1) {
+            long npcCountInWorld = world.getNpcs().stream()
+                    .filter(npc -> npc.getDescription() != null || !npc.getText().isEmpty())
+                    .count();
+            return (int) npcCountInWorld;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Checks if the specified world is active.
+     *
+     * @param worldId The ID of the world to check.
+     * @return True if the world is active, false otherwise.
+     */
+    private boolean isWorldActive(int worldId){
+        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+        return world.isActive();
+    }
+
+    /**
+     * Gets the count of active dungeons in the specified course and world.
+     *
+     * @param worldId The ID of the world from which the count of active dungeons is to be retrieved.
+     * @return The number of active dungeons in the specified world.
+     */
+    private int getActiveDungeonCount(int worldId){
+        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+
+        float countOfActiveDungeonsInWorld = world.getDungeons().stream()
+                .filter(dungeon -> dungeon.isActive())
+                .count();
+        return (int) countOfActiveDungeonsInWorld;
+    }
+
+    /**
+     * Gets the count of minigames in the specified course and world, considering only active worlds.
+     *
+     * @param worldId The ID of the world from which the count of minigames is to be retrieved.
+     * @return The number of minigames in the specified world that were created, or 0 if the world is not active.
+     */
+    private int getMinigameCount(int worldId){
+        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+        if(isWorldActive(worldId) || worldId == 1) {
+            long minigameCountInWorld = world.getMinigameTasks().stream()
+                    .filter(minigame -> minigame.getGame() != null && !"NONE".equals(minigame.getGame().name()))
+                    .count();
+
+            return (int) minigameCountInWorld;
+        }
+        return 0;
+    }
+
+    /**
+     * Retrieves the names of minigames from all active worlds, filtering out duplicates.
+     *
+     * @return A list of unique minigame names from the active worlds.
+     */
+    private List<String> getMinigameNames() {
+        Set<World> allWorlds = worldService.getAllWorldsFromCourse(1);
+
+        List<World> activeWorlds = allWorlds.stream()
+                .filter(world -> world.isActive() || world.getIndex() == 1)
+                .collect(Collectors.toList());
+
+        List<String> minigameNames = activeWorlds.stream()
+                .flatMap(world -> world.getMinigameTasks().stream())
+                .filter(minigame -> minigame.getGame() != null)
+                .map(minigame -> minigame.getGame().name())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return minigameNames;
     }
 }

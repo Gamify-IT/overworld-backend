@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @Service
 @Transactional
 public class WorldService {
@@ -31,6 +34,9 @@ public class WorldService {
 
     @Autowired
     private AreaMapMapper areaMapMapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public WorldService() {
         areaConfig = new AreaConfig();
