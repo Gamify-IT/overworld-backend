@@ -13,6 +13,8 @@ import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @EnableScheduling
 public class AchievementService {
-
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private AchievementRepository achievementRepository;
 
@@ -54,13 +57,8 @@ public class AchievementService {
         createOpenerAndLevelUpAchievements(currentAchievementList);
         createAllOtherAchievements(currentAchievementList);
 
-        //currentAchievementList.sort(Comparator.comparing(Achievement::getAchievementTitle));
-
-        currentAchievementList.forEach(achievementRepository::save);
-
         List<Achievement> existingAchievements = achievementRepository.findAll(Sort.by("achievementTitle"));
 
-        existingAchievements.sort(Comparator.comparing(Achievement::getAchievementTitle));
         List<Achievement> achievementsToDelete = existingAchievements.stream()
                 .filter(existingAchievement ->
                         currentAchievementList.stream()
@@ -69,7 +67,24 @@ public class AchievementService {
                                 )
                 )
                 .toList();
-        achievementRepository.deleteAll(achievementsToDelete);
+
+        if (!achievementsToDelete.isEmpty()) {
+            entityManager.flush();
+            entityManager.clear();
+            achievementRepository.deleteAll(achievementsToDelete);
+        }
+
+        List<Achievement> achievementsToAdd = currentAchievementList.stream()
+                .filter(newAchievement ->
+                        existingAchievements.stream()
+                                .noneMatch(existingAchievement ->
+                                        existingAchievement.getAchievementTitle().equals(newAchievement.getAchievementTitle())
+                                )
+                )
+                .sorted(Comparator.comparing(Achievement::getAchievementTitle))
+                .toList();
+
+        achievementRepository.saveAll(achievementsToAdd);
 
         for (final Player player : playerRepository.findAll()) {
             for (final Achievement achievement : currentAchievementList) {
@@ -85,39 +100,12 @@ public class AchievementService {
                     achievementsToDelete.stream()
                             .anyMatch(achievement ->
                                     achievement.getAchievementTitle().equals(achievementStatistic.getAchievement().getAchievementTitle())
+
                             )
             );
             playerRepository.save(player);
         }
 
-        /*List<Achievement> achievements = achievementRepository.findAll(Sort.by("achievementTitle"));
-
-
-        for (final Player player : playerRepository.findAll()) {
-            // add statistic for achievement if not exists
-            for (final Achievement achievement : achievements) {
-                if (player.getAchievementStatistics()
-                           .stream()
-                           .noneMatch(achievementStatistic -> achievementStatistic.getAchievement()
-                                                                                  .getAchievementTitle()
-                                                                                  .equals(achievement.getAchievementTitle()))) {
-                    player.getAchievementStatistics().add(new AchievementStatistic(player, achievement));
-                }
-            }
-
-            // remove statistic for achievement if not exists
-            player.getAchievementStatistics()
-                    .removeIf(achievementStatistic ->
-                            achievements
-                                    .stream()
-                                    .noneMatch(achievement ->
-                                            achievement
-                                                    .getAchievementTitle()
-                                                    .equals(achievementStatistic.getAchievement().getAchievementTitle())
-                                    )
-                    );
-            playerRepository.save(player);
-        }*/
 
     }
 
@@ -131,43 +119,36 @@ public class AchievementService {
      *
      */
     private void createBookAchievements(List<Achievement> currentAchievementList) {
-
         int[] bookCountWorld = new int[5];
         int bookCountInTotal = 0;
-        String achievementTitle = "READER_WORLD_";
+        String achievementTitlePrefix = "READER_WORLD_";
 
         for (int i = 1; i <= 4; i++) {
             bookCountWorld[i] = getBookCount(i);
             bookCountInTotal += bookCountWorld[i];
             if (bookCountWorld[i] !=0) {
-                if (i != 1) {
-                    if(isWorldActive(i)) {
-                        currentAchievementList.addAll(Arrays.asList(new Achievement(
-                                AchievementTitle.valueOf(achievementTitle + i),
+                if (i == 1 || isWorldActive(i)) {
+                    currentAchievementList.addAll(Arrays.asList(
+                            new Achievement(
+                                AchievementTitle.valueOf(achievementTitlePrefix + i),
                                 AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
                                 AchievementImage.BOOK_IMAGE.getImageName(),
                                 bookCountWorld[i],
                                 Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                        )));
-                    }
-                } else {
-                    currentAchievementList.addAll(Arrays.asList(new Achievement(
-                            AchievementTitle.valueOf(achievementTitle + i),
-                            AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
-                            AchievementImage.BOOK_IMAGE.getImageName(),
-                            bookCountWorld[i],
-                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                    )));
+                            )
+                    ));
                 }
             }
             if (bookCountInTotal != 0) {
-                currentAchievementList.addAll(Arrays.asList(new Achievement(
-                        AchievementTitle.READER,
-                        AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
-                        AchievementImage.BOOK_IMAGE.getImageName(),
-                        bookCountInTotal,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
-                )));
+                currentAchievementList.addAll(Arrays.asList(
+                        new Achievement(
+                            AchievementTitle.READER,
+                            AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
+                            AchievementImage.BOOK_IMAGE.getImageName(),
+                            bookCountInTotal,
+                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                        )
+                ));
             }
         }
     }
@@ -184,28 +165,16 @@ public class AchievementService {
 
         int[] npcCountWorld = new int[5];
         int npcCountInTotal = 0;
-        String achievementTitle = "COMMUNICATOR_WORLD_";
+        String achievementTitlePrefix = "COMMUNICATOR_WORLD_";
 
         for (int i = 1; i <= 4; i++) {
             npcCountWorld[i] = getNpcCount(i);
             npcCountInTotal += npcCountWorld[i];
             if (npcCountWorld[i] != 0) {
-                if (i != 1) {
-                    if(isWorldActive(i)) {
-                        currentAchievementList.addAll(Arrays.asList(
-                                new Achievement(
-                                        AchievementTitle.valueOf(achievementTitle + i),
-                                        AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(npcCountWorld[i]),
-                                        AchievementImage.NPC_IMAGE.getImageName(),
-                                        npcCountWorld[i],
-                                        Arrays.asList(AchievementCategory.EXPLORING)
-                                )
-                        ));
-                    }
-                } else {
+                if (i == 1 || isWorldActive(i)) {
                     currentAchievementList.addAll(Arrays.asList(
                             new Achievement(
-                                    AchievementTitle.valueOf(achievementTitle + i),
+                                    AchievementTitle.valueOf(achievementTitlePrefix + i),
                                     AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(npcCountWorld[i]),
                                     AchievementImage.NPC_IMAGE.getImageName(),
                                     npcCountWorld[i],
@@ -214,17 +183,17 @@ public class AchievementService {
                     ));
                 }
             }
-            if(npcCountInTotal != 0){
-                currentAchievementList.addAll(Arrays.asList(
-                        new Achievement(
-                                AchievementTitle.COMMUNICATOR,
-                                AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(npcCountInTotal),
-                                AchievementImage.NPC_IMAGE.getImageName(),
-                                npcCountInTotal,
-                                Arrays.asList(AchievementCategory.EXPLORING)
-                        )
-                ));
-            }
+        }
+        if(npcCountInTotal != 0){
+            currentAchievementList.addAll(Arrays.asList(
+                    new Achievement(
+                            AchievementTitle.COMMUNICATOR,
+                            AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(npcCountInTotal),
+                            AchievementImage.NPC_IMAGE.getImageName(),
+                            npcCountInTotal,
+                            Arrays.asList(AchievementCategory.EXPLORING)
+                    )
+            ));
         }
     }
 
@@ -346,7 +315,6 @@ public class AchievementService {
      */
     private void createAchievementForEachMinigame(List<Achievement> currentAchievementList) {
         List<String> minigameNames = getMinigameNames();
-        // Створюємо досягнення для кожної мінігри
         minigameNames.forEach(minigameName -> {
             if (!minigameName.toUpperCase().equals("NONE") && !minigameName.toUpperCase().equals("REGEXGAME")) {
                 currentAchievementList.addAll(Arrays.asList(
@@ -494,12 +462,12 @@ public class AchievementService {
 
         if(isWorldActive(worldId) || worldId == 1) {
             long bookCountInWorld = world.getBooks().stream()
-                    .filter(book -> book.getDescription() != null || !book.getText().isEmpty())
+                    .filter(book -> book.getDescription() != null && !book.getText().isEmpty())
                     .count();
             return (int) bookCountInWorld;
+        } else {
+            return 0;
         }
-
-        return 0;
     }
 
 
@@ -518,12 +486,12 @@ public class AchievementService {
 
         if(isWorldActive(worldId) || worldId == 1) {
             long npcCountInWorld = world.getNpcs().stream()
-                    .filter(npc -> npc.getDescription() != null || !npc.getText().isEmpty())
+                    .filter(npc -> npc.getDescription() != null && npc.getText() != null && !npc.getText().isEmpty())
                     .count();
             return (int) npcCountInWorld;
+        } else {
+            return 0;
         }
-
-        return 0;
     }
 
     /**
