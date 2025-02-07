@@ -56,8 +56,11 @@ public class AchievementService {
         createOpenerAndLevelUpAchievements(currentAchievementList);
         createAllOtherAchievements(currentAchievementList);
 
+        currentAchievementList.forEach(achievementRepository::save);
+
         List<Achievement> existingAchievements = achievementRepository.findAll(Sort.by("achievementTitle"));
 
+        existingAchievements.sort(Comparator.comparing(Achievement::getAchievementTitle));
         List<Achievement> achievementsToDelete = existingAchievements.stream()
                 .filter(existingAchievement ->
                         currentAchievementList.stream()
@@ -67,23 +70,6 @@ public class AchievementService {
                 )
                 .toList();
 
-        if (!achievementsToDelete.isEmpty()) {
-            entityManager.flush();
-            entityManager.clear();
-            achievementRepository.deleteAll(achievementsToDelete);
-        }
-
-        List<Achievement> achievementsToAdd = currentAchievementList.stream()
-                .filter(newAchievement ->
-                        existingAchievements.stream()
-                                .noneMatch(existingAchievement ->
-                                        existingAchievement.getAchievementTitle().equals(newAchievement.getAchievementTitle())
-                                )
-                )
-                .sorted(Comparator.comparing(Achievement::getAchievementTitle))
-                .toList();
-
-        achievementRepository.saveAll(achievementsToAdd);
 
         for (final Player player : playerRepository.findAll()) {
             for (final Achievement achievement : currentAchievementList) {
@@ -99,11 +85,20 @@ public class AchievementService {
                     achievementsToDelete.stream()
                             .anyMatch(achievement ->
                                     achievement.getAchievementTitle().equals(achievementStatistic.getAchievement().getAchievementTitle())
+
                             )
             );
             playerRepository.save(player);
         }
-    }
+
+        if (!achievementsToDelete.isEmpty()) {
+            entityManager.flush();
+            entityManager.clear();
+            achievementRepository.deleteAll(achievementsToDelete);
+        }
+    
+
+}
 
 
     /**
@@ -126,11 +121,11 @@ public class AchievementService {
                 if (i == 1 || isWorldActive(i)) {
                     currentAchievementList.addAll(Arrays.asList(
                             new Achievement(
-                                AchievementTitle.valueOf(achievementTitlePrefix + i),
-                                AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
-                                AchievementImage.BOOK_IMAGE.getImageName(),
-                                bookCountWorld[i],
-                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                                    AchievementTitle.valueOf(achievementTitlePrefix + i),
+                                    AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
+                                    AchievementImage.BOOK_IMAGE.getImageName(),
+                                    bookCountWorld[i],
+                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
                             )
                     ));
                 }
@@ -138,15 +133,16 @@ public class AchievementService {
             if (bookCountInTotal != 0) {
                 currentAchievementList.addAll(Arrays.asList(
                         new Achievement(
-                            AchievementTitle.READER,
-                            AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
-                            AchievementImage.BOOK_IMAGE.getImageName(),
-                            bookCountInTotal,
-                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                                AchievementTitle.READER,
+                                AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
+                                AchievementImage.BOOK_IMAGE.getImageName(),
+                                bookCountInTotal,
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
                         )
                 ));
             }
         }
+
     }
 
     /**
