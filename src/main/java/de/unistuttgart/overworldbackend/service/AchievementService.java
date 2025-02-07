@@ -40,7 +40,6 @@ public class AchievementService {
     @Autowired
     private WorldService worldService;
 
-
     /**
      * Checks for all players the current achievements adds new created achievements to the player and removes none existing achievements.
      */
@@ -100,13 +99,10 @@ public class AchievementService {
                     achievementsToDelete.stream()
                             .anyMatch(achievement ->
                                     achievement.getAchievementTitle().equals(achievementStatistic.getAchievement().getAchievementTitle())
-
                             )
             );
             playerRepository.save(player);
         }
-
-
     }
 
 
@@ -213,7 +209,7 @@ public class AchievementService {
             if (countActiveDungeons[i] >= 1) {
                 currentAchievementList.addAll(Arrays.asList(new Achievement(
                         AchievementTitle.valueOf(achievementTitle + i),
-                        AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(1),
+                        AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(i),
                         AchievementImage.DUNGEON_IMAGE.getImageName(),
                         1,
                         Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
