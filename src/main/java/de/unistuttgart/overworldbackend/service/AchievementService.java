@@ -9,6 +9,7 @@ import de.unistuttgart.overworldbackend.data.enums.AchievementDescription;
 import de.unistuttgart.overworldbackend.data.enums.AchievementImage;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
+import de.unistuttgart.overworldbackend.repositories.AchievementStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 
 import java.util.*;
@@ -39,6 +40,8 @@ public class AchievementService {
 
     @Autowired
     private WorldService worldService;
+    @Autowired
+    private AchievementStatisticRepository achievementStatisticRepository;
 
     /**
      * Checks for all players the current achievements adds new created achievements to the player and removes none existing achievements.
@@ -66,6 +69,13 @@ public class AchievementService {
                         currentAchievementList.stream()
                                 .noneMatch(currentAchievement ->
                                         currentAchievement.getAchievementTitle().equals(existingAchievement.getAchievementTitle())
+                                )
+                )
+                .filter(achievement ->
+                        playerRepository.findAll().stream()
+                                .flatMap(player -> player.getAchievementStatistics().stream())
+                                .noneMatch(statistic ->
+                                        statistic.getAchievement().equals(achievement) && statistic.isCompleted()
                                 )
                 )
                 .toList();
@@ -96,8 +106,6 @@ public class AchievementService {
             entityManager.clear();
             achievementRepository.deleteAll(achievementsToDelete);
         }
-    
-
 }
 
 
