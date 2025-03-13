@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class OverworldBackendApplication {
 
     public static void main(final String[] args) {
+        System.setProperty("liquibase.secureParsing", "false");
         SpringApplication.run(OverworldBackendApplication.class, args);
     }
 

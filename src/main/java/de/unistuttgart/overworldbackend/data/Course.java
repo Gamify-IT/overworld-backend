@@ -1,5 +1,7 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +47,18 @@ public class Course {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerStatistic> playerStatistics = new HashSet<>();
+
+    @JsonManagedReference(value = "achievement-course")
+    @OneToMany(
+        mappedBy = "course",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL,
+        targetEntity = AchievementStatistic.class
+    )
+    List<AchievementStatistic> achievementStatistics = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "courses")
+    private List<Player> players = new ArrayList<>();
 
     public Course(
         final String courseName,
@@ -103,5 +117,9 @@ public class Course {
                 book.setCourse(this);
                 book.setArea(area);
             });
+    }
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
     }
 }

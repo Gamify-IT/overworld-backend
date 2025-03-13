@@ -20,9 +20,12 @@ public class Player {
 
     String username;
 
-    @JsonManagedReference(value = "player-achievements")
+    @JsonManagedReference(value = "achievement-player")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AchievementStatistic.class)
     List<AchievementStatistic> achievementStatistics = new ArrayList<>();
+
+    @ManyToMany
+    List<Course> courses = new ArrayList<>();
 
     @JsonManagedReference(value = "player-keybindings")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Keybinding.class)
@@ -31,5 +34,9 @@ public class Player {
     public Player(String userId, String username) {
         this.userId = userId;
         this.username = username;
+    }
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
     }
 }
