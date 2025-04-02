@@ -62,6 +62,9 @@ public class CourseService {
     TowerDefenseClient towerDefenseClient;
 
     @Autowired
+    UmlgameClient umlgameClient;
+
+    @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
@@ -385,6 +388,9 @@ public class CourseService {
                         break;
                     case TOWERDEFENSE:
                         cloneId = towerDefenseClient.postClone(accessToken, minigameTask.getConfigurationId());
+                        break;
+                    case UMLGAME:
+                        cloneId = umlgameClient.postClone(accessToken, minigameTask.getConfigurationId());
                         break;
                     default:
                         minigameTask.setGame(Minigame.NONE);
