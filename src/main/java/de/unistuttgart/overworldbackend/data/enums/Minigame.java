@@ -9,7 +9,8 @@ public enum Minigame {
     MEMORY,
     TOWERCRUSH,
     REGEXGAME,
-    TOWERDEFENSE;
+    TOWERDEFENSE,
+    UMLGAME;
 
     /**
      * Checks if a minigame is configured
