@@ -21,7 +21,7 @@ public class Player {
     String username;
 
     @JsonManagedReference(value = "achievement-player")
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AchievementStatistic.class)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = AchievementStatistic.class, orphanRemoval = true)
     List<AchievementStatistic> achievementStatistics = new ArrayList<>();
 
     @ManyToMany
