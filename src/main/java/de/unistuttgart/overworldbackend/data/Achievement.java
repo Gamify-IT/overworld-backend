@@ -37,6 +37,8 @@ public class Achievement {
      */
     int amountRequired;
 
+    int courseId;
+
     @ElementCollection
     List<AchievementCategory> categories;
 
@@ -45,12 +47,14 @@ public class Achievement {
         String description,
         String imageName,
         int amountRequired,
-        List<AchievementCategory> categories
+        List<AchievementCategory> categories,
+        int courseId
     ) {
         this.achievementTitle = achievementTitle;
         this.description = description;
         this.imageName = imageName;
         this.amountRequired = amountRequired;
         this.categories = categories;
+        this.courseId = courseId;
     }
 }

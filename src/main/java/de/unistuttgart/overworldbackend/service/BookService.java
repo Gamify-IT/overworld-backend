@@ -4,6 +4,7 @@ import de.unistuttgart.overworldbackend.data.Book;
 import de.unistuttgart.overworldbackend.data.BookDTO;
 import de.unistuttgart.overworldbackend.data.mapper.BookMapper;
 import de.unistuttgart.overworldbackend.repositories.BookRepository;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    private CourseRepository courseRepository;
+
     @Autowired
     private WorldService worldService;
 
@@ -25,6 +28,9 @@ public class BookService {
 
     @Autowired
     private BookMapper bookMapper;
+
+    @Autowired
+    private AchievementService achievementService;
 
     /**
      * Get a book from a world by its index and a course by its id
@@ -108,6 +114,7 @@ public class BookService {
         book.setText(bookDTO.getText());
         book.setDescription(bookDTO.getDescription());
         final Book updatedBook = bookRepository.save(book);
+        achievementService.initializeAchievementsOfCourse(courseRepository.findById(courseId).orElseThrow());
         return bookMapper.bookToBookDTO(updatedBook);
     }
 

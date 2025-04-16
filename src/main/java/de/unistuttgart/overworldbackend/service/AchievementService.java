@@ -54,21 +54,23 @@ public class AchievementService {
     /**
      * Checks for all players the current achievements adds new created achievements to the player and removes none existing achievements.
      */
-    @Transactional
-    @Scheduled(fixedRate = 6000)
-    public synchronized void updatePlayerStatisticAchievements() {
+    @EventListener(ApplicationReadyEvent.class)
+    public void updatePlayerStatisticAchievements() {
         List<Achievement> currentAchievementList = new ArrayList<>();
-        createBookAchievements(currentAchievementList);
-        createAchievementForEachMinigame(currentAchievementList);
-        createNpcAchievements(currentAchievementList);
-        createDungeonAchievements(currentAchievementList);
-        createMinigameAchievements(currentAchievementList);
-        createOpenerAndLevelUpAchievements(currentAchievementList);
-        createAllOtherAchievements(currentAchievementList);
 
-        currentAchievementList.forEach(achievementRepository::save);
+        for (final Course course : courseRepository.findAll()) {
+            createBookAchievements(currentAchievementList, course);
+            createAchievementForEachMinigame(currentAchievementList, course);
+            createNpcAchievements(currentAchievementList, course);
+            createDungeonAchievements(currentAchievementList, course);
+            createMinigameAchievements(currentAchievementList, course);
+            createOpenerAndLevelUpAchievements(currentAchievementList, course);
+            createAllOtherAchievements(currentAchievementList, course);
+        }
 
-        List<Achievement> existingAchievements = achievementRepository.findAll(Sort.by("achievementTitle"));
+        achievementRepository.saveAll(currentAchievementList);
+
+        /*List<Achievement> existingAchievements = achievementRepository.findAll(Sort.by("achievementTitle"));
 
         existingAchievements.sort(Comparator.comparing(Achievement::getAchievementTitle));
         List<Achievement> achievementsToDelete = existingAchievements.stream()
@@ -116,7 +118,7 @@ public class AchievementService {
             achievementRepository.deleteAll(achievementsToDelete);
         }
 
-        achievementRepository.saveAll(currentAchievementList);
+        achievementRepository.saveAll(currentAchievementList);*/
         initializeAchievements();
     }
 
@@ -126,7 +128,7 @@ public class AchievementService {
     private void initializeAchievements() {
         for (final Player player : playerRepository.findAll()) {
             initializeAchievementsOfPlayer(player);
-            removeNotExistentAchievements(player, achievementRepository.findAll());
+            //removeNotExistentAchievements(player, achievementRepository.findAll());
         }
     }
 
@@ -165,11 +167,12 @@ public class AchievementService {
             .removeIf(stat ->
                 achievements
                     .stream()
-                    .noneMatch(achievement -> achievement.getId().equals(stat.getAchievement().getId()))
+                    .noneMatch(achievement -> achievement.getId().equals(stat.getAchievement().getId()) && !stat.isCompleted())
             );
 
         for (final Achievement achievement : achievements) {
             if (
+                achievement.getCourseId() == course.getId() &&
                 player
                     .getAchievementStatistics()
                     .stream()
@@ -212,23 +215,24 @@ public class AchievementService {
      * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
      *
      */
-    private void createBookAchievements(List<Achievement> currentAchievementList) {
+    private void createBookAchievements(List<Achievement> currentAchievementList, Course course) {
         int[] bookCountWorld = new int[5];
         int bookCountInTotal = 0;
         String achievementTitlePrefix = "READER_WORLD_";
 
         for (int i = 1; i <= 4; i++) {
-            bookCountWorld[i] = getBookCount(i);
+            bookCountWorld[i] = getBookCount(i, course.getId());
             bookCountInTotal += bookCountWorld[i];
             if (bookCountWorld[i] !=0) {
-                if (i == 1 || isWorldActive(i)) {
+                if (i == 1 || isWorldActive(i, course.getId())) {
                     currentAchievementList.addAll(Arrays.asList(
                             new Achievement(
                                     AchievementTitle.valueOf(achievementTitlePrefix + i),
                                     AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
                                     AchievementImage.BOOK_IMAGE.getImageName(),
                                     bookCountWorld[i],
-                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                                    course.getId()
                             )
                     ));
                 }
@@ -240,7 +244,8 @@ public class AchievementService {
                                 AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
                                 AchievementImage.BOOK_IMAGE.getImageName(),
                                 bookCountInTotal,
-                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                                course.getId()
                         )
                 ));
             }
@@ -256,24 +261,25 @@ public class AchievementService {
      * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
      *
      */
-    private void createNpcAchievements(List<Achievement> currentAchievementList) {
+    private void createNpcAchievements(List<Achievement> currentAchievementList, Course course) {
 
         int[] npcCountWorld = new int[5];
         int npcCountInTotal = 0;
         String achievementTitlePrefix = "COMMUNICATOR_WORLD_";
 
         for (int i = 1; i <= 4; i++) {
-            npcCountWorld[i] = getNpcCount(i);
+            npcCountWorld[i] = getNpcCount(i, course.getId());
             npcCountInTotal += npcCountWorld[i];
             if (npcCountWorld[i] != 0) {
-                if (i == 1 || isWorldActive(i)) {
+                if (i == 1 || isWorldActive(i, course.getId())) {
                     currentAchievementList.addAll(Arrays.asList(
                             new Achievement(
                                     AchievementTitle.valueOf(achievementTitlePrefix + i),
                                     AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(npcCountWorld[i]),
                                     AchievementImage.NPC_IMAGE.getImageName(),
                                     npcCountWorld[i],
-                                    Arrays.asList(AchievementCategory.EXPLORING)
+                                    Arrays.asList(AchievementCategory.EXPLORING),
+                                    course.getId()
                             )
                     ));
                 }
@@ -286,7 +292,8 @@ public class AchievementService {
                             AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(npcCountInTotal),
                             AchievementImage.NPC_IMAGE.getImageName(),
                             npcCountInTotal,
-                            Arrays.asList(AchievementCategory.EXPLORING)
+                            Arrays.asList(AchievementCategory.EXPLORING),
+                            course.getId()
                     )
             ));
         }
@@ -299,19 +306,20 @@ public class AchievementService {
      * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
      *
      */
-    private void createDungeonAchievements(List<Achievement> currentAchievementList) {
+    private void createDungeonAchievements(List<Achievement> currentAchievementList, Course course) {
         int[] countActiveDungeons =  new int[5];
         String achievementTitle = "MINER_WORLD_";
 
         for(int i = 1; i <= 4; i++){
-            countActiveDungeons[i] = getActiveDungeonCount(i);
+            countActiveDungeons[i] = getActiveDungeonCount(i, course.getId());
             if (countActiveDungeons[i] >= 1) {
                 currentAchievementList.addAll(Arrays.asList(new Achievement(
                         AchievementTitle.valueOf(achievementTitle + i),
                         AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(i),
                         AchievementImage.DUNGEON_IMAGE.getImageName(),
                         1,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                        course.getId()
                 )));
             }
         }
@@ -325,11 +333,11 @@ public class AchievementService {
      * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
      *
      */
-    private void createMinigameAchievements(List<Achievement> currentAchievementList) {
+    private void createMinigameAchievements(List<Achievement> currentAchievementList, Course course) {
         int minigameCountInTotal = 0;
         int requiredAmountForAchievement;
         for (int i = 1; i <= 4; i++) {
-            minigameCountInTotal += getMinigameCount(i);
+            minigameCountInTotal += getMinigameCount(i, course.getId());
         }
 
         if(minigameCountInTotal != 0){
@@ -344,14 +352,16 @@ public class AchievementService {
                             AchievementDescription.COMPLETE_MINIGAMES.getDescriptionWithRequiredAmount(requiredAmountForAchievement),
                             AchievementImage.STAR_IMAGE.getImageName(),
                             requiredAmountForAchievement,
-                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
+                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE),
+                            course.getId()
                     ),
                     new Achievement(
                             AchievementTitle.MINIGAME_SPOTS_FINDER,
                             AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(requiredAmountForAchievement),
                             AchievementImage.MINIGAME_SPOT_IMAGE.getImageName(),
                             requiredAmountForAchievement,
-                            Arrays.asList(AchievementCategory.EXPLORING)
+                            Arrays.asList(AchievementCategory.EXPLORING),
+                            course.getId()
                     )
             ));
         } else {
@@ -372,17 +382,18 @@ public class AchievementService {
      * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
      *
      */
-    private void createOpenerAndLevelUpAchievements(List<Achievement> currentAchievementList) {
+    private void createOpenerAndLevelUpAchievements(List<Achievement> currentAchievementList, Course course) {
         String achievementTitle = "OPENER_WORLD_";
         for (int i = 2; i <= 4; i++) {
-            if (isWorldActive(i)) {
+            if (isWorldActive(i, course.getId())) {
                 currentAchievementList.addAll(Arrays.asList(
                         new Achievement(
                                 AchievementTitle.valueOf(achievementTitle + i),
                                 AchievementDescription.UNLOCK_WORLD.getDescriptionWithRequiredAmount(i),
                                 AchievementImage.GLASS_IMAGE.getImageName(),
                                 1,
-                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                                course.getId()
                         )
                 ));
 
@@ -393,7 +404,8 @@ public class AchievementService {
                                     AchievementDescription.LEVEL_UP.getDescriptionWithRequiredAmount(i),
                                     AchievementImage.LEVEL_UP_IMAGE.getImageName(),
                                     i,
-                                    Arrays.asList(AchievementCategory.ACHIEVING)
+                                    Arrays.asList(AchievementCategory.ACHIEVING),
+                                    course.getId()
                             )
                     ));
                 }
@@ -408,8 +420,8 @@ public class AchievementService {
      * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
      *
      */
-    private void createAchievementForEachMinigame(List<Achievement> currentAchievementList) {
-        List<String> minigameNames = getMinigameNames();
+    private void createAchievementForEachMinigame(List<Achievement> currentAchievementList, Course course) {
+        List<String> minigameNames = getMinigameNames(course.getId());
         minigameNames.forEach(minigameName -> {
             if (!minigameName.toUpperCase().equals("NONE") && !minigameName.toUpperCase().equals("REGEXGAME")) {
                 currentAchievementList.addAll(Arrays.asList(
@@ -418,7 +430,8 @@ public class AchievementService {
                                 AchievementDescription.valueOf(minigameName.toUpperCase()).getDescription(),
                                 AchievementImage.valueOf(minigameName.toUpperCase() + "_IMAGE").getImageName(),
                                 1,
-                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE),
+                                course.getId()
                         )
                 ));
             }
@@ -432,112 +445,127 @@ public class AchievementService {
      * @param currentAchievementList The list of achievements to which the newly created achievements will be added.
      *
      */
-    private void createAllOtherAchievements(List<Achievement> currentAchievementList) {
+    private void createAllOtherAchievements(List<Achievement> currentAchievementList, Course course) {
         currentAchievementList.addAll(Arrays.asList(
                 new Achievement(
                         AchievementTitle.GO_FOR_A_WALK,
                         AchievementDescription.WALK_TILES.getDescriptionWithRequiredAmount(10),
                         AchievementImage.FOOT_IMAGE.getImageName(),
                         10,
-                        Arrays.asList(AchievementCategory.EXPLORING, AchievementCategory.ACHIEVING)
+                        Arrays.asList(AchievementCategory.EXPLORING, AchievementCategory.ACHIEVING),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.GO_FOR_A_LONGER_WALK,
                         AchievementDescription.WALK_TILES.getDescriptionWithRequiredAmount(1000),
                         AchievementImage.FOOT_IMAGE.getImageName(),
                         1000,
-                        Arrays.asList(AchievementCategory.EXPLORING, AchievementCategory.ACHIEVING)
+                        Arrays.asList(AchievementCategory.EXPLORING, AchievementCategory.ACHIEVING),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.SELECT_CHARACTER,
                         AchievementDescription.CHANGE_SKIN.getDescription(),
                         AchievementImage.NPC_IMAGE.getImageName(),
                         1,
-                        Arrays.asList(AchievementCategory.EXPLORING)
+                        Arrays.asList(AchievementCategory.EXPLORING),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.BEGINNER,
                         AchievementDescription.PLAY_MINUTES.getDescriptionWithRequiredAmount(30),
                         AchievementImage.CLOCK_IMAGE.getImageName(),
                         30,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.EXPERIENCED_PLAYER,
                         AchievementDescription.PLAY_MINUTES.getDescriptionWithRequiredAmount(90),
                         AchievementImage.CLOCK_IMAGE.getImageName(),
                         90,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.SPEEDRUNNER,
                         AchievementDescription.USE_SPRINT.getDescriptionWithRequiredAmount(30),
                         AchievementImage.ROCKET_IMAGE.getImageName(),
                         30,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.TELEPORTER_BEGINNER,
                         AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(4),
                         AchievementImage.TELEPORTER_IMAGE.getImageName(),
                         4,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.TELEPORTER_PROFESSIONAL,
                         AchievementDescription.OPEN_TELEPORTERS.getDescriptionWithRequiredAmount(10),
                         AchievementImage.TELEPORTER_IMAGE.getImageName(),
                         10,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.TRAVELER,
                         AchievementDescription.USE_UFO.getDescriptionWithRequiredAmount(3),
                         AchievementImage.UFO_IMAGE.getImageName(),
                         3,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.GAMER,
                         AchievementDescription.LOGIN.getDescriptionWithRequiredAmount(2),
                         AchievementImage.CALENDER_IMAGE.getImageName(),
                         2,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.PROFESSIONAL_GAMER,
                         AchievementDescription.LOGIN.getDescriptionWithRequiredAmount(5),
                         AchievementImage.CALENDER_IMAGE.getImageName(),
                         5,
-                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE)
+                        Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING, AchievementCategory.SOCIALIZING, AchievementCategory.COMPETITIVE),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.GOAT,
                         AchievementDescription.LEADEROARD_1.getDescription(),
                         AchievementImage.MEDAL_1_IMAGE.getImageName(),
                         1,
-                        Arrays.asList(AchievementCategory.COMPETITIVE)
+                        Arrays.asList(AchievementCategory.COMPETITIVE),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.ONE_OF_THE_BEST_PLAYERS,
                         AchievementDescription.LEADEROARD_2_3.getDescription(),
                         AchievementImage.MEDAL_3_IMAGE.getImageName(),
                         1,
-                        Arrays.asList(AchievementCategory.COMPETITIVE)
+                        Arrays.asList(AchievementCategory.COMPETITIVE),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.GET_COINS,
                         AchievementDescription.GET_COINS.getDescriptionWithRequiredAmount(50),
                         AchievementImage.COIN_IMAGE.getImageName(),
                         50,
-                        Arrays.asList(AchievementCategory.ACHIEVING)
+                        Arrays.asList(AchievementCategory.ACHIEVING),
+                        course.getId()
                 ),
                 new Achievement(
                         AchievementTitle.GET_MORE_COINS,
                         AchievementDescription.GET_COINS.getDescriptionWithRequiredAmount(150),
                         AchievementImage.COIN_IMAGE.getImageName(),
                         150,
-                        Arrays.asList(AchievementCategory.ACHIEVING)
+                        Arrays.asList(AchievementCategory.ACHIEVING),
+                        course.getId()
                 )
         ));
     }
@@ -552,10 +580,10 @@ public class AchievementService {
      * not active.
      *
      */
-    private int getBookCount(int worldId){
-        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+    private int getBookCount(int worldId, int courseId){
+        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
 
-        if(isWorldActive(worldId) || worldId == 1) {
+        if(isWorldActive(worldId, courseId) || worldId == 1) {
             long bookCountInWorld = world.getBooks().stream()
                     .filter(book -> book.getDescription() != null && !book.getText().isEmpty())
                     .count();
@@ -575,10 +603,10 @@ public class AchievementService {
      * not active.
      *
      */
-    private int getNpcCount(int worldId){
-        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+    private int getNpcCount(int worldId, int courseId){
+        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
 
-        if(isWorldActive(worldId) || worldId == 1) {
+        if(isWorldActive(worldId, courseId) || worldId == 1) {
             long npcCountInWorld = world.getNpcs().stream()
                     .filter(npc -> npc.getDescription() != null && npc.getText() != null && !npc.getText().isEmpty())
                     .count();
@@ -594,8 +622,8 @@ public class AchievementService {
      * @param worldId The ID of the world to check.
      * @return True if the world is active, false otherwise.
      */
-    private boolean isWorldActive(int worldId){
-        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+    private boolean isWorldActive(int worldId, int courseId){
+        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
         return world.isActive();
     }
 
@@ -605,8 +633,8 @@ public class AchievementService {
      * @param worldId The ID of the world from which the count of active dungeons is to be retrieved.
      * @return The number of active dungeons in the specified world.
      */
-    private int getActiveDungeonCount(int worldId){
-        World world = worldService.getWorldByIndexFromCourse(1, worldId);
+    private int getActiveDungeonCount(int worldId, int courseId){
+        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
 
         float countOfActiveDungeonsInWorld = world.getDungeons().stream()
                 .filter(dungeon -> dungeon.isActive())
@@ -620,9 +648,9 @@ public class AchievementService {
      * @param worldId The ID of the world from which the count of minigames is to be retrieved.
      * @return The number of minigames in the specified world that were created, or 0 if the world is not active.
      */
-    private int getMinigameCount(int worldId){
-        World world = worldService.getWorldByIndexFromCourse(1, worldId);
-        if(isWorldActive(worldId) || worldId == 1) {
+    private int getMinigameCount(int worldId, int courseId){
+        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
+        if(isWorldActive(worldId, courseId) || worldId == 1) {
             long minigameCountInWorld = world.getMinigameTasks().stream()
                     .filter(minigame -> minigame.getGame() != null && !"NONE".equals(minigame.getGame().name()))
                     .count();
@@ -637,8 +665,8 @@ public class AchievementService {
      *
      * @return A list of unique minigame names from the active worlds.
      */
-    private List<String> getMinigameNames() {
-        Set<World> allWorlds = worldService.getAllWorldsFromCourse(1);
+    private List<String> getMinigameNames(int courseId) {
+        Set<World> allWorlds = worldService.getAllWorldsFromCourse(courseId);
 
         List<World> activeWorlds = allWorlds.stream()
                 .filter(world -> world.isActive() || world.getIndex() == 1)

@@ -17,7 +17,8 @@
         <!--> create achievement related tables with new structure <-->
         <sql>
             CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-            CREATE TABLE "achievement" ("id" UUID NOT NULL, "achievement_title" INTEGER NOT NULL, "amount_required" INTEGER NOT NULL, "description" VARCHAR(255), "image_name" VARCHAR(255), CONSTRAINT "achievement_pkey" PRIMARY KEY ("id"));
+            CREATE TABLE "achievement" ("id" UUID NOT NULL, "achievement_title" INTEGER NOT NULL, "amount_required" INTEGER NOT NULL, "description" VARCHAR(255), "image_name" VARCHAR(255), "course_id" INTEGER NOT NULL, CONSTRAINT "achievement_pkey" PRIMARY KEY ("id"));
+            ALTER TABLE "achievement" ADD CONSTRAINT "fk12orhai85gjq544il8s2jsbdl" FOREIGN KEY ("course_id") REFERENCES "course" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
 
             CREATE TABLE "achievement_categories" ("achievement_id" UUID NOT NULL, "categories" INTEGER);
             ALTER TABLE "achievement_categories" ADD CONSTRAINT "fkb6aptbv8q314wndmnioet6v8e" FOREIGN KEY ("achievement_id") REFERENCES "achievement" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
