@@ -1,5 +1,6 @@
 package de.unistuttgart.overworldbackend.service;
 
+import de.unistuttgart.overworldbackend.data.Achievement;
 import de.unistuttgart.overworldbackend.data.Book;
 import de.unistuttgart.overworldbackend.data.BookDTO;
 import de.unistuttgart.overworldbackend.data.mapper.BookMapper;
@@ -10,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -114,7 +118,6 @@ public class BookService {
         book.setText(bookDTO.getText());
         book.setDescription(bookDTO.getDescription());
         final Book updatedBook = bookRepository.save(book);
-        achievementService.initializeAchievementsOfCourse(courseRepository.findById(courseId).orElseThrow());
         return bookMapper.bookToBookDTO(updatedBook);
     }
 

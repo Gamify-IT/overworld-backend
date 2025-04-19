@@ -26,12 +26,11 @@ public class AchievementStatistic {
     UUID id;
 
     @JsonBackReference(value = "achievement-player")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     Player player;
 
-    @JsonBackReference(value = "achievement-course")
-    @ManyToOne(cascade = CascadeType.ALL)
-    Course course;
+    @Column(name = "course_id")
+    int courseId;
 
     @OneToOne
     Achievement achievement;
@@ -43,9 +42,9 @@ public class AchievementStatistic {
     @ElementCollection
     List<IntTuple> interactedObjects;
 
-    public AchievementStatistic(Player player, Course course, Achievement achievement) {
+    public AchievementStatistic(Player player, int courseId, Achievement achievement) {
         this.player = player;
-        this.course = course;
+        this.courseId = courseId;
         this.achievement = achievement;
         this.progress = 0;
         this.completed = false;

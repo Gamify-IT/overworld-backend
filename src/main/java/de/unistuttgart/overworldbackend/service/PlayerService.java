@@ -73,7 +73,7 @@ public class PlayerService {
             );
         }
         final Player newPlayer = new Player(playerRegistrationDTO.getUserId(), playerRegistrationDTO.getUsername());
-        achievementService.initializeAchievementsOfPlayer(newPlayer);
+        achievementService.initializeAchievements(newPlayer);
         final Binding[] bindings = Binding.values();
         for (final Binding binding : bindings) {
             newPlayer.getKeybindings().add(new Keybinding(newPlayer, binding, ""));

@@ -17,6 +17,7 @@
         <!--> create achievement related tables with new structure <-->
         <sql>
             CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
             CREATE TABLE "achievement" ("id" UUID NOT NULL, "achievement_title" INTEGER NOT NULL, "amount_required" INTEGER NOT NULL, "description" VARCHAR(255), "image_name" VARCHAR(255), "course_id" INTEGER NOT NULL, CONSTRAINT "achievement_pkey" PRIMARY KEY ("id"));
             ALTER TABLE "achievement" ADD CONSTRAINT "fk12orhai85gjq544il8s2jsbdl" FOREIGN KEY ("course_id") REFERENCES "course" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
 
@@ -27,7 +28,7 @@
             ALTER TABLE "achievement_statistic" ADD CONSTRAINT "uksnsaeurvphh56fvpbsdribsf5" UNIQUE ("player_user_id", "course_id", "achievement_id");
             ALTER TABLE "achievement_statistic" ADD CONSTRAINT "fkd21dk5l8wkghjv3s20d4btc8x" FOREIGN KEY ("achievement_id") REFERENCES "achievement" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
             ALTER TABLE "achievement_statistic" ADD CONSTRAINT "fk14q4mqkxir3s28xk1mw4sviep" FOREIGN KEY ("player_user_id") REFERENCES "player" ("user_id") ON UPDATE NO ACTION ON DELETE CASCADE;
-            ALTER TABLE "achievement_statistic" ADD CONSTRAINT "fk12orn06caiu19w8il8s2jsbdl" FOREIGN KEY ("course_id") REFERENCES "course" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
+            <!--ALTER TABLE "achievement_statistic" ADD CONSTRAINT "fk12orn06caiu19w8il8s2jsbdl" FOREIGN KEY ("course_id") REFERENCES "course" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;-->
 
             CREATE TABLE "player_achievement_statistics" ("player_user_id" VARCHAR(255) NOT NULL, "achievement_statistics_id" UUID NOT NULL);
             ALTER TABLE "player_achievement_statistics" ADD CONSTRAINT "uksa1a2g6ghhuf4p6g6xwqf6p1l" UNIQUE ("achievement_statistics_id", "player_user_id");
@@ -39,7 +40,7 @@
             ALTER TABLE "achievement_statistic_interacted_objects" ADD CONSTRAINT "fkmtiaq4kijok63ghrvrna9po4k" FOREIGN KEY ("achievement_statistic_id") REFERENCES "achievement_statistic" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
         </sql>
 
-        <!--> update player and course table <-->
+    <!--> update player-course table <-->
         <sql>
             CREATE TABLE "player_course" ("player_user_id" VARCHAR(255) NOT NULL, "course_id" INTEGER NOT NULL, CONSTRAINT "player_course_pl" PRIMARY KEY ("player_user_id", "course_id"));
             ALTER TABLE "player_course" ADD CONSTRAINT "ukp08e5ji56gd4sgtwe7olekjax" UNIQUE ("player_user_id", "course_id");

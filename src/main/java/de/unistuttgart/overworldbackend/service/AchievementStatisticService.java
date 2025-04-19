@@ -41,7 +41,7 @@ public class AchievementStatisticService {
             )
             .getAchievementStatistics()
             .stream()
-            .filter(achievementStatistic -> achievementStatistic.getCourse().getId() == courseId)
+            .filter(achievementStatistic -> achievementStatistic.getCourseId() == courseId)
             .collect(Collectors.toList());
     }
 

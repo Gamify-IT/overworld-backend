@@ -135,7 +135,7 @@ public class CourseService {
             DEFAULT_IS_ACTIVE,
             worlds
         );
-        achievementService.initializeAchievementsOfCourse(course);
+        achievementService.initializeAchievements(course);
         courseRepository.save(course);
         return courseMapper.courseToCourseDTO(course);
     }
