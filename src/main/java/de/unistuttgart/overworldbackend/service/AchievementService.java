@@ -6,7 +6,6 @@ import de.unistuttgart.overworldbackend.data.enums.AchievementDescription;
 import de.unistuttgart.overworldbackend.data.enums.AchievementImage;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
-import de.unistuttgart.overworldbackend.repositories.AchievementStatisticRepository;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 
@@ -45,38 +44,27 @@ public class AchievementService {
     @Autowired
     private WorldService worldService;
 
-    @Autowired
-    private AchievementStatisticRepository achievementStatisticRepository;
-
     /**
      * Creates achievements for each course.
      * Checks for all players in each course their current achievement statistics, adds new ones and removes non exiting ones.
      */
     @EventListener(ApplicationReadyEvent.class)
-    public void updatePlayerStatisticAchievements() {
-        List<Player> players = playerRepository.findAll();
-
+    public void initializePlayerStatisticAchievements() {
         for (final Course course : courseRepository.findAll()) {
-            List<Achievement> courseAchievements = createCourseAchievements(course);
-
-            for (final Player player : players) {
-                boolean changed = createNewAchievementStatistics(course, courseAchievements, player);
-
-                boolean removed = player.getAchievementStatistics().removeIf(stat ->
-                        stat.getCourseId() == course.getId() &&
-                                !stat.isCompleted() &&
-                                courseAchievements.stream().noneMatch(ach -> ach.getId().equals(stat.getAchievement().getId()))
-                );
-
-                if (changed || removed) {
-                    playerRepository.save(player);
-                }
-            }
+            updateCourseAchievements(course);
         }
     }
 
-    private boolean createNewAchievementStatistics(Course course, List<Achievement> courseAchievements, Player player) {
-        boolean changed  = false;
+    /**
+     * Creates new achievement statistics for a list of achievements for a player of a certain course.
+     *
+     * @param course             course of the player
+     * @param courseAchievements achievements to create achievements statistics for
+     * @param player             player whose achievement statistics are created
+     * @return true if new achievement statistics were created
+     */
+    private boolean createNewAchievementStatistics(final Course course, final List<Achievement> courseAchievements, final Player player) {
+        boolean changed = false;
 
         Map<UUID, AchievementStatistic> existingStats = player.getAchievementStatistics()
                 .stream()
@@ -99,12 +87,23 @@ public class AchievementService {
     }
 
     /**
-     * Creates all achievements of a course.
+     * Updates all achievements of a course.
+     *
+     * @param course course whose achievements are updated
+     */
+    public void updateCourseAchievements(final Course course) {
+        updateBookAchievements(course);
+        // TODO: add other dynamic achievements
+        updateAllOtherAchievements(course);
+    }
+
+    /**
+     * Creates all achievements for a course.
      *
      * @param course course whose achievements are created
      * @return list of created achievements
      */
-    private List<Achievement> createCourseAchievements(Course course) {
+    public List<Achievement> createCourseAchievements(final Course course) {
         List<Achievement> courseAchievements = new ArrayList<>();
 
         createBookAchievements(courseAchievements, course);
@@ -116,6 +115,7 @@ public class AchievementService {
         createAllOtherAchievements(courseAchievements, course);
 
         achievementRepository.saveAll(courseAchievements);
+
         return courseAchievements;
     }
 
@@ -124,10 +124,9 @@ public class AchievementService {
      *
      * @param player player whose achievement statistics are created
      */
-    public void initializeAchievements(Player player) {
+    public void initializeAchievements(final Player player) {
         for (final Course course : courseRepository.findAll()) {
             List<Achievement> courseAchievements = course.getCourseAchievements();
-
             if (createNewAchievementStatistics(course, courseAchievements, player)) {
                 playerRepository.save(player);
             }
@@ -137,15 +136,42 @@ public class AchievementService {
     /**
      * Creates achievements for a course and updates the achievement statistics of its players.
      *
-     * @param course course whose achievements are created
+     * @param courseAchievements achievements whose statistics are updated
+     * @param course             course whose achievements are created
      */
-    public void initializeAchievements(Course course) {
-        List<Achievement> courseAchievements = createCourseAchievements(course);
-
+    public void initializeAchievements(final List<Achievement> courseAchievements, final Course course) {
         for (final Player player : playerRepository.findAll()) {
             if (createNewAchievementStatistics(course, courseAchievements, player)) {
                 playerRepository.save(player);
             }
+        }
+    }
+
+    /**
+     * Creates achievement statistics for a list of achievements for all players in a course.
+     *
+     * @param course       course who is considered
+     * @param achievements achievements to create statistics for
+     */
+    private void updatePlayerStatisticAchievements(final Course course, final List<Achievement> achievements) {
+        for (Player player : playerRepository.findAll()) {
+            Map<UUID, AchievementStatistic> achievementStats = player.getAchievementStatistics()
+                    .stream()
+                    .filter(stat -> stat.getCourseId() == course.getId())
+                    .collect(Collectors.toMap(
+                            stat -> stat.getAchievement().getId(),
+                            stat -> stat
+                    ));
+            for (Achievement achievement : achievements) {
+                AchievementStatistic stat = achievementStats.get(achievement.getId());
+                if (stat != null) {
+                    stat.setAchievement(achievement);
+                } else {
+                    stat = new AchievementStatistic(player, course.getId(), achievement);
+                    player.getAchievementStatistics().add(stat);
+                }
+            }
+            playerRepository.save(player);
         }
     }
 
@@ -178,8 +204,86 @@ public class AchievementService {
                     );
                 }
             }
-            if (bookCountInTotal != 0) {
-                courseAchievements.add(
+        }
+
+        if (bookCountInTotal != 0) {
+            courseAchievements.add(
+                    new Achievement(
+                            AchievementTitle.READER,
+                            AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
+                            AchievementImage.BOOK_IMAGE.getImageName(),
+                            bookCountInTotal,
+                            Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                            course
+                    )
+            );
+        }
+    }
+
+    /**
+     * Updates all book related achievements of a course and the achievement statistics of the course members.
+     *
+     * @param course course whose achievements are updated
+     */
+    public void updateBookAchievements(final Course course) {
+        List<Achievement> courseAchievements = new ArrayList<>(course.getCourseAchievements());
+
+        int[] bookCountWorld = new int[5];
+        int bookCountInTotal = 0;
+        String achievementTitlePrefix = "READER_WORLD_";
+
+        for (int i = 1; i <= 4; i++) {
+            bookCountWorld[i] = getBookCount(i, course.getId());
+            bookCountInTotal += bookCountWorld[i];
+            int worldIndex = i;
+
+            // get book-related achievement
+            Achievement achievement = courseAchievements.stream().filter(a -> a.getAchievementTitle().name().startsWith(String.format("%s%d", achievementTitlePrefix, worldIndex))).findFirst().orElse(null);
+
+            if (bookCountWorld[i] == 0) {
+                // case 1: no achievement required -> delete existing one if there is one
+                if ((i == 1 || isWorldActive(i, course.getId())) && achievement != null) {
+                    course.removeAchievement(achievement);
+                } else {
+                }
+            } else {
+                // case 2: update existent achievement
+                if (achievement != null) {
+                    achievement.setDescription(AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]));
+                    achievement.setAmountRequired(bookCountWorld[i]);
+                }
+                // case 3: create achievement from scratch
+                else {
+                    course.addAchievement(new Achievement(
+                                    AchievementTitle.valueOf(achievementTitlePrefix + i),
+                                    AchievementDescription.INTERACT_WITH_BOOKS.getDescriptionWithRequiredAmount(bookCountWorld[i]),
+                                    AchievementImage.BOOK_IMAGE.getImageName(),
+                                    bookCountWorld[i],
+                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                                    course
+                            )
+                    );
+                }
+            }
+            courseRepository.save(course);
+        }
+
+        Achievement achievement = courseAchievements.stream().filter(a -> a.getAchievementTitle().name().equals("READER")).findFirst().orElse(null);
+
+        if (bookCountInTotal == 0) {
+            // case 1: no achievement required -> delete existing one
+            if (achievement != null) {
+                course.removeAchievement(achievement);
+            }
+        } else {
+            // case 2: update existing achievement
+            if (achievement != null) {
+                achievement.setDescription(AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal));
+                achievement.setAmountRequired(bookCountInTotal);
+            }
+            // case 3: create required achievement from scratch
+            else {
+                course.addAchievement(
                         new Achievement(
                                 AchievementTitle.READER,
                                 AchievementDescription.INTERACT_WITH_BOOKS_IN_TOTAL.getDescriptionWithRequiredAmount(bookCountInTotal),
@@ -192,6 +296,10 @@ public class AchievementService {
             }
         }
 
+        courseRepository.save(course);
+
+        // update player achievement statistics
+        updatePlayerStatisticAchievements(course, courseAchievements.stream().filter(a -> a.getAchievementTitle().name().startsWith("READER")).collect(Collectors.toList()));
     }
 
     /**
@@ -503,6 +611,30 @@ public class AchievementService {
                         course
                 )
         ));
+    }
+
+    /**
+     * Creates all achievements statistics, if non-existent, of all players in a course.
+     *
+     * @param course course to create statistics for
+     */
+    private void updateAllOtherAchievements(final Course course) {
+        List<Achievement> courseAchievements = course.getCourseAchievements();
+
+        for (Player player : playerRepository.findAll()) {
+            for (Achievement achievement : courseAchievements) {
+                if (player.getAchievementStatistics().stream().noneMatch(stat -> stat.getAchievement().equals(achievement))) {
+                    player.getAchievementStatistics().add(
+                            new AchievementStatistic(
+                                    player,
+                                    course.getId(),
+                                    achievement
+                            )
+                    );
+                }
+            }
+            playerRepository.save(player);
+        }
     }
 
     /**

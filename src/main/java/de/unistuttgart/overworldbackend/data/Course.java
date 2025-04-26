@@ -116,11 +116,16 @@ public class Course {
                 });
     }
 
-    public void addPlayer(Player player) {
-        this.players.add(player);
+    public void addAchievement(final Achievement achievement) {
+        if (achievement != null && courseAchievements.stream().noneMatch(a -> a.getAchievementTitle().equals(achievement.getAchievementTitle()))) {
+            this.courseAchievements.add(achievement);
+        }
     }
 
-    public void addAchievement(Achievement achievement) {
-        this.courseAchievements.add(achievement);
+    public void removeAchievement(final Achievement achievement) {
+        if (achievement != null && this.courseAchievements.contains(achievement)) {
+            this.courseAchievements.remove(achievement);
+            achievement.setCourse(null);
+        }
     }
 }
