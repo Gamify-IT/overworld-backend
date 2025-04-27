@@ -7,6 +7,7 @@ import de.unistuttgart.overworldbackend.data.PlayerStatistic;
 import de.unistuttgart.overworldbackend.data.comparator.AreaComparator;
 import de.unistuttgart.overworldbackend.data.enums.Minigame;
 import de.unistuttgart.overworldbackend.data.mapper.MinigameTaskMapper;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.MinigameTaskRepository;
 import java.util.Optional;
 import java.util.Set;
@@ -37,6 +38,12 @@ public class MinigameTaskService {
 
     @Autowired
     private PlayerStatisticService playerStatisticService;
+
+    @Autowired
+    private AchievementService achievementService;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     /**
      * Get a minigame task of an area
@@ -169,6 +176,14 @@ public class MinigameTaskService {
         } else if (!configuredAfter && configuredBefore) {
             minigameRemoved(courseId, worldIndex, dungeonIndex);
         }
+        achievementService.updateMinigameAchievements(courseRepository.
+                findById(courseId).orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no course with id %s.", courseId))
+                ));
+        achievementService.updateAchievementForEachMinigame(courseRepository.
+                findById(courseId).orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no course with id %s.", courseId))
+                ));
         return minigameTaskMapper.minigameTaskToMinigameTaskDTO(updatedMinigameTask);
     }
 

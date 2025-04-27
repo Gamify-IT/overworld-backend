@@ -1,10 +1,7 @@
 package de.unistuttgart.overworldbackend.service;
 
 import de.unistuttgart.overworldbackend.data.*;
-import de.unistuttgart.overworldbackend.data.enums.AchievementCategory;
-import de.unistuttgart.overworldbackend.data.enums.AchievementDescription;
-import de.unistuttgart.overworldbackend.data.enums.AchievementImage;
-import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
+import de.unistuttgart.overworldbackend.data.enums.*;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
 import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
@@ -14,14 +11,17 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import de.unistuttgart.overworldbackend.repositories.WorldRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
@@ -42,7 +42,7 @@ public class AchievementService {
     private CourseRepository courseRepository;
 
     @Autowired
-    private WorldService worldService;
+    private WorldRepository worldRepository;
 
     /**
      * Creates achievements for each existing course based on their configuration at the start of the application.
@@ -93,7 +93,11 @@ public class AchievementService {
      */
     public void updateCourseAchievements(final Course course) {
         updateBookAchievements(course);
-        // TODO: add other dynamic achievements
+        updateNpcAchievements(course);
+        updateDungeonAchievements(course);
+        updateMinigameAchievements(course);
+        updateAchievementForEachMinigame(course);
+        updateOpenerAndLevelUpAchievements(course);
         updateAllOtherAchievements(course);
     }
 
@@ -224,7 +228,8 @@ public class AchievementService {
             int worldIndex = i;
 
             // get book-related achievement
-            Achievement achievement = courseAchievements.stream().filter(a -> a.getAchievementTitle().name().startsWith(String.format("%s%d", achievementTitlePrefix, worldIndex))).findFirst().orElse(null);
+            Achievement achievement = courseAchievements.stream().filter(a ->
+                    a.getAchievementTitle().name().startsWith(String.format("%s%d", achievementTitlePrefix, worldIndex))).findFirst().orElse(null);
 
             if (bookCountWorld[i] == 0) {
                 // case 1: no achievement required -> delete existing one if there is one
@@ -295,7 +300,6 @@ public class AchievementService {
      * @param courseAchievements The list of achievements to which the newly created achievements will be added.
      */
     private void createNpcAchievements(List<Achievement> courseAchievements, Course course) {
-
         int[] npcCountWorld = new int[5];
         int npcCountInTotal = 0;
         String achievementTitlePrefix = "COMMUNICATOR_WORLD_";
@@ -333,6 +337,89 @@ public class AchievementService {
     }
 
     /**
+     * Updates all npc related achievements of a course and the achievement statistics of the course members.
+     *
+     * @param course course whose achievements are updated
+     */
+    public void updateNpcAchievements(final Course course) {
+        List<Achievement> courseAchievements = new ArrayList<>(course.getCourseAchievements());
+
+        int[] npcCountWorld = new int[5];
+        int npcCountInTotal = 0;
+        String achievementTitlePrefix = "COMMUNICATOR_WORLD_";
+
+        for (int i = 1; i <= 4; i++) {
+            npcCountWorld[i] = getNpcCount(i, course.getId());
+            npcCountInTotal += npcCountWorld[i];
+            int worldIndex = i;
+
+            // get npc-related achievement
+            Achievement achievement = courseAchievements.stream().filter(a ->
+                    a.getAchievementTitle().name().startsWith(String.format("%s%d", achievementTitlePrefix, worldIndex))).findFirst().orElse(null);
+
+            if (npcCountWorld[i] == 0) {
+                // case 1: no achievement required -> delete existing one if there is one
+                if (i == 1 || isWorldActive(i, course.getId())) {
+                    course.removeAchievement(achievement);
+                }
+            } else {
+                // case 2: update existent achievement
+                if (achievement != null) {
+                    achievement.setDescription(AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(npcCountWorld[i]));
+                    achievement.setAmountRequired(npcCountWorld[i]);
+                }
+                // case 3: create achievement from scratch
+                else {
+                    course.addAchievement(
+                            new Achievement(
+                                    AchievementTitle.valueOf(achievementTitlePrefix + i),
+                                    AchievementDescription.TALK_TO_NPC.getDescriptionWithRequiredAmount(npcCountWorld[i]),
+                                    AchievementImage.NPC_IMAGE.getImageName(),
+                                    npcCountWorld[i],
+                                    List.of(AchievementCategory.EXPLORING),
+                                    course
+                            )
+                    );
+                }
+            }
+            courseRepository.save(course);
+        }
+
+        Achievement achievement = courseAchievements.stream().filter(a -> a.getAchievementTitle().name().equals("COMMUNICATOR")).findFirst().orElse(null);
+
+        if (npcCountInTotal == 0) {
+            // case 1: no achievement required -> delete existing one
+            if (achievement != null) {
+                course.removeAchievement(achievement);
+            }
+        } else {
+            // case 2: update existing achievement
+            if (achievement != null) {
+                achievement.setDescription(AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(npcCountInTotal));
+                achievement.setAmountRequired(npcCountInTotal);
+            }
+            // case 3: create required achievement from scratch
+            else {
+                course.addAchievement(
+                        new Achievement(
+                                AchievementTitle.COMMUNICATOR,
+                                AchievementDescription.TALK_TO_NPC_IN_TOTAL.getDescriptionWithRequiredAmount(npcCountInTotal),
+                                AchievementImage.NPC_IMAGE.getImageName(),
+                                npcCountInTotal,
+                                List.of(AchievementCategory.EXPLORING),
+                                course
+                        )
+                );
+            }
+        }
+
+        courseRepository.save(course);
+
+        // update player achievement statistics
+        updatePlayerStatisticAchievements(course, course.getCourseAchievements().stream().filter(a -> a.getAchievementTitle().name().startsWith("COMMUNICATOR")).collect(Collectors.toList()));
+    }
+
+    /**
      * Creates 4 achievements related to dungeons.
      * This function creates achievements for each active world if there is at least one dungeon active.
      *
@@ -354,6 +441,55 @@ public class AchievementService {
                         course
                 ));
             }
+        }
+    }
+
+    /**
+     * Updates all dungeon related achievements of a course and the achievement statistics of the course members.
+     *
+     * @param course course whose achievements are updated
+     */
+    public void updateDungeonAchievements(final Course course) {
+        List<Achievement> courseAchievements = new ArrayList<>(course.getCourseAchievements());
+
+        int[] countActiveDungeons = new int[5];
+        String achievementTitlePrefix = "MINER_WORLD_";
+
+        for (int i = 1; i <= 4; i++) {
+            countActiveDungeons[i] = getActiveDungeonCount(i, course.getId());
+            int worldIndex = i;
+
+            // get dungeon related achievement
+            Achievement achievement = courseAchievements.stream().filter(a ->
+                    a.getAchievementTitle().name().startsWith(String.format("%s%d", achievementTitlePrefix, worldIndex))).findFirst().orElse(null);
+
+            if (countActiveDungeons[i] == 0) {
+                // case 1: no achievement required -> delete existing one if there is one
+                course.removeAchievement(achievement);
+            } else {
+                // case 2: update existent achievement
+                if (achievement != null) {
+                    achievement.setDescription(AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(i));
+                    achievement.setAmountRequired(1);
+                }
+                // case 3: create achievement from scratch
+                else {
+                    course.addAchievement(
+                            new Achievement(
+                                    AchievementTitle.valueOf(achievementTitlePrefix + i),
+                                    AchievementDescription.UNLOCK_DUNGEONS.getDescriptionWithRequiredAmount(i),
+                                    AchievementImage.DUNGEON_IMAGE.getImageName(),
+                                    1,
+                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                                    course
+                            )
+                    );
+                }
+            }
+            courseRepository.save(course);
+
+            // update player achievement statistics
+            updatePlayerStatisticAchievements(course, course.getCourseAchievements().stream().filter(a -> a.getAchievementTitle().name().startsWith("MINER")).collect(Collectors.toList()));
         }
     }
 
@@ -407,6 +543,81 @@ public class AchievementService {
     }
 
     /**
+     * Updates all minigame-spot related achievements of a course and the achievement statistics of the course members.
+     *
+     * @param course course whose achievements are updated
+     */
+    public void updateMinigameAchievements(final Course course) {
+        List<Achievement> courseAchievements = new ArrayList<>(course.getCourseAchievements());
+
+        int minigameCountInTotal = 0;
+        int requiredAmountForAchievement;
+
+        for (int i = 1; i <= 4; i++) {
+            minigameCountInTotal += getMinigameCount(i, course.getId());
+        }
+
+        // get minigame related achievements
+        List<Achievement> achievements = courseAchievements.stream().filter(achievement ->
+                        achievement.getAchievementTitle().name().equals("MINIGAME_ACHIEVER") ||
+                                achievement.getAchievementTitle().name().equals("MINIGAME_SPOTS_FINDER"))
+                .toList();
+
+        if (minigameCountInTotal == 0) {
+            // case 1: no achievements required -> delete existing ones if there are any
+            achievements.forEach(course::removeAchievement);
+        } else {
+            if (minigameCountInTotal == 1 || minigameCountInTotal == 2 || minigameCountInTotal == 3) {
+                requiredAmountForAchievement = minigameCountInTotal;
+            } else {
+                requiredAmountForAchievement = minigameCountInTotal - 2;
+            }
+            // case 2: update existent achievements
+            if (!achievements.isEmpty()) {
+                for (Achievement achievement : achievements) {
+                    if (achievement.getAchievementTitle().name().equals("MINIGAME_ACHIEVER")) {
+                        achievement.setDescription(AchievementDescription.COMPLETE_MINIGAMES.getDescriptionWithRequiredAmount(requiredAmountForAchievement));
+                        achievement.setAmountRequired(requiredAmountForAchievement);
+                    } else {
+                        achievement.setDescription(AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(requiredAmountForAchievement));
+                        achievement.setAmountRequired(requiredAmountForAchievement);
+                    }
+                }
+            }
+            // case 3: create achievements from scratch
+            else {
+                course.addAchievement(
+                        new Achievement(
+                                AchievementTitle.MINIGAME_ACHIEVER,
+                                AchievementDescription.COMPLETE_MINIGAMES.getDescriptionWithRequiredAmount(requiredAmountForAchievement),
+                                AchievementImage.STAR_IMAGE.getImageName(),
+                                requiredAmountForAchievement,
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE),
+                                course
+                        )
+                );
+                course.addAchievement(
+                        new Achievement(
+                                AchievementTitle.MINIGAME_SPOTS_FINDER,
+                                AchievementDescription.FIND_MINIGAME_SPOTS.getDescriptionWithRequiredAmount(requiredAmountForAchievement),
+                                AchievementImage.MINIGAME_SPOT_IMAGE.getImageName(),
+                                requiredAmountForAchievement,
+                                List.of(AchievementCategory.EXPLORING),
+                                course
+                        )
+                );
+            }
+        }
+        courseRepository.save(course);
+
+        // update player achievement statistics
+        updatePlayerStatisticAchievements(course, course.getCourseAchievements().stream().filter(achievement ->
+                achievement.getAchievementTitle().name().equals("MINIGAME_ACHIEVER") ||
+                        achievement.getAchievementTitle().name().equals("MINIGAME_SPOTS_FINDER")
+        ).collect(Collectors.toList()));
+    }
+
+    /**
      * Creates 1 achievement for level up if the world 2 is active and 3 achievements for 3 worlds, if they are active.
      * This function check if the necessary world is active and creates achievements based on it.
      *
@@ -444,6 +655,73 @@ public class AchievementService {
     }
 
     /**
+     * Updates all opener and level up achievements of a course and the achievement statistics of the course members.
+     *
+     * @param course course whose achievements are updated
+     */
+    public void updateOpenerAndLevelUpAchievements(final Course course) {
+        List<Achievement> courseAchievements = new ArrayList<>(course.getCourseAchievements());
+        String achievementTitlePrefix = "OPENER_WORLD_";
+
+        for (int i = 2; i <= 4; i++) {
+            // get level up and opener achievements
+            List<Achievement> achievements = courseAchievements.stream().filter(achievement ->
+                    achievement.getAchievementTitle().name().startsWith(achievementTitlePrefix) ||
+                            achievement.getAchievementTitle().name().equals("LEVEL_UP")
+            ).toList();
+
+            // case 1: no achievements required -> delete existing ones if there are any
+            if (!isWorldActive(i, course.getId())) {
+                achievements.forEach(course::removeAchievement);
+            } else {
+                // case 2: update existent achievements
+                if (!achievements.isEmpty()) {
+                    for (Achievement achievement : achievements) {
+                        if (achievement.getAchievementTitle().name().startsWith(achievementTitlePrefix)) {
+                            achievement.setDescription(AchievementDescription.UNLOCK_WORLD.getDescriptionWithRequiredAmount(i));
+                            achievement.setAmountRequired(1);
+                        } else {
+                            achievement.setDescription(AchievementDescription.LEVEL_UP.getDescriptionWithRequiredAmount(i));
+                            achievement.setAmountRequired(i);
+                        }
+                    }
+                }
+                // case 3: create achievements from scratch
+                else {
+                    course.addAchievement(
+                            new Achievement(
+                                    AchievementTitle.valueOf(achievementTitlePrefix + i),
+                                    AchievementDescription.UNLOCK_WORLD.getDescriptionWithRequiredAmount(i),
+                                    AchievementImage.GLASS_IMAGE.getImageName(),
+                                    1,
+                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.EXPLORING),
+                                    course
+                            )
+                    );
+                    if (i == 2) {
+                        course.addAchievement(
+                                new Achievement(
+                                        AchievementTitle.LEVEL_UP,
+                                        AchievementDescription.LEVEL_UP.getDescriptionWithRequiredAmount(i),
+                                        AchievementImage.LEVEL_UP_IMAGE.getImageName(),
+                                        i,
+                                        List.of(AchievementCategory.ACHIEVING),
+                                        course
+                                )
+                        );
+                    }
+                }
+            }
+            courseRepository.save(course);
+        }
+        // update player achievement statistics
+        updatePlayerStatisticAchievements(course, course.getCourseAchievements().stream().filter(achievement ->
+                achievement.getAchievementTitle().name().startsWith(achievementTitlePrefix) ||
+                        achievement.getAchievementTitle().name().equals("LEVEL_UP")
+        ).collect(Collectors.toList()));
+    }
+
+    /**
      * Creates achievement for each type of minigames, that were created in course, based on their name and active
      * worlds, in which these minigames were created.
      *
@@ -465,6 +743,50 @@ public class AchievementService {
                 );
             }
         });
+    }
+
+    /**
+     * Updates all minigame related achievements of a course and the achievement statistics of the course members.
+     *
+     * @param course course whose achievements are updated
+     */
+    public void updateAchievementForEachMinigame(final Course course) {
+        List<Achievement> courseAchievements = new ArrayList<>(course.getCourseAchievements());
+        List<String> minigameNames = getMinigameNames(course.getId());
+
+        for (String minigameName : minigameNames) {
+            // get minigame achievement
+            Achievement achievement = courseAchievements.stream().filter(a ->
+                    a.getAchievementTitle().name().startsWith(minigameName)).findFirst().orElse(null);
+
+            // case 1: no achievement required -> delete existing one if there is one
+            if (minigameName.equalsIgnoreCase("NONE") || minigameName.equalsIgnoreCase("REGEXGAME")) {
+                course.removeAchievement(achievement);
+            } else {
+                // case 2: update existent achievement
+                if (achievement != null) {
+                    achievement.setDescription(AchievementDescription.valueOf(minigameName.toUpperCase()).getDescription());
+                    achievement.setAmountRequired(1);
+                }
+                // case 3: create achievement from scratch
+                else {
+                    course.addAchievement(
+                            new Achievement(
+                                    AchievementTitle.valueOf(minigameName.toUpperCase() + "_MASTER"),
+                                    AchievementDescription.valueOf(minigameName.toUpperCase()).getDescription(),
+                                    AchievementImage.valueOf(minigameName.toUpperCase() + "_IMAGE").getImageName(),
+                                    1,
+                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE),
+                                    course
+                            )
+                    );
+                }
+            }
+            courseRepository.save(course);
+        }
+        // update player achievement statistics
+        updatePlayerStatisticAchievements(course, course.getCourseAchievements().stream().filter(achievement ->
+                minigameNames.stream().anyMatch(name -> achievement.getAchievementTitle().name().startsWith(name))).toList());
     }
 
     /**
@@ -632,7 +954,7 @@ public class AchievementService {
      * not active.
      */
     private int getBookCount(int worldId, int courseId) {
-        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
+        World world = getWorldByIndexFromCourse(courseId, worldId);
 
         if (isWorldActive(worldId, courseId) || worldId == 1) {
             long bookCountInWorld = world.getBooks().stream()
@@ -654,7 +976,7 @@ public class AchievementService {
      * not active.
      */
     private int getNpcCount(int worldId, int courseId) {
-        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
+        World world = getWorldByIndexFromCourse(courseId, worldId);
 
         if (isWorldActive(worldId, courseId) || worldId == 1) {
             long npcCountInWorld = world.getNpcs().stream()
@@ -673,8 +995,7 @@ public class AchievementService {
      * @return True if the world is active, false otherwise.
      */
     private boolean isWorldActive(int worldId, int courseId) {
-        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
-        return world.isActive();
+        return getWorldByIndexFromCourse(courseId, worldId).isActive();
     }
 
     /**
@@ -684,7 +1005,7 @@ public class AchievementService {
      * @return The number of active dungeons in the specified world.
      */
     private int getActiveDungeonCount(int worldId, int courseId) {
-        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
+        World world = getWorldByIndexFromCourse(courseId, worldId);
 
         float countOfActiveDungeonsInWorld = world.getDungeons().stream()
                 .filter(Area::isActive)
@@ -699,7 +1020,7 @@ public class AchievementService {
      * @return The number of minigames in the specified world that were created, or 0 if the world is not active.
      */
     private int getMinigameCount(int worldId, int courseId) {
-        World world = worldService.getWorldByIndexFromCourse(courseId, worldId);
+        World world = getWorldByIndexFromCourse(courseId, worldId);
         if (isWorldActive(worldId, courseId) || worldId == 1) {
             long minigameCountInWorld = world.getMinigameTasks().stream()
                     .filter(minigame -> minigame.getGame() != null && !"NONE".equals(minigame.getGame().name()))
@@ -716,7 +1037,7 @@ public class AchievementService {
      * @return A list of unique minigame names from the active worlds.
      */
     private List<String> getMinigameNames(int courseId) {
-        Set<World> allWorlds = worldService.getAllWorldsFromCourse(courseId);
+        Set<World> allWorlds = getAllWorldsFromCourse(courseId);
 
         List<World> activeWorlds = allWorlds.stream()
                 .filter(world -> world.isActive() || world.getIndex() == 1)
@@ -729,5 +1050,36 @@ public class AchievementService {
                 .distinct()
                 .collect(Collectors.toList());
     }
-}
 
+    /**
+     * Get a world of a course
+     *
+     * @throws ResponseStatusException (404) if world with its static name could not be found in the course
+     * @param courseId the id of the course the world is part of
+     * @param worldIndex the index of the world searching for
+     * @return the found world object
+     */
+    public World getWorldByIndexFromCourse(final int courseId, final int worldIndex) {
+        return worldRepository
+                .findByIndexAndCourseId(worldIndex, courseId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                String.format(
+                                        "There is no world with static name %s in the course with ID %s.",
+                                        worldIndex,
+                                        courseId
+                                )
+                        )
+                );
+    }
+
+    /**
+     * Returns all worlds of a course
+     * @param courseId id of the course
+     * @return Set of Worlds of the course
+     */
+    public Set<World> getAllWorldsFromCourse(final int courseId) {
+        return worldRepository.findAllByCourseId(courseId);
+    }
+}
