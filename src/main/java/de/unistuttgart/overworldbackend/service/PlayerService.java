@@ -4,6 +4,7 @@ import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.enums.Binding;
 import de.unistuttgart.overworldbackend.data.mapper.PlayerMapper;
 import de.unistuttgart.overworldbackend.repositories.AchievementRepository;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerRepository;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,8 @@ public class PlayerService {
 
     @Autowired
     private AchievementService achievementService;
+    @Autowired
+    private CourseRepository courseRepository;
 
     /**
      * get all players
@@ -73,7 +76,12 @@ public class PlayerService {
             );
         }
         final Player newPlayer = new Player(playerRegistrationDTO.getUserId(), playerRegistrationDTO.getUsername());
-        achievementService.initializeAchievements(newPlayer);
+        for (Course course : courseRepository.findAll()) {
+            List<Achievement> courseAchievements = course.getCourseAchievements();
+            for (Achievement achievement: courseAchievements) {
+                newPlayer.getAchievementStatistics().add(new AchievementStatistic(newPlayer, course.getId(), achievement));
+            }
+        }
         final Binding[] bindings = Binding.values();
         for (final Binding binding : bindings) {
             newPlayer.getKeybindings().add(new Keybinding(newPlayer, binding, ""));

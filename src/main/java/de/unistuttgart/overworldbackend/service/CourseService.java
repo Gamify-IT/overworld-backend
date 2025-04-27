@@ -135,8 +135,8 @@ public class CourseService {
             DEFAULT_IS_ACTIVE,
             worlds
         );
-        achievementService.initializeAchievements(achievementService.createCourseAchievements(course), course);
         courseRepository.save(course);
+        achievementService.initializeAchievements(achievementService.createCourseAchievements(course), course);
         return courseMapper.courseToCourseDTO(course);
     }
 
@@ -247,8 +247,8 @@ public class CourseService {
                 .map(world -> cloneWorld(world, accessToken, errorMessages))
                 .collect(Collectors.toCollection(ArrayList::new))
         );
-        achievementService.initializeAchievements(achievementService.createCourseAchievements(course), course);
         courseRepository.save(cloneCourse);
+        achievementService.initializeAchievements(achievementService.createCourseAchievements(cloneCourse), cloneCourse);
         final CourseDTO courseDTO = courseMapper.courseToCourseDTO(cloneCourse);
         return new CourseCloneDTO(
             courseDTO.getId(),

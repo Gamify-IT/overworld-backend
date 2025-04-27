@@ -45,7 +45,7 @@ public class AchievementService {
     private WorldService worldService;
 
     /**
-     * Creates achievements for each course.
+     * Creates achievements for each existing course based on their configuration at the start of the application.
      * Checks for all players in each course their current achievement statistics, adds new ones and removes non exiting ones.
      */
     @EventListener(ApplicationReadyEvent.class)
@@ -117,20 +117,6 @@ public class AchievementService {
         achievementRepository.saveAll(courseAchievements);
 
         return courseAchievements;
-    }
-
-    /**
-     * Creates achievement statistics for a player's courses.
-     *
-     * @param player player whose achievement statistics are created
-     */
-    public void initializeAchievements(final Player player) {
-        for (final Course course : courseRepository.findAll()) {
-            List<Achievement> courseAchievements = course.getCourseAchievements();
-            if (createNewAchievementStatistics(course, courseAchievements, player)) {
-                playerRepository.save(player);
-            }
-        }
     }
 
     /**
@@ -244,7 +230,6 @@ public class AchievementService {
                 // case 1: no achievement required -> delete existing one if there is one
                 if ((i == 1 || isWorldActive(i, course.getId())) && achievement != null) {
                     course.removeAchievement(achievement);
-                } else {
                 }
             } else {
                 // case 2: update existent achievement
@@ -299,7 +284,7 @@ public class AchievementService {
         courseRepository.save(course);
 
         // update player achievement statistics
-        updatePlayerStatisticAchievements(course, courseAchievements.stream().filter(a -> a.getAchievementTitle().name().startsWith("READER")).collect(Collectors.toList()));
+        updatePlayerStatisticAchievements(course, course.getCourseAchievements().stream().filter(a -> a.getAchievementTitle().name().startsWith("READER")).collect(Collectors.toList()));
     }
 
     /**
