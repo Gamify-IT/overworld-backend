@@ -19,7 +19,7 @@ CREATE TABLE "achievement"
     "amount_required"   INTEGER NOT NULL,
     "description"       VARCHAR(255),
     "image_name"        VARCHAR(255),
-    "course_id"         INTEGER NOT NULL,
+    "course_id"         INTEGER,
     CONSTRAINT "achievement_pkey" PRIMARY KEY ("id")
 );
 ALTER TABLE "achievement"

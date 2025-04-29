@@ -753,37 +753,37 @@ public class AchievementService {
     public void updateAchievementForEachMinigame(final Course course) {
         List<Achievement> courseAchievements = new ArrayList<>(course.getCourseAchievements());
         List<String> minigameNames = getMinigameNames(course.getId());
+        List<Achievement> achievements = courseAchievements.stream().filter(achievement ->
+                Arrays.stream(Minigame.values()).anyMatch(minigame -> achievement.getAchievementTitle().name().startsWith(minigame.name()))).toList();
 
+        // create achievement for new minigame except for none and regexgame
         for (String minigameName : minigameNames) {
-            // get minigame achievement
-            Achievement achievement = courseAchievements.stream().filter(a ->
-                    a.getAchievementTitle().name().startsWith(minigameName)).findFirst().orElse(null);
-
-            // case 1: no achievement required -> delete existing one if there is one
-            if (minigameName.equalsIgnoreCase("NONE") || minigameName.equalsIgnoreCase("REGEXGAME")) {
-                course.removeAchievement(achievement);
-            } else {
-                // case 2: update existent achievement
-                if (achievement != null) {
-                    achievement.setDescription(AchievementDescription.valueOf(minigameName.toUpperCase()).getDescription());
-                    achievement.setAmountRequired(1);
-                }
-                // case 3: create achievement from scratch
-                else {
-                    course.addAchievement(
-                            new Achievement(
-                                    AchievementTitle.valueOf(minigameName.toUpperCase() + "_MASTER"),
-                                    AchievementDescription.valueOf(minigameName.toUpperCase()).getDescription(),
-                                    AchievementImage.valueOf(minigameName.toUpperCase() + "_IMAGE").getImageName(),
-                                    1,
-                                    Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE),
-                                    course
-                            )
-                    );
-                }
+            if (!minigameName.equals("NONE") && !minigameName.equals("REGEXGAME") &&
+                    achievements.stream().noneMatch(achievement -> achievement.getAchievementTitle().name().startsWith(minigameName))
+            ) {
+                course.addAchievement(
+                        new Achievement(
+                                AchievementTitle.valueOf(minigameName.toUpperCase() + "_MASTER"),
+                                AchievementDescription.valueOf(minigameName.toUpperCase()).getDescription(),
+                                AchievementImage.valueOf(minigameName.toUpperCase() + "_IMAGE").getImageName(),
+                                1,
+                                Arrays.asList(AchievementCategory.ACHIEVING, AchievementCategory.COMPETITIVE),
+                                course
+                        )
+                );
             }
-            courseRepository.save(course);
         }
+
+        // delete achievement if minigame no longer exists or is for minigame none or regexgame
+        for (Achievement achievement : achievements) {
+            if (minigameNames.stream().noneMatch(name -> achievement.getAchievementTitle().name().startsWith(name)) ||
+                    achievement.getAchievementTitle().name().startsWith("NONE") || achievement.getAchievementTitle().name().startsWith("REGEXGAME")
+            ) {
+                course.removeAchievement(achievement);
+            }
+        }
+        courseRepository.save(course);
+
         // update player achievement statistics
         updatePlayerStatisticAchievements(course, course.getCourseAchievements().stream().filter(achievement ->
                 minigameNames.stream().anyMatch(name -> achievement.getAchievementTitle().name().startsWith(name))).toList());
@@ -1054,10 +1054,10 @@ public class AchievementService {
     /**
      * Get a world of a course
      *
-     * @throws ResponseStatusException (404) if world with its static name could not be found in the course
-     * @param courseId the id of the course the world is part of
+     * @param courseId   the id of the course the world is part of
      * @param worldIndex the index of the world searching for
      * @return the found world object
+     * @throws ResponseStatusException (404) if world with its static name could not be found in the course
      */
     public World getWorldByIndexFromCourse(final int courseId, final int worldIndex) {
         return worldRepository
@@ -1076,6 +1076,7 @@ public class AchievementService {
 
     /**
      * Returns all worlds of a course
+     *
      * @param courseId id of the course
      * @return Set of Worlds of the course
      */
