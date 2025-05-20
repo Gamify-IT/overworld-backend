@@ -276,8 +276,8 @@ public class PlayerStatisticService {
                 currentWorld
                     .getDungeons()
                     .parallelStream()
-                    .min(Comparator.comparingInt(Area::getIndex))
                     .filter(Dungeon::isConfigured)
+                    .min(Comparator.comparingInt(Area::getIndex))
                     .ifPresentOrElse(
                         playerStatistic::addUnlockedArea,
                         () ->
@@ -293,8 +293,8 @@ public class PlayerStatisticService {
                     .getDungeons()
                     .parallelStream()
                     .filter(dungeon -> dungeon.getIndex() > currentDungeon.getIndex())
-                    .min(Comparator.comparingInt(Dungeon::getIndex))
                     .filter(Dungeon::isConfigured)
+                    .min(Comparator.comparingInt(Dungeon::getIndex))
                     .ifPresentOrElse(
                         playerStatistic::addUnlockedArea,
                         () ->
