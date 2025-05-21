@@ -5,6 +5,7 @@ import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.config.AreaConfig;
 import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.DungeonMapper;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.DungeonRepository;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,12 @@ public class DungeonService {
 
     @Autowired
     private AreaMapMapper areaMapMapper;
+
+    @Autowired
+    private AchievementService achievementService;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     public DungeonService() {
         areaConfig = new AreaConfig();
@@ -114,6 +121,10 @@ public class DungeonService {
         dungeon.setTopicName(dungeonDTO.getTopicName());
         dungeon.setActive(dungeonDTO.isActive());
         final Dungeon updatedDungeon = dungeonRepository.save(dungeon);
+        achievementService.updateDungeonAchievements(courseRepository.
+                findById(courseId).orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no course with id %s.", courseId))
+                ));
         return dungeonMapper.dungeonToDungeonDTO(updatedDungeon);
     }
 

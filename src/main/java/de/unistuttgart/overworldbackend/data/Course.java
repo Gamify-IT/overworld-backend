@@ -1,11 +1,15 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +22,7 @@ import lombok.experimental.FieldDefaults;
  * When multiple courses exist, no data will be shared between them.
  */
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "courseName", "semester" }) })
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"courseName", "semester"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,12 +50,19 @@ public class Course {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<PlayerStatistic> playerStatistics = new HashSet<>();
 
+    @JsonManagedReference(value = "achievement-course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Achievement.class, orphanRemoval = true)
+    List<Achievement> courseAchievements = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "courses")
+    private List<Player> players = new ArrayList<>();
+
     public Course(
-        final String courseName,
-        final String semester,
-        final String description,
-        final boolean active,
-        final List<World> worlds
+            final String courseName,
+            final String semester,
+            final String description,
+            final boolean active,
+            final List<World> worlds
     ) {
         this.courseName = courseName;
         this.semester = semester;
@@ -86,22 +97,35 @@ public class Course {
     private void setAreaCourseId(final Area area) {
         area.setCourse(this);
         area
-            .getMinigameTasks()
-            .forEach(minigameTask -> {
-                minigameTask.setCourse(this);
-                minigameTask.setArea(area);
-            });
+                .getMinigameTasks()
+                .forEach(minigameTask -> {
+                    minigameTask.setCourse(this);
+                    minigameTask.setArea(area);
+                });
         area
-            .getNpcs()
-            .forEach(npc -> {
-                npc.setCourse(this);
-                npc.setArea(area);
-            });
+                .getNpcs()
+                .forEach(npc -> {
+                    npc.setCourse(this);
+                    npc.setArea(area);
+                });
         area
-            .getBooks()
-            .forEach(book -> {
-                book.setCourse(this);
-                book.setArea(area);
-            });
+                .getBooks()
+                .forEach(book -> {
+                    book.setCourse(this);
+                    book.setArea(area);
+                });
+    }
+
+    public void addAchievement(final Achievement achievement) {
+        if (achievement != null && courseAchievements.stream().noneMatch(a -> a.getAchievementTitle().equals(achievement.getAchievementTitle()))) {
+            this.courseAchievements.add(achievement);
+        }
+    }
+
+    public void removeAchievement(final Achievement achievement) {
+        if (achievement != null && this.courseAchievements.contains(achievement)) {
+            this.courseAchievements.remove(achievement);
+            achievement.setCourse(null);
+        }
     }
 }

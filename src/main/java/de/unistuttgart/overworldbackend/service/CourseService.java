@@ -67,6 +67,9 @@ public class CourseService {
     @Autowired
     private CourseMapper courseMapper;
 
+    @Autowired
+    private AchievementService achievementService;
+
     public CourseService() {
         configCourse = new CourseConfig();
         final ObjectMapper mapper = new ObjectMapper();
@@ -133,6 +136,7 @@ public class CourseService {
             worlds
         );
         courseRepository.save(course);
+        achievementService.initializeAchievements(achievementService.createCourseAchievements(course), course);
         return courseMapper.courseToCourseDTO(course);
     }
 
@@ -243,8 +247,8 @@ public class CourseService {
                 .map(world -> cloneWorld(world, accessToken, errorMessages))
                 .collect(Collectors.toCollection(ArrayList::new))
         );
-
         courseRepository.save(cloneCourse);
+        achievementService.initializeAchievements(achievementService.createCourseAchievements(cloneCourse), cloneCourse);
         final CourseDTO courseDTO = courseMapper.courseToCourseDTO(cloneCourse);
         return new CourseCloneDTO(
             courseDTO.getId(),

@@ -15,7 +15,7 @@ public enum AchievementImage {
     MINIGAME_SPOT_IMAGE("minigameSpotImage"),
     BOOK_IMAGE("bookImage"),
     TELEPORTER_IMAGE("teleporterImage"),
-    CHICKEN_IMAGE("chickenImage"),
+    CHICKENSHOCK_IMAGE("chickenImage"),
     MEMORY_IMAGE("cardImage"),
     FINITEQUIZ_IMAGE("brainImage"),
     CROSSWORDPUZZLE_IMAGE("puzzleImage"),

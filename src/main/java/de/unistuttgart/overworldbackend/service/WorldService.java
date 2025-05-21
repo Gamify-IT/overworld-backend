@@ -5,6 +5,7 @@ import de.unistuttgart.overworldbackend.data.*;
 import de.unistuttgart.overworldbackend.data.config.AreaConfig;
 import de.unistuttgart.overworldbackend.data.mapper.AreaMapMapper;
 import de.unistuttgart.overworldbackend.data.mapper.WorldMapper;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.WorldRepository;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Service
 @Transactional
@@ -31,6 +34,16 @@ public class WorldService {
 
     @Autowired
     private AreaMapMapper areaMapMapper;
+
+    @Autowired
+    private AchievementService achievementService;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public WorldService() {
         areaConfig = new AreaConfig();
@@ -83,6 +96,10 @@ public class WorldService {
         world.setTopicName(worldDTO.getTopicName());
         world.setActive(worldDTO.isActive());
         final World updatedWorld = worldRepository.save(world);
+        achievementService.updateOpenerAndLevelUpAchievements(courseRepository.
+                findById(courseId).orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no course with id %s.", courseId))
+                ));
         return worldMapper.worldToWorldDTO(updatedWorld);
     }
 

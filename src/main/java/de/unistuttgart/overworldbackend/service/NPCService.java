@@ -4,6 +4,7 @@ import de.unistuttgart.overworldbackend.data.NPC;
 import de.unistuttgart.overworldbackend.data.NPCDTO;
 import de.unistuttgart.overworldbackend.data.PlayerNPCStatistic;
 import de.unistuttgart.overworldbackend.data.mapper.NPCMapper;
+import de.unistuttgart.overworldbackend.repositories.CourseRepository;
 import de.unistuttgart.overworldbackend.repositories.NPCRepository;
 import de.unistuttgart.overworldbackend.repositories.PlayerNPCStatisticRepository;
 import java.util.List;
@@ -31,6 +32,12 @@ public class NPCService {
 
     @Autowired
     private PlayerNPCStatisticRepository playerNPCStatisticRepository;
+
+    @Autowired
+    private AchievementService achievementService;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     /**
      * Get a NPC from a world by its index and a course by its id
@@ -110,6 +117,10 @@ public class NPCService {
         npc.setText(npcDTO.getText());
         npc.setDescription(npcDTO.getDescription());
         final NPC updatedNPC = npcRepository.save(npc);
+        achievementService.updateNpcAchievements(courseRepository.
+                findById(courseId).orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no course with id %s.", courseId))
+                ));
         return npcMapper.npcToNPCDTO(updatedNPC);
     }
 

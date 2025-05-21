@@ -1,25 +1,29 @@
 package de.unistuttgart.overworldbackend.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import de.unistuttgart.overworldbackend.data.enums.AchievementCategory;
 import de.unistuttgart.overworldbackend.data.enums.AchievementTitle;
+
+import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.UUID;
+import javax.persistence.*;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Achievement {
 
     @Id
+    @GeneratedValue(generator = "uuid")
+    UUID id;
+
     AchievementTitle achievementTitle;
 
     String description;
@@ -34,6 +38,26 @@ public class Achievement {
      */
     int amountRequired;
 
+    @JsonBackReference(value = "achievement-course")
+    @ManyToOne
+    Course course;
+
     @ElementCollection
-    List<AchievementCategory> categories;
+    List<AchievementCategory> categories = new ArrayList<>();
+
+    public Achievement(
+        AchievementTitle achievementTitle,
+        String description,
+        String imageName,
+        int amountRequired,
+        List<AchievementCategory> categories,
+        Course course
+    ) {
+        this.achievementTitle = achievementTitle;
+        this.description = description;
+        this.imageName = imageName;
+        this.amountRequired = amountRequired;
+        this.categories = categories;
+        this.course = course;
+    }
 }

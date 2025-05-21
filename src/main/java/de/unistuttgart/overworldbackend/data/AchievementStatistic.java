@@ -9,7 +9,11 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "player_user_id", "achievement_achievement_title" }) })
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "player_user_id", "course_id", "achievement_id" }),
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +29,9 @@ public class AchievementStatistic {
     @ManyToOne
     Player player;
 
+    @Column(name = "course_id")
+    int courseId;
+
     @OneToOne
     Achievement achievement;
 
@@ -35,8 +42,9 @@ public class AchievementStatistic {
     @ElementCollection
     List<IntTuple> interactedObjects;
 
-    public AchievementStatistic(Player player, Achievement achievement) {
+    public AchievementStatistic(Player player, int courseId, Achievement achievement) {
         this.player = player;
+        this.courseId = courseId;
         this.achievement = achievement;
         this.progress = 0;
         this.completed = false;
